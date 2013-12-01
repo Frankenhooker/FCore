@@ -1,0 +1,14 @@
++
++###################################################################################################
++# ANTICHEAT
++#
++#     Anticheat.Enable
++#        Description: Enables or disables the Anticheat System.
++#        Default:     1 - (Enabled)
++#                     0 - (Disabled)
++
++Anticheat.Enable = 0
++
++#
++###################################################################################################
+\ Keine neue Zeile am Ende
