@@ -1398,6 +1398,7 @@ void AddBattlegroundScripts()
 /* This is where custom scripts' loading functions should be declared. */
 
 void AddSC_CPWS_Transmogrification();
+void AddSC_npc_info();
 #endif
 
 void AddCustomScripts()
@@ -1406,5 +1407,6 @@ void AddCustomScripts()
     /* This is where custom scripts should be added. */
 
     AddSC_CPWS_Transmogrification();
+	AddSC_npc_info();
 #endif
 }
