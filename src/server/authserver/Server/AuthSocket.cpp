@@ -222,6 +222,8 @@ void AuthSocket::OnClose(void)
 // Read the packet from the client
 void AuthSocket::OnRead()
 {
+    #define MAX_AUTH_LOGON_CHALLENGES_IN_A_ROW 3
+    uint32 challengesInARow = 0;
     uint8 _cmd;
     while (1)
     {
