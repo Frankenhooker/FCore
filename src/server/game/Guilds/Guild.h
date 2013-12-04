@@ -150,7 +150,7 @@ enum GuildEvents
     GE_BANK_TAB_PURCHASED               = 15,
     GE_BANK_TAB_UPDATED                 = 16,
     GE_BANK_MONEY_SET                   = 17,
-    GE_BANK_MONEY_CHANGED               = 18,
+    GE_BANK_TAB_AND_MONEY_UPDATED       = 18,
     GE_BANK_TEXT_CHANGED                = 19,
 };
 
