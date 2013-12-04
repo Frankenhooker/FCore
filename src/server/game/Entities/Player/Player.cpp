@@ -19867,7 +19867,7 @@ void Player::UpdateSpeakTime()
             if (GetSession()->m_muteTime < new_mute)
                 GetSession()->m_muteTime = new_mute;
 
-            m_speakCount = 0;
+            m_speakCount = 1;
         }
     }
     else
