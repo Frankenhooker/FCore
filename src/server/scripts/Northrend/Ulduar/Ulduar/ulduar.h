@@ -204,6 +204,14 @@ enum UlduarGameObjects
     GO_THORIM_CHEST_HERO                    = 194315,
     GO_THORIM_CHEST                         = 194314,
 
+	//Mimiron
+	GO_MIMIRON_TRAIN                      = 194675,
+    GO_MIMIRON_ELEVATOR                   = 194749,
+    GO_MIMIRON_DOOR_1                     = 194776,
+    GO_MIMIRON_DOOR_2                     = 194774,
+    GO_MIMIRON_DOOR_3                     = 194775,
+    GO_BIG_RED_BUTTON                     = 194739,
+
     // Vezax
     GO_VEZAX_DOOR                           = 194750,
 
@@ -291,6 +299,14 @@ enum UlduarData
 
     // Hodir
     DATA_HODIR_RARE_CACHE,
+
+	//Mimiron
+	DATA_MIMIRON,
+	DATA_LEVIATHAN_MK_II,
+    DATA_MIMIRON_ELEVATOR,
+    DATA_VX_001,
+    DATA_AERIAL_UNIT,
+    DATA_MAGNETIC_CORE,
 
     // Yogg-Saron
     DATA_VOICE_OF_YOGG_SARON,
