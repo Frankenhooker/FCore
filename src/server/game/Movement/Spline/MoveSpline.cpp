@@ -233,6 +233,12 @@ bool MoveSplineInitArgs::_checkPathBounds() const
 
 MoveSpline::UpdateResult MoveSpline::_updateState(int32& ms_time_diff)
 {
+	if (ms_time_diff < 0)
+	{
+		ms_time_diff = 0;
+		return Result_Arrived;
+	}
+
     if (Finalized())
     {
         ms_time_diff = 0;
