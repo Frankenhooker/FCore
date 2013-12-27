@@ -85,7 +85,10 @@ enum Events
     EVENT_MOVEMENT       = 7,
     EVENT_FIREBALL       = 8,
     EVENT_LAIR_GUARD     = 9,
-    EVENT_WHELP_SPAWN    = 10
+    EVENT_WHELP_SPAWN    = 10,
+	EVENT_COMBUSTION     = 11,
+	EVENT_ZOMBIE_DRAGONS = 12,
+	EVENT_SHEAR          = 13
 };
 
 struct OnyxMove
@@ -370,8 +373,21 @@ public:
                             break;
                         case EVENT_WING_BUFFET:    // Phase PHASE_START and PHASE_END
                             DoCastVictim(SPELL_WING_BUFFET);
-                            events.ScheduleEvent(EVENT_WING_BUFFET, urand (15000, 30000));
+                            events.ScheduleEvent(EVENT_WING_BUFFET, urand (25000, 30000));
                             break;
+						case EVENT_COMBUSTION:     // Phase PHASE_END
+							if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
+                            DoCast(target, 74562);
+							events.ScheduleEvent(EVENT_COMBUSTION, 15000);
+							break;
+						case EVENT_ZOMBIE_DRAGONS: // Phase PHASE_END
+							me->SummonCreature(299999, -41.22f, -205.34f, -80.7f, 0.0F, TEMPSUMMON_MANUAL_DESPAWN);
+							events.ScheduleEvent(EVENT_ZOMBIE_DRAGONS, 30000);
+							break;
+						case EVENT_SHEAR:		   // Phase PHASE_END
+							DoCastVictim(41032);
+							events.ScheduleEvent(EVENT_SHEAR, 19000);
+							break;
                         default:
                             break;
                     }
@@ -380,7 +396,7 @@ public:
             }
             else
             {
-                if (HealthBelowPct(40))
+                if (HealthBelowPct(50))
                 {
                     Phase = PHASE_END;
                     if (instance)
@@ -392,6 +408,9 @@ public:
                     IsMoving = false;
                     me->GetMotionMaster()->MovePoint(9, me->GetHomePosition());
                     events.ScheduleEvent(EVENT_BELLOWING_ROAR, 30000);
+					events.ScheduleEvent(EVENT_COMBUSTION, 5000);
+					events.ScheduleEvent(EVENT_ZOMBIE_DRAGONS, 9000);
+					events.ScheduleEvent(EVENT_SHEAR, 1000);
                     return;
                 }
 
@@ -472,8 +491,49 @@ public:
         return new boss_onyxiaAI(creature);
     }
 };
+class npc_zombie_dragon : public CreatureScript
+{
+public:
+    npc_zombie_dragon() : CreatureScript("npc_zombie_dragon") { }
+
+    struct npc_zombie_dragonAI : public ScriptedAI
+    {
+        npc_zombie_dragonAI(Creature* creature) : ScriptedAI(creature){}
+
+		uint32 uiGrowthTimer;
+
+		void Reset() OVERRIDE
+		{
+			me->DespawnOrUnsummon();
+		}
+		void EnterCombat(Unit* /*who*/) OVERRIDE
+		{
+			uiGrowthTimer = 2000;
+			me->SetSpeed(MOVE_WALK, 1.5f);
+		}
+		void UpdateAI(uint32 uiDiff) OVERRIDE
+		{
+			if(uiGrowthTimer <= uiDiff)
+			{
+				DoCast(36300);
+				uiGrowthTimer = 3000;
+			}
+			else uiGrowthTimer -= uiDiff;
+		}
+		void JustDied(Unit* /*killer*/) OVERRIDE
+		{
+			DoCast(70503);
+		}
+	};
+
+	CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    {
+        return new npc_zombie_dragonAI(creature);
+    }
+};
 
 void AddSC_boss_onyxia()
 {
     new boss_onyxia();
+	new npc_zombie_dragon();
 }

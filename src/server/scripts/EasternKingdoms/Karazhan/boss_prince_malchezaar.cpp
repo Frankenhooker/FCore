@@ -129,6 +129,7 @@ public:
                 if (HellfireTimer <= diff)
                 {
                     DoCast(me, SPELL_HELLFIRE);
+					DoCast(45996);
                     HellfireTimer = 0;
                 }
                 else HellfireTimer -= diff;
@@ -201,6 +202,7 @@ public:
         uint32 InfernalTimer;
         uint32 AxesTargetSwitchTimer;
         uint32 InfernalCleanupTimer;
+		uint32 NetherTimer;
 
         std::vector<uint64> infernals;
         std::vector<InfernalPoint*> positions;
@@ -442,6 +444,7 @@ public:
                 if (HealthBelowPct(30))
                 {
                     InfernalTimer = 15000;
+					NetherTimer   = 2000;
 
                     phase = 3;
 
@@ -485,8 +488,8 @@ public:
 
                 if (Cleave_Timer <= diff)
                 {
-                    DoCastVictim(SPELL_CLEAVE);
-                    Cleave_Timer = urand(6000, 12000);
+                    DoCast(SPELL_CLEAVE);
+                    Cleave_Timer = urand(10000, 12000);
                 } else Cleave_Timer -= diff;
             }
             else
@@ -526,6 +529,12 @@ public:
                 SummonInfernal(diff);
                 InfernalTimer = phase == 3 ? 14500 : 44500;    // 15 secs in phase 3, 45 otherwise
             } else InfernalTimer -= diff;
+
+			if(NetherTimer <= diff)
+			{
+				DoCastAOE(35859);
+				NetherTimer = 50000;
+			} else NetherTimer -= diff;
 
             if (ShadowNovaTimer <= diff)
             {
