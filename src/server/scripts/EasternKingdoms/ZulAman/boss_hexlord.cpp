@@ -222,7 +222,7 @@ struct boss_hexlord_addAI : public ScriptedAI
         instance = creature->GetInstanceScript();
     }
 
-    void Reset() OVERRIDE {}
+    void Reset() OVERRIDE { }
 
     void EnterCombat(Unit* /*who*/) OVERRIDE
     {
@@ -300,7 +300,7 @@ class boss_hexlord_malacrass : public CreatureScript
                     instance->SetData(DATA_HEXLORDEVENT, IN_PROGRESS);
 
                 DoZoneInCombat();
-                me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, 0);
+                me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(me, SOUND_YELL_AGGRO);
 
                 for (uint8 i = 0; i < 4; ++i)
@@ -321,11 +321,11 @@ class boss_hexlord_malacrass : public CreatureScript
                 switch (urand(0, 1))
                 {
                     case 0:
-                        me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, 0);
+                        me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(me, SOUND_YELL_KILL_ONE);
                         break;
                     case 1:
-                        me->MonsterYell(YELL_KILL_TWO, LANG_UNIVERSAL, 0);
+                        me->MonsterYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(me, SOUND_YELL_KILL_TWO);
                         break;
                 }
@@ -336,7 +336,7 @@ class boss_hexlord_malacrass : public CreatureScript
                 if (instance)
                     instance->SetData(DATA_HEXLORDEVENT, DONE);
 
-                me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, 0);
+                me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(me, SOUND_YELL_DEATH);
 
                 for (uint8 i = 0; i < 4; ++i)
@@ -410,7 +410,7 @@ class boss_hexlord_malacrass : public CreatureScript
                 if (DrainPower_Timer <= diff)
                 {
                     DoCast(me, SPELL_DRAIN_POWER, true);
-                    me->MonsterYell(YELL_DRAIN_POWER, LANG_UNIVERSAL, 0);
+                    me->MonsterYell(YELL_DRAIN_POWER, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(me, SOUND_YELL_DRAIN_POWER);
                     DrainPower_Timer = urand(40000, 55000);    // must cast in 60 sec, or buff/debuff will disappear
                 } else DrainPower_Timer -= diff;
@@ -422,7 +422,7 @@ class boss_hexlord_malacrass : public CreatureScript
                     else
                     {
                         DoCast(me, SPELL_SPIRIT_BOLTS, false);
-                        me->MonsterYell(YELL_SPIRIT_BOLTS, LANG_UNIVERSAL, 0);
+                        me->MonsterYell(YELL_SPIRIT_BOLTS, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(me, SOUND_YELL_SPIRIT_BOLTS);
                         SpiritBolts_Timer = 40000;
                         SiphonSoul_Timer = 10000;    // ready to drain
@@ -526,7 +526,7 @@ class boss_thurg : public CreatureScript
         struct boss_thurgAI : public boss_hexlord_addAI
         {
 
-            boss_thurgAI(Creature* creature) : boss_hexlord_addAI(creature) {}
+            boss_thurgAI(Creature* creature) : boss_hexlord_addAI(creature) { }
 
             uint32 bloodlust_timer;
             uint32 cleave_timer;
@@ -583,7 +583,7 @@ class boss_alyson_antille : public CreatureScript
         struct boss_alyson_antilleAI : public boss_hexlord_addAI
         {
             //Holy Priest
-            boss_alyson_antilleAI(Creature* creature) : boss_hexlord_addAI(creature) {}
+            boss_alyson_antilleAI(Creature* creature) : boss_hexlord_addAI(creature) { }
 
             uint32 flashheal_timer;
             uint32 dispelmagic_timer;
@@ -670,7 +670,7 @@ class boss_alyson_antille : public CreatureScript
 
 struct boss_gazakrothAI : public boss_hexlord_addAI
 {
-    boss_gazakrothAI(Creature* creature) : boss_hexlord_addAI(creature)  {}
+    boss_gazakrothAI(Creature* creature) : boss_hexlord_addAI(creature)  { }
 
     uint32 firebolt_timer;
 
@@ -721,7 +721,7 @@ class boss_lord_raadan : public CreatureScript
 
         struct boss_lord_raadanAI : public boss_hexlord_addAI
         {
-            boss_lord_raadanAI(Creature* creature) : boss_hexlord_addAI(creature)  {}
+            boss_lord_raadanAI(Creature* creature) : boss_hexlord_addAI(creature)  { }
 
             uint32 flamebreath_timer;
             uint32 thunderclap_timer;
@@ -772,7 +772,7 @@ class boss_darkheart : public CreatureScript
 
         struct boss_darkheartAI : public boss_hexlord_addAI
         {
-            boss_darkheartAI(Creature* creature) : boss_hexlord_addAI(creature)  {}
+            boss_darkheartAI(Creature* creature) : boss_hexlord_addAI(creature)  { }
 
             uint32 psychicwail_timer;
 
@@ -814,7 +814,7 @@ class boss_slither : public CreatureScript
 
         struct boss_slitherAI : public boss_hexlord_addAI
         {
-            boss_slitherAI(Creature* creature) : boss_hexlord_addAI(creature) {}
+            boss_slitherAI(Creature* creature) : boss_hexlord_addAI(creature) { }
 
             uint32 venomspit_timer;
 
@@ -872,7 +872,7 @@ class boss_fenstalker : public CreatureScript
 
         struct boss_fenstalkerAI : public boss_hexlord_addAI
         {
-            boss_fenstalkerAI(Creature* creature) : boss_hexlord_addAI(creature) {}
+            boss_fenstalkerAI(Creature* creature) : boss_hexlord_addAI(creature) { }
 
             uint32 volatileinf_timer;
 
@@ -915,7 +915,7 @@ class boss_koragg : public CreatureScript
 
         struct boss_koraggAI : public boss_hexlord_addAI
         {
-            boss_koraggAI(Creature* creature) : boss_hexlord_addAI(creature) {}
+            boss_koraggAI(Creature* creature) : boss_hexlord_addAI(creature) { }
 
             uint32 coldstare_timer;
             uint32 mightyblow_timer;

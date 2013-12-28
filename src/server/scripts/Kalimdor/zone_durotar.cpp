@@ -51,7 +51,7 @@ public:
 
     struct npc_lazy_peonAI : public ScriptedAI
     {
-        npc_lazy_peonAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_lazy_peonAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint64 PlayerGUID;
 
@@ -80,24 +80,24 @@ public:
             if (player && player->GetQuestStatus(QUEST_LAZY_PEONS) == QUEST_STATUS_INCOMPLETE)
             {
                 player->KilledMonsterCredit(me->GetEntry(), me->GetGUID());
-                Talk(SAY_SPELL_HIT, caster->GetGUID());
+                Talk(SAY_SPELL_HIT, caster);
                 me->RemoveAllAuras();
                 if (GameObject* Lumberpile = me->FindNearestGameObject(GO_LUMBERPILE, 20))
                     me->GetMotionMaster()->MovePoint(1, Lumberpile->GetPositionX()-1, Lumberpile->GetPositionY(), Lumberpile->GetPositionZ());
             }
         }
 
-        void UpdateAI(uint32 Diff) OVERRIDE
+        void UpdateAI(uint32 diff) OVERRIDE
         {
             if (work == true)
                 me->HandleEmoteCommand(EMOTE_ONESHOT_WORK_CHOPWOOD);
-            if (RebuffTimer <= Diff)
+            if (RebuffTimer <= diff)
             {
                 DoCast(me, SPELL_BUFF_SLEEP);
                 RebuffTimer = 300000;                 //Rebuff agian in 5 minutes
             }
             else
-                RebuffTimer -= Diff;
+                RebuffTimer -= diff;
             if (!UpdateVictim())
                 return;
             DoMeleeAttackIfReady();
@@ -208,7 +208,7 @@ class npc_tiger_matriarch_credit : public CreatureScript
                                     me->AddAura(SPELL_NO_SUMMON_AURA, summoner);
                                     me->AddAura(SPELL_DETECT_INVIS, summoner);
                                     summoner->CastSpell(summoner, SPELL_SUMMON_MATRIARCH, true);
-                                    Talk(SAY_MATRIARCH_AGGRO, summoner->GetGUID());
+                                    Talk(SAY_MATRIARCH_AGGRO, summoner);
                                 }
                         }
                     }
@@ -230,7 +230,7 @@ class npc_tiger_matriarch_credit : public CreatureScript
 class npc_tiger_matriarch : public CreatureScript
 {
     public:
-        npc_tiger_matriarch() : CreatureScript("npc_tiger_matriarch") {}
+        npc_tiger_matriarch() : CreatureScript("npc_tiger_matriarch") { }
 
         struct npc_tiger_matriarchAI : public ScriptedAI
         {
@@ -443,7 +443,7 @@ typedef npc_troll_volunteer::npc_troll_volunteerAI VolunteerAI;
 class spell_mount_check : public SpellScriptLoader
 {
     public:
-        spell_mount_check() : SpellScriptLoader("spell_mount_check") {}
+        spell_mount_check() : SpellScriptLoader("spell_mount_check") { }
 
         class spell_mount_check_AuraScript : public AuraScript
         {
@@ -491,7 +491,7 @@ class spell_mount_check : public SpellScriptLoader
 class spell_voljin_war_drums : public SpellScriptLoader
 {
     public:
-        spell_voljin_war_drums() : SpellScriptLoader("spell_voljin_war_drums") {}
+        spell_voljin_war_drums() : SpellScriptLoader("spell_voljin_war_drums") { }
 
         class spell_voljin_war_drums_SpellScript : public SpellScript
         {
@@ -548,7 +548,7 @@ enum VoodooSpells
 class spell_voodoo : public SpellScriptLoader
 {
     public:
-        spell_voodoo() : SpellScriptLoader("spell_voodoo") {}
+        spell_voodoo() : SpellScriptLoader("spell_voodoo") { }
 
         class spell_voodoo_SpellScript : public SpellScript
         {

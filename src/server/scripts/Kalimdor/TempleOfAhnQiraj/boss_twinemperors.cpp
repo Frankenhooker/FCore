@@ -80,7 +80,7 @@ struct boss_twinemperorsAI : public ScriptedAI
     uint32 AfterTeleportTimer;
     bool DontYellWhenDead;
     uint32 Abuse_Bug_Timer, BugsTimer;
-    bool tspellcasted;
+    bool tspellcast;
     uint32 EnrageTimer;
 
     virtual bool IAmVeklor() = 0;
@@ -92,7 +92,7 @@ struct boss_twinemperorsAI : public ScriptedAI
         Heal_Timer = 0;                                     // first heal immediately when they get close together
         Teleport_Timer = TELEPORTTIME;
         AfterTeleport = false;
-        tspellcasted = false;
+        tspellcast = false;
         AfterTeleportTimer = 0;
         Abuse_Bug_Timer = urand(10000, 17000);
         BugsTimer = 2000;
@@ -243,21 +243,21 @@ struct boss_twinemperorsAI : public ScriptedAI
         me->AddUnitState(UNIT_STATE_STUNNED);
         AfterTeleport = true;
         AfterTeleportTimer = 2000;
-        tspellcasted = false;
+        tspellcast = false;
     }
 
     bool TryActivateAfterTTelep(uint32 diff)
     {
         if (AfterTeleport)
         {
-            if (!tspellcasted)
+            if (!tspellcast)
             {
                 me->ClearUnitState(UNIT_STATE_STUNNED);
                 DoCast(me, SPELL_TWIN_TELEPORT);
                 me->AddUnitState(UNIT_STATE_STUNNED);
             }
 
-            tspellcasted = true;
+            tspellcast = true;
 
             if (AfterTeleportTimer <= diff)
             {
@@ -378,7 +378,7 @@ struct boss_twinemperorsAI : public ScriptedAI
     {
         if (EnrageTimer <= diff)
         {
-            if (!me->IsNonMeleeSpellCasted(true))
+            if (!me->IsNonMeleeSpellCast(true))
             {
                 DoCast(me, SPELL_BERSERK);
                 EnrageTimer = 60*60000;
@@ -400,7 +400,7 @@ public:
     struct boss_veknilashAI : public boss_twinemperorsAI
     {
         bool IAmVeklor() {return false;}
-        boss_veknilashAI(Creature* creature) : boss_twinemperorsAI(creature) {}
+        boss_veknilashAI(Creature* creature) : boss_twinemperorsAI(creature) { }
 
         uint32 UpperCut_Timer;
         uint32 UnbalancingStrike_Timer;
@@ -486,7 +486,7 @@ public:
     struct boss_veklorAI : public boss_twinemperorsAI
     {
         bool IAmVeklor() {return true;}
-        boss_veklorAI(Creature* creature) : boss_twinemperorsAI(creature) {}
+        boss_veklorAI(Creature* creature) : boss_twinemperorsAI(creature) { }
 
         uint32 ShadowBolt_Timer;
         uint32 Blizzard_Timer;

@@ -186,6 +186,7 @@ hyjal_trashAI::hyjal_trashAI(Creature* creature) : npc_escortAI(creature)
     faction = 0;
     useFlyPath = false;
     damageTaken = 0;
+    memset(DummyTarget, 0, sizeof(DummyTarget));
     Reset();
 }
 
@@ -430,7 +431,6 @@ public:
 
         bool meteor;
         bool CanMove;
-        bool WpEnabled;
         bool go;
         uint32 spawnTimer;
         uint32 FlameBuffetTimer;
@@ -443,7 +443,7 @@ public:
             imol = false;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
@@ -594,7 +594,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -697,7 +697,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -820,7 +820,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -918,7 +918,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -1017,7 +1017,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -1107,7 +1107,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
@@ -1206,7 +1206,7 @@ public:
             me->SetPosition(x, y, z, 0);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {

@@ -34,7 +34,7 @@ class instance_ramparts : public InstanceMapScript
 
         struct instance_ramparts_InstanceMapScript : public InstanceScript
         {
-            instance_ramparts_InstanceMapScript(Map* map) : InstanceScript(map) {}
+            instance_ramparts_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
             void Initialize() OVERRIDE
             {
@@ -121,7 +121,7 @@ class instance_ramparts : public InstanceMapScript
                 bool spawned;
         };
 
-        InstanceScript* GetInstanceScript(InstanceMap* map) const
+        InstanceScript* GetInstanceScript(InstanceMap* map) const OVERRIDE
         {
             return new instance_ramparts_InstanceMapScript(map);
         }

@@ -60,14 +60,9 @@ class instance_magisters_terrace : public InstanceMapScript
 public:
     instance_magisters_terrace() : InstanceMapScript("instance_magisters_terrace", 585) { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* map) const
-    {
-        return new instance_magisters_terrace_InstanceMapScript(map);
-    }
-
     struct instance_magisters_terrace_InstanceMapScript : public InstanceScript
     {
-        instance_magisters_terrace_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_magisters_terrace_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         uint32 Encounter[MAX_ENCOUNTER];
         uint32 DelrissaDeathCount;
@@ -296,7 +291,7 @@ public:
                 case DATA_FEL_CRYSTAL:
                     if (FelCrystals.size() < felCristalIndex)
                     {
-                        TC_LOG_ERROR(LOG_FILTER_TSCR, "Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                        TC_LOG_ERROR("scripts", "Magisters Terrace: No Fel Crystals loaded in Inst Data");
                         return 0;
                     }
 
@@ -311,6 +306,11 @@ public:
                 felCristalIndex = value;
         }
     };
+
+    InstanceScript* GetInstanceScript(InstanceMap* map) const OVERRIDE
+    {
+        return new instance_magisters_terrace_InstanceMapScript(map);
+    }
 };
 
 void AddSC_instance_magisters_terrace()

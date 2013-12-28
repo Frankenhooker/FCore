@@ -42,7 +42,7 @@ public:
 
     struct instance_razorfen_kraul_InstanceMapScript : public InstanceScript
     {
-        instance_razorfen_kraul_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_razorfen_kraul_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         uint64 DoorWardGUID;
         int WardKeeperDeath;
@@ -65,7 +65,7 @@ public:
                         return player;
                 }
             }
-            TC_LOG_DEBUG(LOG_FILTER_TSCR, "Instance Razorfen Kraul: GetPlayerInMap, but PlayerList is empty!");
+            TC_LOG_DEBUG("scripts", "Instance Razorfen Kraul: GetPlayerInMap, but PlayerList is empty!");
             return NULL;
         }
 

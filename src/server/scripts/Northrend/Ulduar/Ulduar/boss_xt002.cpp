@@ -232,7 +232,7 @@ class boss_xt002 : public CreatureScript
                 events.ScheduleEvent(EVENT_ENRAGE, TIMER_ENRAGE);
                 events.ScheduleEvent(EVENT_GRAVITY_BOMB, TIMER_GRAVITY_BOMB);
                 events.ScheduleEvent(EVENT_SEARING_LIGHT, TIMER_SEARING_LIGHT);
-                //Tantrum is casted a bit slower the first time.
+                //Tantrum is cast a bit slower the first time.
                 events.ScheduleEvent(EVENT_TYMPANIC_TANTRUM, urand(TIMER_TYMPANIC_TANTRUM_MIN, TIMER_TYMPANIC_TANTRUM_MAX) * 2);
 
                 if (!instance)
@@ -459,7 +459,7 @@ class npc_xt002_heart : public CreatureScript
                 SetCombatMovement(false);
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
 
             void JustDied(Unit* /*killer*/) OVERRIDE
             {

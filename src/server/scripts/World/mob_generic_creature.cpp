@@ -36,7 +36,7 @@ public:
 
     struct generic_creatureAI : public ScriptedAI
     {
-        generic_creatureAI(Creature* creature) : ScriptedAI(creature) {}
+        generic_creatureAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
         uint32 BuffTimer;           //This variable keeps track of buffs
@@ -93,7 +93,7 @@ public:
             if (me->IsWithinMeleeRange(me->GetVictim()))
             {
                 //Make sure our attack is ready and we arn't currently casting
-                if (me->isAttackReady() && !me->IsNonMeleeSpellCasted(false))
+                if (me->isAttackReady() && !me->IsNonMeleeSpellCast(false))
                 {
                     bool Healing = false;
                     SpellInfo const* info = NULL;
@@ -124,7 +124,7 @@ public:
             else
             {
                 //Only run this code if we arn't already casting
-                if (!me->IsNonMeleeSpellCasted(false))
+                if (!me->IsNonMeleeSpellCast(false))
                 {
                     bool Healing = false;
                     SpellInfo const* info = NULL;
@@ -212,7 +212,7 @@ public:
 
     struct trigger_deathAI : public NullCreatureAI
     {
-        trigger_deathAI(Creature* creature) : NullCreatureAI(creature) {}
+        trigger_deathAI(Creature* creature) : NullCreatureAI(creature) { }
         void JustDied(Unit* killer) OVERRIDE
         {
             if (me->m_spells[0])

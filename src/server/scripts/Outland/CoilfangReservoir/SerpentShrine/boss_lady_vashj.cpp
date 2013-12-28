@@ -601,9 +601,9 @@ public:
                 VashjGUID = instance->GetData64(DATA_LADYVASHJ);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -831,18 +831,18 @@ public:
 
         InstanceScript* instance;
         uint32 CheckTimer;
-        bool Casted;
+        bool Cast;
 
         void Reset() OVERRIDE
         {
             CheckTimer = 0;
-            Casted = false;
+            Cast = false;
             me->SetDisplayId(11686); // invisible
 
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -857,10 +857,10 @@ public:
                 if (vashj && vashj->IsAlive())
                 {
                     // start visual channel
-                    if (!Casted || !vashj->HasAura(SPELL_MAGIC_BARRIER))
+                    if (!Cast || !vashj->HasAura(SPELL_MAGIC_BARRIER))
                     {
                         DoCast(vashj, SPELL_MAGIC_BARRIER, true);
-                        Casted = true;
+                        Cast = true;
                     }
                 }
                 CheckTimer = 1000;

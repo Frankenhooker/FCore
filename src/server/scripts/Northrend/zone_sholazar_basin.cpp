@@ -225,7 +225,7 @@ public:
                 break;
             case GOSSIP_ACTION_INFO_DEF+2:
                 player->CLOSE_GOSSIP_MENU();
-                creature->AI()->Talk(SAY_TEXTID_VEKJIK1, player->GetGUID());
+                creature->AI()->Talk(SAY_TEXTID_VEKJIK1, player);
                 player->AreaExploredOrEventHappens(QUEST_MAKING_PEACE);
                 creature->CastSpell(player, SPELL_FREANZYHEARTS_FURY, false);
                 break;
@@ -502,7 +502,7 @@ public:
 
     struct npc_jungle_punch_targetAI : public ScriptedAI
     {
-        npc_jungle_punch_targetAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_jungle_punch_targetAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -772,7 +772,7 @@ public:
             {
                 if (Creature* presence = caster->FindNearestCreature(NPC_PRESENCE, 50.0f))
                 {
-                    presence->AI()->Talk(WHISPER_ACTIVATE, caster->GetGUID());
+                    presence->AI()->Talk(WHISPER_ACTIVATE, caster);
                     presence->CastSpell(presence, SPELL_FREYA_DUMMY, true); // will target plants
                     // Freya Dummy could be scripted with the following code
 
@@ -1016,7 +1016,7 @@ public:
 
     struct npc_vics_flying_machineAI : public VehicleAI
     {
-        npc_vics_flying_machineAI(Creature* creature) : VehicleAI(creature) {}
+        npc_vics_flying_machineAI(Creature* creature) : VehicleAI(creature) { }
 
         void PassengerBoarded(Unit* passenger, int8 /*seatId*/, bool apply) OVERRIDE
         {
@@ -1073,12 +1073,63 @@ public:
             }
         }
 
-        void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+        void UpdateAI(uint32 /*diff*/) OVERRIDE { }
     };
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_vics_flying_machineAI(creature);
+    }
+};
+
+/*######
+## Quest Dreadsaber Mastery: Stalking the Prey (12550)
+######*/
+
+enum ShangoTracks
+{
+    SPELL_CORRECT_TRACKS   = 52160,
+    SPELL_INCORRECT_TRACKS = 52163,
+    SAY_CORRECT_TRACKS     = 28634,
+    SAY_INCORRECT_TRACKS   = 28635
+};
+
+class spell_shango_tracks : public SpellScriptLoader
+{
+public:
+   spell_shango_tracks() : SpellScriptLoader("spell_shango_tracks") { }
+
+    class spell_shango_tracks_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_shango_tracks_SpellScript);
+
+        void HandleScript(SpellEffIndex /*effIndex*/)
+        {
+            if (Player* player = GetHitUnit()->ToPlayer())
+            {
+                switch (GetSpellInfo()->Id)
+                {
+                    case SPELL_CORRECT_TRACKS:
+                        player->MonsterSay(sObjectMgr->GetTrinityStringForDBCLocale(SAY_CORRECT_TRACKS), LANG_UNIVERSAL, player);
+                        break;
+                    case SPELL_INCORRECT_TRACKS:
+                        player->MonsterSay(sObjectMgr->GetTrinityStringForDBCLocale(SAY_INCORRECT_TRACKS), LANG_UNIVERSAL, player);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        void Register() OVERRIDE
+        {
+            OnEffectHitTarget += SpellEffectFn(spell_shango_tracks_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        }
+    };
+
+    SpellScript* GetSpellScript() const OVERRIDE
+    {
+        return new spell_shango_tracks_SpellScript();
     }
 };
 
@@ -1095,4 +1146,5 @@ void AddSC_sholazar_basin()
     new spell_q12589_shoot_rjr();
     new npc_haiphoon();
     new npc_vics_flying_machine();
+    new spell_shango_tracks();
 }

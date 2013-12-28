@@ -680,7 +680,7 @@ class boss_flame_leviathan_defense_turret : public CreatureScript
 
         struct boss_flame_leviathan_defense_turretAI : public TurretAI
         {
-            boss_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature) {}
+            boss_flame_leviathan_defense_turretAI(Creature* creature) : TurretAI(creature) { }
 
             void DamageTaken(Unit* who, uint32 &damage) OVERRIDE
             {
@@ -858,7 +858,7 @@ class npc_pool_of_tar : public CreatureScript
                     me->CastSpell(me, SPELL_BLAZE, true);
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
@@ -1498,7 +1498,7 @@ class spell_auto_repair : public SpellScriptLoader
     };
 
     public:
-        spell_auto_repair() : SpellScriptLoader("spell_auto_repair") {}
+        spell_auto_repair() : SpellScriptLoader("spell_auto_repair") { }
 
         class spell_auto_repair_SpellScript : public SpellScript
         {
@@ -1530,7 +1530,7 @@ class spell_auto_repair : public SpellScriptLoader
                 if (!driver)
                     return;
 
-                driver->MonsterTextEmote(EMOTE_REPAIR, driver->GetGUID(), true);
+                driver->MonsterTextEmote(EMOTE_REPAIR, driver, true);
 
                 InstanceScript* instance = driver->GetInstanceScript();
                 if (!instance)
@@ -1607,7 +1607,7 @@ class FlameLeviathanPursuedTargetSelector
     };
 
     public:
-        explicit FlameLeviathanPursuedTargetSelector(Unit* unit) : _me(unit) {};
+        explicit FlameLeviathanPursuedTargetSelector(Unit* unit) : _me(unit) { };
 
         bool operator()(WorldObject* target) const
         {
@@ -1645,7 +1645,7 @@ class FlameLeviathanPursuedTargetSelector
 class spell_pursue : public SpellScriptLoader
 {
     public:
-        spell_pursue() : SpellScriptLoader("spell_pursue") {}
+        spell_pursue() : SpellScriptLoader("spell_pursue") { }
 
         class spell_pursue_SpellScript : public SpellScript
         {
@@ -1690,9 +1690,9 @@ class spell_pursue : public SpellScriptLoader
 
                 for (SeatMap::const_iterator itr = caster->GetVehicleKit()->Seats.begin(); itr != caster->GetVehicleKit()->Seats.end(); ++itr)
                 {
-                    if (IS_PLAYER_GUID(itr->second.Passenger.Guid))
+                    if (Player* passenger = ObjectAccessor::GetPlayer(*caster, itr->second.Passenger.Guid))
                     {
-                        caster->AI()->Talk(EMOTE_PURSUE, itr->second.Passenger.Guid);
+                        caster->AI()->Talk(EMOTE_PURSUE, passenger);
                         return;
                     }
                 }
@@ -1717,7 +1717,7 @@ class spell_pursue : public SpellScriptLoader
 class spell_vehicle_throw_passenger : public SpellScriptLoader
 {
     public:
-        spell_vehicle_throw_passenger() : SpellScriptLoader("spell_vehicle_throw_passenger") {}
+        spell_vehicle_throw_passenger() : SpellScriptLoader("spell_vehicle_throw_passenger") { }
 
         class spell_vehicle_throw_passenger_SpellScript : public SpellScript
         {

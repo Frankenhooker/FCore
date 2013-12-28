@@ -20,7 +20,9 @@
 #include "ScriptedCreature.h"
 #include "ScriptedEscortAI.h"
 #include "Player.h"
+#include "Spell.h"
 #include "SpellInfo.h"
+#include "SpellScript.h"
 #include "CreatureTextMgr.h"
 
 /*######
@@ -158,7 +160,7 @@ public:
                     if (player)
                     {
                         player->GroupEventHappens(QUEST_PERILOUS_ADVENTURE, me);
-                        Talk(SAY_QUEST_COMPLETE, player->GetGUID());
+                        Talk(SAY_QUEST_COMPLETE, player);
                     }
                     me->SetWalk(false);
                     break;
@@ -217,9 +219,9 @@ public:
 
     struct npc_mrfloppyAI : public ScriptedAI
     {
-        npc_mrfloppyAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_mrfloppyAI(Creature* creature) : ScriptedAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void EnterCombat(Unit* Who) OVERRIDE
         {
@@ -239,9 +241,9 @@ public:
             }
         }
 
-        void EnterEvadeMode() OVERRIDE {}
+        void EnterEvadeMode() OVERRIDE { }
 
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 /*diff*/) OVERRIDE
@@ -279,7 +281,7 @@ public:
 
     struct npc_outhouse_bunnyAI : public ScriptedAI
     {
-        npc_outhouse_bunnyAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_outhouse_bunnyAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -341,7 +343,7 @@ public:
 
     struct npc_tallhorn_stagAI : public ScriptedAI
     {
-        npc_tallhorn_stagAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_tallhorn_stagAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -393,7 +395,7 @@ public:
 
     struct npc_amberpine_woodsmanAI : public ScriptedAI
     {
-        npc_amberpine_woodsmanAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_amberpine_woodsmanAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -459,7 +461,7 @@ public:
 
     struct npc_wounded_skirmisherAI : public ScriptedAI
     {
-        npc_wounded_skirmisherAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_wounded_skirmisherAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -505,87 +507,6 @@ public:
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_wounded_skirmisherAI(creature);
-    }
-};
-
-/*Lightning Sentry - if you kill it when you have your Minion with you, you will get a quest credit*/
-enum Sentry
-{
-    //Creature
-    NPC_LIGHTNING_SENTRY                   = 26407,
-    NPC_WAR_GOLEM                          = 27017,
-    // Quest
-    QUEST_OR_MAYBE_WE_DONT_A               = 12138,
-    QUEST_OR_MAYBE_WE_DONT_H               = 12198,
-    // Spell
-    SPELL_CHARGED_SENTRY_TOTEM             = 52703,
-    SPELL_WAR_GOLEM_CHARGE_CREDIT          = 47797,
-};
-
-enum SentryEvents
-{
-    EVENT_SENTRY                           = 1
-};
-
-class npc_lightning_sentry : public CreatureScript
-{
-public:
-    npc_lightning_sentry() : CreatureScript("npc_lightning_sentry") { }
-
-    struct npc_lightning_sentryAI : public ScriptedAI
-    {
-        npc_lightning_sentryAI(Creature* creature) : ScriptedAI(creature) { }
-
-        void Reset() OVERRIDE
-        {
-            _events.ScheduleEvent(EVENT_SENTRY, urand(10000, 12000));
-        }
-
-        void UpdateAI(uint32 diff) OVERRIDE
-        {
-            if (!UpdateVictim())
-                return;
-
-            _events.Update(diff);
-
-            while (uint32 eventId = _events.ExecuteEvent())
-            {
-                switch (eventId)
-                {
-                    case EVENT_SENTRY:
-                        DoCast(SPELL_CHARGED_SENTRY_TOTEM);
-                        _events.ScheduleEvent(EVENT_SENTRY, urand(10000, 12000));
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if (!UpdateVictim())
-                return;
-
-            DoMeleeAttackIfReady();
-        }
-
-        void JustDied(Unit* killer) OVERRIDE
-        {
-            if (killer->ToPlayer() && killer->ToPlayer()->GetTypeId() == TYPEID_PLAYER)
-            {
-                if (me->FindNearestCreature(NPC_WAR_GOLEM, 10.0f, true))
-                {
-                    if (killer->ToPlayer()->GetQuestStatus(QUEST_OR_MAYBE_WE_DONT_A) == QUEST_STATUS_INCOMPLETE ||
-                        killer->ToPlayer()->GetQuestStatus(QUEST_OR_MAYBE_WE_DONT_H) == QUEST_STATUS_INCOMPLETE)
-                        DoCast(killer, SPELL_WAR_GOLEM_CHARGE_CREDIT);
-                }
-            }
-        }
-        private:
-            EventMap _events;
-    };
-
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
-    {
-        return new npc_lightning_sentryAI(creature);
     }
 };
 
@@ -830,6 +751,43 @@ public:
         }
 };
 
+enum ShredderDelivery
+{
+    NPC_BROKEN_DOWN_SHREDDER               = 27354
+};
+
+class spell_shredder_delivery : public SpellScriptLoader
+{
+    public:
+        spell_shredder_delivery() : SpellScriptLoader("spell_shredder_delivery") { }
+
+        class spell_shredder_delivery_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_shredder_delivery_SpellScript);
+
+            bool Load() OVERRIDE
+            {
+                return GetCaster()->GetTypeId() == TYPEID_UNIT;
+            }
+
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+                if (GetCaster()->ToCreature()->GetEntry() == NPC_BROKEN_DOWN_SHREDDER)
+                    GetCaster()->ToCreature()->DespawnOrUnsummon();
+            }
+
+            void Register() OVERRIDE
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_shredder_delivery_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const OVERRIDE
+        {
+            return new spell_shredder_delivery_SpellScript();
+        }
+};
+
 void AddSC_grizzly_hills()
 {
     new npc_emily();
@@ -838,7 +796,7 @@ void AddSC_grizzly_hills()
     new npc_tallhorn_stag();
     new npc_amberpine_woodsman();
     new npc_wounded_skirmisher();
-    new npc_lightning_sentry();
     new npc_venture_co_straggler();
     new npc_lake_frog();
+    new spell_shredder_delivery();
 }

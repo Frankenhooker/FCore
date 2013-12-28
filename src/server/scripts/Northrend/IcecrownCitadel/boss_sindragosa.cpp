@@ -123,8 +123,8 @@ enum Events
     EVENT_FROSTWARDEN_ORDER_WHELP   = 19,
     EVENT_CONCUSSIVE_SHOCK          = 20,
 
-	//Custom
-	EVENT_ICE_TOMB_CUSTOM			= 28,
+    //Custom
+    EVENT_ICE_TOMB_CUSTOM			= 28,
 
     // event groups
     EVENT_GROUP_LAND_PHASE          = 1,
@@ -189,7 +189,7 @@ class FrostBombExplosion : public BasicEvent
 
         bool Execute(uint64 /*eventTime*/, uint32 /*updateTime*/)
         {
-           // _owner->CastSpell((Unit*)NULL, SPELL_FROST_BOMB, false, NULL, NULL, _sindragosaGUID);
+            _owner->CastSpell((Unit*)NULL, SPELL_FROST_BOMB, false, NULL, NULL, _sindragosaGUID);
             _owner->RemoveAurasDueToSpell(SPELL_FROST_BOMB_VISUAL);
             return true;
         }
@@ -268,9 +268,7 @@ class boss_sindragosa : public CreatureScript
                     return;
                 }*/
 
-                //BossAI::EnterCombat(victim);
-				me->setActive(true);
-                DoZoneInCombat();
+                BossAI::EnterCombat(victim);
                 DoCast(me, SPELL_FROST_AURA);
                 DoCast(me, SPELL_PERMAEATING_CHILL);
                 Talk(SAY_AGGRO);
@@ -350,7 +348,7 @@ class boss_sindragosa : public CreatureScript
                         me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), NULL);
                         me->SetFacingTo(float(M_PI));
                         events.ScheduleEvent(EVENT_AIR_MOVEMENT_FAR, 1);
-                        //events.ScheduleEvent(EVENT_FROST_BOMB, 9000);
+                        events.ScheduleEvent(EVENT_FROST_BOMB, 9000);
                         break;
                     case POINT_AIR_PHASE_FAR:
                         me->SetFacingTo(float(M_PI));
@@ -489,7 +487,7 @@ class boss_sindragosa : public CreatureScript
                         case EVENT_ICE_TOMB:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, FrostBeaconSelector(me)))
                             {
-                                Talk(EMOTE_WARN_FROZEN_ORB, target->GetGUID());
+                                Talk(EMOTE_WARN_FROZEN_ORB, target);
                                 DoCast(target, SPELL_ICE_TOMB_DUMMY, true);
                             }
                             events.ScheduleEvent(EVENT_ICE_TOMB, urand(16000, 23000));
@@ -505,12 +503,12 @@ class boss_sindragosa : public CreatureScript
                             events.ScheduleEvent(EVENT_FROST_BOMB, urand(6000, 8000));
                             break;
                         }
-						case EVENT_ICE_TOMB_CUSTOM:
-						{
-							ClearMysticBuffet();
-							events.ScheduleEvent(EVENT_ICE_TOMB_CUSTOM, 1000);
-							break;
-						}
+                        case EVENT_ICE_TOMB_CUSTOM:
+                        {
+                            ClearMysticBuffet();
+                            events.ScheduleEvent(EVENT_ICE_TOMB_CUSTOM, 1000);
+                            break;
+                        }
                         case EVENT_LAND:
                         {
                             events.CancelEvent(EVENT_FROST_BOMB);
@@ -532,7 +530,7 @@ class boss_sindragosa : public CreatureScript
                                 Talk(SAY_PHASE_2);
                                 events.ScheduleEvent(EVENT_ICE_TOMB, urand(7000, 10000));
                                 events.RescheduleEvent(EVENT_ICY_GRIP, urand(35000, 40000));
-								events.ScheduleEvent(EVENT_ICE_TOMB_CUSTOM, 1000);
+                                events.ScheduleEvent(EVENT_ICE_TOMB_CUSTOM, 1000);
                                 DoCast(me, SPELL_MYSTIC_BUFFET, true);
                             }
                             else
@@ -552,18 +550,19 @@ class boss_sindragosa : public CreatureScript
             bool _isInAirPhase;
             bool _isThirdPhase;
             bool _summoned;
-		public:
-			void ClearMysticBuffet() const
-			{   
-				Player* player;
-				Map::PlayerList const& players = me->GetMap()->GetPlayers();
+
+        public:
+            void ClearMysticBuffet() const
+            {
+                Player* player;
+                Map::PlayerList const& players = me->GetMap()->GetPlayers();
                 if (!players.isEmpty())
                     for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                         if (player = itr->GetSource())
-							if(Unit* tombtarget = player->FindNearestCreature(NPC_FROST_BOMB, 50.0f, true))
-								if (player->GetDistance2d(tombtarget->GetPositionX(),tombtarget->GetPositionY()) < 10.0f)
-									player->RemoveAura(70127);
-			}
+                            if(Unit* tombtarget = player->FindNearestCreature(NPC_FROST_BOMB, 50.0f, true))
+                                if (player->GetDistance2d(tombtarget->GetPositionX(),tombtarget->GetPositionY()) < 10.0f)
+                                    player->RemoveAura(70127);
+            }
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE

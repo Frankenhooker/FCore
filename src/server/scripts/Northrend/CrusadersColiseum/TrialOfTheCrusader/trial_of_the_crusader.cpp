@@ -124,7 +124,7 @@ class npc_announcer_toc10 : public CreatureScript
                     pAlly->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
 
-            void AttackStart(Unit* /*who*/) OVERRIDE {}
+            void AttackStart(Unit* /*who*/) OVERRIDE { }
         };
 
         bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
@@ -375,7 +375,7 @@ class npc_fizzlebang_toc : public CreatureScript
 
             void JustDied(Unit* killer) OVERRIDE
             {
-                Talk(SAY_STAGE_1_06, killer->GetGUID());
+                Talk(SAY_STAGE_1_06, killer);
                 _instance->SetData(TYPE_EVENT, 1180);
                 if (Creature* temp = Unit::GetCreature(*me, _instance->GetData64(NPC_JARAXXUS)))
                 {
@@ -547,9 +547,9 @@ class npc_tirion_toc : public CreatureScript
                 _instance = me->GetInstanceScript();
             }
 
-            void Reset() OVERRIDE {}
+            void Reset() OVERRIDE { }
 
-            void AttackStart(Unit* /*who*/) OVERRIDE {}
+            void AttackStart(Unit* /*who*/) OVERRIDE { }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
@@ -835,9 +835,9 @@ class npc_garrosh_toc : public CreatureScript
                 _instance = me->GetInstanceScript();
             }
 
-            void Reset() OVERRIDE {}
+            void Reset() OVERRIDE { }
 
-            void AttackStart(Unit* /*who*/) OVERRIDE {}
+            void AttackStart(Unit* /*who*/) OVERRIDE { }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
@@ -919,9 +919,9 @@ class npc_varian_toc : public CreatureScript
                 _instance = me->GetInstanceScript();
             }
 
-            void Reset() OVERRIDE {}
+            void Reset() OVERRIDE { }
 
-            void AttackStart(Unit* /*who*/) OVERRIDE {}
+            void AttackStart(Unit* /*who*/) OVERRIDE { }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {

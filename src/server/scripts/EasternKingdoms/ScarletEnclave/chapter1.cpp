@@ -144,7 +144,7 @@ public:
                 me->CastSpell(me, SPELL_DK_INITIATE_VISUAL, true);
 
                 if (Player* starter = ObjectAccessor::GetPlayer(*me, playerGUID))
-                    sCreatureTextMgr->SendChat(me, SAY_EVENT_ATTACK, 0, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_NORMAL, 0, TEAM_OTHER, false, starter);
+                    sCreatureTextMgr->SendChat(me, SAY_EVENT_ATTACK, NULL, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_NORMAL, 0, TEAM_OTHER, false, starter);
 
                 phase = PHASE_TO_ATTACK;
             }
@@ -180,7 +180,7 @@ public:
                         anchorGUID = anchor->GetGUID();
                     }
                     else
-                        TC_LOG_ERROR(LOG_FILTER_TSCR, "npc_unworthy_initiateAI: unable to find anchor!");
+                        TC_LOG_ERROR("scripts", "npc_unworthy_initiateAI: unable to find anchor!");
 
                     float dist = 99.0f;
                     GameObject* prison = NULL;
@@ -200,7 +200,7 @@ public:
                     if (prison)
                         prison->ResetDoorOrButton();
                     else
-                        TC_LOG_ERROR(LOG_FILTER_TSCR, "npc_unworthy_initiateAI: unable to find prison!");
+                        TC_LOG_ERROR("scripts", "npc_unworthy_initiateAI: unable to find prison!");
                 }
                 break;
             case PHASE_TO_EQUIP:
@@ -211,7 +211,7 @@ public:
                     else
                     {
                         me->GetMotionMaster()->MovePoint(1, anchorX, anchorY, me->GetPositionZ());
-                        //TC_LOG_DEBUG(LOG_FILTER_TSCR, "npc_unworthy_initiateAI: move to %f %f %f", anchorX, anchorY, me->GetPositionZ());
+                        //TC_LOG_DEBUG("scripts", "npc_unworthy_initiateAI: move to %f %f %f", anchorX, anchorY, me->GetPositionZ());
                         phase = PHASE_EQUIPING;
                         wait_timer = 0;
                     }
@@ -288,7 +288,7 @@ public:
 
     struct npc_unworthy_initiate_anchorAI : public PassiveAI
     {
-        npc_unworthy_initiate_anchorAI(Creature* creature) : PassiveAI(creature), prisonerGUID(0) {}
+        npc_unworthy_initiate_anchorAI(Creature* creature) : PassiveAI(creature), prisonerGUID(0) { }
 
         uint64 prisonerGUID;
 
@@ -371,7 +371,7 @@ public:
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
 
-            sCreatureTextMgr->SendChat(creature, SAY_DUEL, 0, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_NORMAL, 0, TEAM_OTHER, false, player);
+            sCreatureTextMgr->SendChat(creature, SAY_DUEL, NULL, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_NORMAL, 0, TEAM_OTHER, false, player);
 
             player->CastSpell(creature, SPELL_DUEL, false);
             player->CastSpell(player, SPELL_DUEL_FLAG, true);
@@ -615,7 +615,7 @@ public:
 
     struct npc_salanar_the_horsemanAI : public ScriptedAI
     {
-        npc_salanar_the_horsemanAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_salanar_the_horsemanAI(Creature* creature) : ScriptedAI(creature) { }
 
         void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
         {
@@ -687,7 +687,7 @@ public:
 
     struct npc_ros_dark_riderAI : public ScriptedAI
     {
-        npc_ros_dark_riderAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_ros_dark_riderAI(Creature* creature) : ScriptedAI(creature) { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
@@ -742,7 +742,7 @@ public:
 
     struct npc_dkc1_gothikAI : public ScriptedAI
     {
-        npc_dkc1_gothikAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_dkc1_gothikAI(Creature* creature) : ScriptedAI(creature) { }
 
         void MoveInLineOfSight(Unit* who) OVERRIDE
 

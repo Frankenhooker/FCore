@@ -68,7 +68,7 @@ public:
     {
         npc_mistAI(Creature* creature) : FollowerAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void MoveInLineOfSight(Unit* who) OVERRIDE
 
@@ -79,7 +79,7 @@ public:
             {
                 if (me->IsWithinDistInMap(who, 10.0f))
                 {
-                    Talk(SAY_AT_HOME, who->GetGUID());
+                    Talk(SAY_AT_HOME, who);
                     DoComplete();
                 }
             }

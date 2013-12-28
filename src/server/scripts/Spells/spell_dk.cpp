@@ -330,7 +330,8 @@ class spell_dk_corpse_explosion : public SpellScriptLoader
                     return false;
                 return true;
             }
-			uint32 entry;
+            uint32 entry;
+
             void HandleDummy(SpellEffIndex /*effIndex*/)
             {
                 if (Unit* unitTarget = GetHitUnit())
@@ -351,14 +352,14 @@ class spell_dk_corpse_explosion : public SpellScriptLoader
                     // Set corpse look
                     GetCaster()->CastSpell(unitTarget, SPELL_DK_CORPSE_EXPLOSION_VISUAL, true);
                 }
-				else if(Unit* unitTarget = GetCaster()->FindNearestCreature(entry, 30.0f, false))
-				{
-						int32 bp = 0;
-					    bp = GetEffectValue();
-                        GetCaster()->CastCustomSpell(unitTarget, GetSpellInfo()->Effects[EFFECT_1].CalcValue(), &bp, NULL, NULL, true);
-                        // Corpse Explosion (Suicide)
-                        unitTarget->CastSpell(unitTarget, SPELL_DK_CORPSE_EXPLOSION_TRIGGERED, true);
-				}
+                else if(Unit* unitTarget = GetCaster()->FindNearestCreature(entry, 30.0f, false))
+                {
+                    int32 bp = 0;
+                    bp = GetEffectValue();
+                    GetCaster()->CastCustomSpell(unitTarget, GetSpellInfo()->Effects[EFFECT_1].CalcValue(), &bp, NULL, NULL, true);
+                    // Corpse Explosion (Suicide)
+                    unitTarget->CastSpell(unitTarget, SPELL_DK_CORPSE_EXPLOSION_TRIGGERED, true);
+                }
             }
 
             void Register() OVERRIDE
@@ -444,7 +445,7 @@ class spell_dk_death_coil : public SpellScriptLoader
 class spell_dk_death_gate : public SpellScriptLoader
 {
     public:
-        spell_dk_death_gate() : SpellScriptLoader("spell_dk_death_gate") {}
+        spell_dk_death_gate() : SpellScriptLoader("spell_dk_death_gate") { }
 
         class spell_dk_death_gate_SpellScript : public SpellScript
         {

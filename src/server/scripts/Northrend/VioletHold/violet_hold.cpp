@@ -578,9 +578,9 @@ public:
             bPortalGuardianOrKeeperOrEliteSpawn = false;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -649,7 +649,7 @@ public:
                         uiSpawnTimer = SPAWN_TIME;
                     } else uiSpawnTimer -= diff;
 
-                    if (bPortalGuardianOrKeeperOrEliteSpawn && !me->IsNonMeleeSpellCasted(false))
+                    if (bPortalGuardianOrKeeperOrEliteSpawn && !me->IsNonMeleeSpellCast(false))
                     {
                         me->Kill(me, false);
                         me->RemoveCorpse();
@@ -1342,7 +1342,7 @@ public:
             DoCast(me, SPELL_ARCANE_SPHERE_PASSIVE, true);
         }
 
-        void EnterCombat(Unit * /*who*/) OVERRIDE {}
+        void EnterCombat(Unit * /*who*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {

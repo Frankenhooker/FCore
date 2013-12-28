@@ -53,7 +53,7 @@ public:
 
     struct boss_sarturaAI : public ScriptedAI
     {
-        boss_sarturaAI(Creature* creature) : ScriptedAI(creature) {}
+        boss_sarturaAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 WhirlWind_Timer;
         uint32 WhirlWindRandom_Timer;
@@ -160,7 +160,7 @@ public:
                 //If she is 20% enrage
                 if (!Enraged)
                 {
-                    if (!HealthAbovePct(20) && !me->IsNonMeleeSpellCasted(false))
+                    if (!HealthAbovePct(20) && !me->IsNonMeleeSpellCast(false))
                     {
                         DoCast(me, SPELL_ENRAGE);
                         Enraged = true;
@@ -196,7 +196,7 @@ public:
 
     struct npc_sartura_royal_guardAI : public ScriptedAI
     {
-        npc_sartura_royal_guardAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_sartura_royal_guardAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 WhirlWind_Timer;
         uint32 WhirlWindRandom_Timer;

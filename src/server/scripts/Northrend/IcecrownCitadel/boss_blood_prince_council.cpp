@@ -199,12 +199,12 @@ class boss_blood_council_controller : public CreatureScript
                 if (instance->GetBossState(DATA_BLOOD_PRINCE_COUNCIL) == IN_PROGRESS)
                     return;
 
-                /*if (!instance->CheckRequiredBosses(DATA_BLOOD_PRINCE_COUNCIL, who->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_BLOOD_PRINCE_COUNCIL, who->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 instance->SetBossState(DATA_BLOOD_PRINCE_COUNCIL, IN_PROGRESS);
 
@@ -666,7 +666,7 @@ class boss_prince_taldaram_icc : public CreatureScript
                     target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true);     // too bad for you raiders, its going to boom
 
                 if (summon->GetEntry() == NPC_BALL_OF_INFERNO_FLAME && target)
-                    Talk(EMOTE_TALDARAM_FLAME, target->GetGUID());
+                    Talk(EMOTE_TALDARAM_FLAME, target);
 
                 if (target)
                     summon->AI()->SetGUID(target->GetGUID());

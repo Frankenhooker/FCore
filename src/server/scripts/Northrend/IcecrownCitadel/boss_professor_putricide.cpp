@@ -739,7 +739,7 @@ class npc_putricide_oozeAI : public ScriptedAI
             if (!UpdateVictim() && !_newTargetSelectTimer)
                 return;
 
-            if (!_newTargetSelectTimer && !me->IsNonMeleeSpellCasted(false, false, true, false, true))
+            if (!_newTargetSelectTimer && !me->IsNonMeleeSpellCast(false, false, true, false, true))
                 _newTargetSelectTimer = 1000;
 
             DoMeleeAttackIfReady();
@@ -924,7 +924,7 @@ class spell_putricide_ooze_channel : public SpellScriptLoader
 class ExactDistanceCheck
 {
     public:
-        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) {}
+        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) { }
 
         bool operator()(WorldObject* unit) const
         {

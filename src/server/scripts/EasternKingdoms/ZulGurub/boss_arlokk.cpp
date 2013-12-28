@@ -88,7 +88,7 @@ Position const PosMoveOnSpawn[1] =
 
 class boss_arlokk : public CreatureScript
 {
-    public: boss_arlokk() : CreatureScript("boss_arlokk") {}
+    public: boss_arlokk() : CreatureScript("boss_arlokk") { }
 
         struct boss_arlokkAI : public BossAI
         {
@@ -228,7 +228,7 @@ class boss_arlokk : public CreatureScript
                             if (target)
                             {
                                 DoCast(target, SPELL_MARK_OF_ARLOKK, true);
-                                Talk(SAY_FEAST_PROWLER, target->GetGUID());
+                                Talk(SAY_FEAST_PROWLER, target);
                             }
                             events.ScheduleEvent(EVENT_MARK_OF_ARLOKK, urand(120000, 130000));
                             break;
@@ -338,7 +338,7 @@ Position const PosProwlerCenter[1] =
 
 class npc_zulian_prowler : public CreatureScript
 {
-    public: npc_zulian_prowler() : CreatureScript("npc_zulian_prowler") {}
+    public: npc_zulian_prowler() : CreatureScript("npc_zulian_prowler") { }
 
         struct npc_zulian_prowlerAI : public ScriptedAI
         {
@@ -433,7 +433,7 @@ Position const PosSummonArlokk[1] =
 
 class go_gong_of_bethekk : public GameObjectScript
 {
-    public: go_gong_of_bethekk() : GameObjectScript("go_gong_of_bethekk") {}
+    public: go_gong_of_bethekk() : GameObjectScript("go_gong_of_bethekk") { }
 
         bool OnGossipHello(Player* /*player*/, GameObject* go) OVERRIDE
         {

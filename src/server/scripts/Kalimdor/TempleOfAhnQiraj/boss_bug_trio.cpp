@@ -32,7 +32,7 @@ enum Spells
     SPELL_CLEAVE       = 26350,
     SPELL_TOXIC_VOLLEY = 25812,
     SPELL_POISON_CLOUD = 38718, //Only Spell with right dmg.
-    SPELL_ENRAGE       = 34624, //Changed cause 25790 is casted on gamers too. Same prob with old explosion of twin emperors.
+    SPELL_ENRAGE       = 34624, //Changed cause 25790 is cast on gamers too. Same prob with old explosion of twin emperors.
 
     SPELL_CHARGE       = 26561,
     SPELL_KNOCKBACK    = 26027,
@@ -308,18 +308,15 @@ public:
             {
                 if (instance)
                 {
-                    Unit* pKri = Unit::GetUnit(*me, instance->GetData64(DATA_KRI));
-                    Unit* pVem = Unit::GetUnit(*me, instance->GetData64(DATA_VEM));
-
                     switch (urand(0, 2))
                     {
                         case 0:
-                            if (pKri)
-                                DoCast(pKri, SPELL_HEAL);
+                            if (Creature* kri = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_KRI)))
+                                DoCast(kri, SPELL_HEAL);
                             break;
                         case 1:
-                            if (pVem)
-                                DoCast(pVem, SPELL_HEAL);
+                            if (Creature* vem = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_VEM)))
+                                DoCast(vem, SPELL_HEAL);
                             break;
                         case 2:
                             DoCast(me, SPELL_HEAL);

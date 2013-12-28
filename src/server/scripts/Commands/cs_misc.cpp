@@ -46,55 +46,55 @@ public:
     {
         static ChatCommand commandTable[] =
         {
-            { "additem",          RBAC_PERM_COMMAND_ADDITEM,          false, &HandleAddItemCommand,          "", NULL },
-            { "additemset",       RBAC_PERM_COMMAND_ADDITEMSET,       false, &HandleAddItemSetCommand,       "", NULL },
-            { "appear",           RBAC_PERM_COMMAND_APPEAR,           false, &HandleAppearCommand,           "", NULL },
-            { "aura",             RBAC_PERM_COMMAND_AURA,             false, &HandleAuraCommand,             "", NULL },
-            { "bank",             RBAC_PERM_COMMAND_BANK,             false, &HandleBankCommand,             "", NULL },
-            { "bindsight",        RBAC_PERM_COMMAND_BINDSIGHT,        false, &HandleBindSightCommand,        "", NULL },
-            { "combatstop",       RBAC_PERM_COMMAND_COMBATSTOP,        true, &HandleCombatStopCommand,       "", NULL },
-            { "cometome",         RBAC_PERM_COMMAND_COMETOME,         false, &HandleComeToMeCommand,         "", NULL },
-            { "commands",         RBAC_PERM_COMMAND_COMMANDS,          true, &HandleCommandsCommand,         "", NULL },
-            { "cooldown",         RBAC_PERM_COMMAND_COOLDOWN,         false, &HandleCooldownCommand,         "", NULL },
-            { "damage",           RBAC_PERM_COMMAND_DAMAGE,           false, &HandleDamageCommand,           "", NULL },
-            { "dev",              RBAC_PERM_COMMAND_DEV,              false, &HandleDevCommand,              "", NULL },
-            { "die",              RBAC_PERM_COMMAND_DIE,              false, &HandleDieCommand,              "", NULL },
-            { "dismount",         RBAC_PERM_COMMAND_DISMOUNT,         false, &HandleDismountCommand,         "", NULL },
-            { "distance",         RBAC_PERM_COMMAND_DISTANCE,         false, &HandleGetDistanceCommand,      "", NULL },
-            { "flusharenapoints", RBAC_PERM_COMMAND_FLUSHARENAPOINTS, false, &HandleFlushArenaPointsCommand, "", NULL },
-            { "freeze",           RBAC_PERM_COMMAND_FREEZE,           false, &HandleFreezeCommand,           "", NULL },
-            { "gps",              RBAC_PERM_COMMAND_GPS,              false, &HandleGPSCommand,              "", NULL },
-            { "guid",             RBAC_PERM_COMMAND_GUID,             false, &HandleGUIDCommand,             "", NULL },
-            { "help",             RBAC_PERM_COMMAND_HELP,              true, &HandleHelpCommand,             "", NULL },
-            { "hidearea",         RBAC_PERM_COMMAND_HIDEAREA,         false, &HandleHideAreaCommand,         "", NULL },
-            { "itemmove",         RBAC_PERM_COMMAND_ITEMMOVE,         false, &HandleItemMoveCommand,         "", NULL },
-            { "kick",             RBAC_PERM_COMMAND_KICK,              true, &HandleKickPlayerCommand,       "", NULL },
-            { "linkgrave",        RBAC_PERM_COMMAND_LINKGRAVE,        false, &HandleLinkGraveCommand,        "", NULL },
-            { "listfreeze",       RBAC_PERM_COMMAND_LISTFREEZE,       false, &HandleListFreezeCommand,       "", NULL },
-            { "maxskill",         RBAC_PERM_COMMAND_MAXSKILL,         false, &HandleMaxSkillCommand,         "", NULL },
-            { "movegens",         RBAC_PERM_COMMAND_MOVEGENS,         false, &HandleMovegensCommand,         "", NULL },
-            { "mute",             RBAC_PERM_COMMAND_MUTE,              true, &HandleMuteCommand,             "", NULL },
-            { "neargrave",        RBAC_PERM_COMMAND_NEARGRAVE,        false, &HandleNearGraveCommand,        "", NULL },
-            { "pinfo",            RBAC_PERM_COMMAND_PINFO,             true, &HandlePInfoCommand,            "", NULL },
-            { "playall",          RBAC_PERM_COMMAND_PLAYALL,          false, &HandlePlayAllCommand,          "", NULL },
-            { "possess",          RBAC_PERM_COMMAND_POSSESS,          false, &HandlePossessCommand,          "", NULL },
-            { "recall",           RBAC_PERM_COMMAND_RECALL,           false, &HandleRecallCommand,           "", NULL },
-            { "repairitems",      RBAC_PERM_COMMAND_REPAIRITEMS,       true, &HandleRepairitemsCommand,      "", NULL },
-            { "respawn",          RBAC_PERM_COMMAND_RESPAWN,          false, &HandleRespawnCommand,          "", NULL },
-            { "revive",           RBAC_PERM_COMMAND_REVIVE,            true, &HandleReviveCommand,           "", NULL },
-            { "saveall",          RBAC_PERM_COMMAND_SAVEALL,           true, &HandleSaveAllCommand,          "", NULL },
-            { "save",             RBAC_PERM_COMMAND_SAVE,             false, &HandleSaveCommand,             "", NULL },
-            { "setskill",         RBAC_PERM_COMMAND_SETSKILL,         false, &HandleSetSkillCommand,         "", NULL },
-            { "showarea",         RBAC_PERM_COMMAND_SHOWAREA,         false, &HandleShowAreaCommand,         "", NULL },
-            { "summon",           RBAC_PERM_COMMAND_SUMMON,           false, &HandleSummonCommand,           "", NULL },
-            { "unaura",           RBAC_PERM_COMMAND_UNAURA,           false, &HandleUnAuraCommand,           "", NULL },
-            { "unbindsight",      RBAC_PERM_COMMAND_UNBINDSIGHT,      false, HandleUnbindSightCommand,       "", NULL },
-            { "unfreeze",         RBAC_PERM_COMMAND_UNFREEZE,         false, &HandleUnFreezeCommand,         "", NULL },
-            { "unmute",           RBAC_PERM_COMMAND_UNMUTE,            true, &HandleUnmuteCommand,           "", NULL },
-            { "unpossess",        RBAC_PERM_COMMAND_UNPOSSESS,        false, &HandleUnPossessCommand,        "", NULL },
-            { "unstuck",          RBAC_PERM_COMMAND_UNSTUCK,           true, &HandleUnstuckCommand,          "", NULL },
-            { "wchange",          RBAC_PERM_COMMAND_WCHANGE,          false, &HandleChangeWeather,           "", NULL },
-			{ "playerinfo",		  RBAC_PERM_COMMAND_PLAYERINFO,		   true, &HandlePlayerinfoCommand,		 "", NULL },
+            { "additem",          rbac::RBAC_PERM_COMMAND_ADDITEM,          false, &HandleAddItemCommand,          "", NULL },
+            { "additemset",       rbac::RBAC_PERM_COMMAND_ADDITEMSET,       false, &HandleAddItemSetCommand,       "", NULL },
+            { "appear",           rbac::RBAC_PERM_COMMAND_APPEAR,           false, &HandleAppearCommand,           "", NULL },
+            { "aura",             rbac::RBAC_PERM_COMMAND_AURA,             false, &HandleAuraCommand,             "", NULL },
+            { "bank",             rbac::RBAC_PERM_COMMAND_BANK,             false, &HandleBankCommand,             "", NULL },
+            { "bindsight",        rbac::RBAC_PERM_COMMAND_BINDSIGHT,        false, &HandleBindSightCommand,        "", NULL },
+            { "combatstop",       rbac::RBAC_PERM_COMMAND_COMBATSTOP,        true, &HandleCombatStopCommand,       "", NULL },
+            { "cometome",         rbac::RBAC_PERM_COMMAND_COMETOME,         false, &HandleComeToMeCommand,         "", NULL },
+            { "commands",         rbac::RBAC_PERM_COMMAND_COMMANDS,          true, &HandleCommandsCommand,         "", NULL },
+            { "cooldown",         rbac::RBAC_PERM_COMMAND_COOLDOWN,         false, &HandleCooldownCommand,         "", NULL },
+            { "damage",           rbac::RBAC_PERM_COMMAND_DAMAGE,           false, &HandleDamageCommand,           "", NULL },
+            { "dev",              rbac::RBAC_PERM_COMMAND_DEV,              false, &HandleDevCommand,              "", NULL },
+            { "die",              rbac::RBAC_PERM_COMMAND_DIE,              false, &HandleDieCommand,              "", NULL },
+            { "dismount",         rbac::RBAC_PERM_COMMAND_DISMOUNT,         false, &HandleDismountCommand,         "", NULL },
+            { "distance",         rbac::RBAC_PERM_COMMAND_DISTANCE,         false, &HandleGetDistanceCommand,      "", NULL },
+            { "flusharenapoints", rbac::RBAC_PERM_COMMAND_FLUSHARENAPOINTS, false, &HandleFlushArenaPointsCommand, "", NULL },
+            { "freeze",           rbac::RBAC_PERM_COMMAND_FREEZE,           false, &HandleFreezeCommand,           "", NULL },
+            { "gps",              rbac::RBAC_PERM_COMMAND_GPS,              false, &HandleGPSCommand,              "", NULL },
+            { "guid",             rbac::RBAC_PERM_COMMAND_GUID,             false, &HandleGUIDCommand,             "", NULL },
+            { "help",             rbac::RBAC_PERM_COMMAND_HELP,              true, &HandleHelpCommand,             "", NULL },
+            { "hidearea",         rbac::RBAC_PERM_COMMAND_HIDEAREA,         false, &HandleHideAreaCommand,         "", NULL },
+            { "itemmove",         rbac::RBAC_PERM_COMMAND_ITEMMOVE,         false, &HandleItemMoveCommand,         "", NULL },
+            { "kick",             rbac::RBAC_PERM_COMMAND_KICK,              true, &HandleKickPlayerCommand,       "", NULL },
+            { "linkgrave",        rbac::RBAC_PERM_COMMAND_LINKGRAVE,        false, &HandleLinkGraveCommand,        "", NULL },
+            { "listfreeze",       rbac::RBAC_PERM_COMMAND_LISTFREEZE,       false, &HandleListFreezeCommand,       "", NULL },
+            { "maxskill",         rbac::RBAC_PERM_COMMAND_MAXSKILL,         false, &HandleMaxSkillCommand,         "", NULL },
+            { "movegens",         rbac::RBAC_PERM_COMMAND_MOVEGENS,         false, &HandleMovegensCommand,         "", NULL },
+            { "mute",             rbac::RBAC_PERM_COMMAND_MUTE,              true, &HandleMuteCommand,             "", NULL },
+            { "neargrave",        rbac::RBAC_PERM_COMMAND_NEARGRAVE,        false, &HandleNearGraveCommand,        "", NULL },
+            { "pinfo",            rbac::RBAC_PERM_COMMAND_PINFO,             true, &HandlePInfoCommand,            "", NULL },
+            { "playall",          rbac::RBAC_PERM_COMMAND_PLAYALL,          false, &HandlePlayAllCommand,          "", NULL },
+            { "possess",          rbac::RBAC_PERM_COMMAND_POSSESS,          false, &HandlePossessCommand,          "", NULL },
+            { "recall",           rbac::RBAC_PERM_COMMAND_RECALL,           false, &HandleRecallCommand,           "", NULL },
+            { "repairitems",      rbac::RBAC_PERM_COMMAND_REPAIRITEMS,       true, &HandleRepairitemsCommand,      "", NULL },
+            { "respawn",          rbac::RBAC_PERM_COMMAND_RESPAWN,          false, &HandleRespawnCommand,          "", NULL },
+            { "revive",           rbac::RBAC_PERM_COMMAND_REVIVE,            true, &HandleReviveCommand,           "", NULL },
+            { "saveall",          rbac::RBAC_PERM_COMMAND_SAVEALL,           true, &HandleSaveAllCommand,          "", NULL },
+            { "save",             rbac::RBAC_PERM_COMMAND_SAVE,             false, &HandleSaveCommand,             "", NULL },
+            { "setskill",         rbac::RBAC_PERM_COMMAND_SETSKILL,         false, &HandleSetSkillCommand,         "", NULL },
+            { "showarea",         rbac::RBAC_PERM_COMMAND_SHOWAREA,         false, &HandleShowAreaCommand,         "", NULL },
+            { "summon",           rbac::RBAC_PERM_COMMAND_SUMMON,           false, &HandleSummonCommand,           "", NULL },
+            { "unaura",           rbac::RBAC_PERM_COMMAND_UNAURA,           false, &HandleUnAuraCommand,           "", NULL },
+            { "unbindsight",      rbac::RBAC_PERM_COMMAND_UNBINDSIGHT,      false, HandleUnbindSightCommand,       "", NULL },
+            { "unfreeze",         rbac::RBAC_PERM_COMMAND_UNFREEZE,         false, &HandleUnFreezeCommand,         "", NULL },
+            { "unmute",           rbac::RBAC_PERM_COMMAND_UNMUTE,            true, &HandleUnmuteCommand,           "", NULL },
+            { "unpossess",        rbac::RBAC_PERM_COMMAND_UNPOSSESS,        false, &HandleUnPossessCommand,        "", NULL },
+            { "unstuck",          rbac::RBAC_PERM_COMMAND_UNSTUCK,           true, &HandleUnstuckCommand,          "", NULL },
+            { "wchange",          rbac::RBAC_PERM_COMMAND_WCHANGE,          false, &HandleChangeWeather,           "", NULL },
+            { "playerinfo",       rbac::RBAC_PERM_COMMAND_PLAYERINFO,        true, &HandlePlayerinfoCommand,       "", NULL },
             { NULL,               0,                                  false, NULL,                           "", NULL }
         };
         return commandTable;
@@ -530,7 +530,7 @@ public:
     {
         Unit* target = handler->getSelectedUnit();
 
-        if (!target || !handler->GetSession()->GetPlayer()->GetSelection())
+        if (!target || !handler->GetSession()->GetPlayer()->GetTarget())
         {
             handler->SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
             handler->SetSentErrorMessage(true);
@@ -561,7 +561,7 @@ public:
 
         if (target)
         {
-            target->ResurrectPlayer(target->GetSession()->HasPermission(RBAC_PERM_RESURRECT_WITH_FULL_HPS) ? 1.0f : 0.5f);
+            target->ResurrectPlayer(target->GetSession()->HasPermission(rbac::RBAC_PERM_RESURRECT_WITH_FULL_HPS) ? 1.0f : 0.5f);
             target->SpawnCorpseBones();
             target->SaveToDB();
         }
@@ -598,7 +598,7 @@ public:
 
     static bool HandleGUIDCommand(ChatHandler* handler, char const* /*args*/)
     {
-        uint64 guid = handler->GetSession()->GetPlayer()->GetSelection();
+        uint64 guid = handler->GetSession()->GetPlayer()->GetTarget();
 
         if (guid == 0)
         {
@@ -764,7 +764,7 @@ public:
         Player* player = handler->GetSession()->GetPlayer();
 
         // save GM account without delay and output message
-        if (handler->GetSession()->HasPermission(RBAC_PERM_COMMANDS_SAVE_WITHOUT_DELAY))
+        if (handler->GetSession()->HasPermission(rbac::RBAC_PERM_COMMANDS_SAVE_WITHOUT_DELAY))
         {
             if (Player* target = handler->getSelectedPlayer())
                 target->SaveToDB();
@@ -822,7 +822,7 @@ public:
     static bool HandleUnstuckCommand(ChatHandler* handler, char const* args)
     {
         // No args required for players
-        if (handler->GetSession() && !handler->GetSession()->HasPermission(RBAC_PERM_COMMANDS_USE_UNSTUCK_WITH_ARGS))
+        if (handler->GetSession() && !handler->GetSession()->HasPermission(rbac::RBAC_PERM_COMMANDS_USE_UNSTUCK_WITH_ARGS))
         {
             // 7355: "Stuck"
             if (Player* player = handler->GetSession()->GetPlayer())
@@ -1111,7 +1111,7 @@ public:
         if (!playerTarget)
             playerTarget = player;
 
-        TC_LOG_DEBUG(LOG_FILTER_GENERAL, handler->GetTrinityString(LANG_ADDITEM), itemId, count);
+        TC_LOG_DEBUG("misc", handler->GetTrinityString(LANG_ADDITEM), itemId, count);
 
         ItemTemplate const* itemTemplate = sObjectMgr->GetItemTemplate(itemId);
         if (!itemTemplate)
@@ -1190,7 +1190,7 @@ public:
         if (!playerTarget)
             playerTarget = player;
 
-        TC_LOG_DEBUG(LOG_FILTER_GENERAL, handler->GetTrinityString(LANG_ADDITEMSET), itemSetId);
+        TC_LOG_DEBUG("misc", handler->GetTrinityString(LANG_ADDITEMSET), itemSetId);
 
         bool found = false;
         ItemTemplateContainer const* its = sObjectMgr->GetItemTemplateStore();
@@ -1546,7 +1546,7 @@ public:
             security      = fields[1].GetUInt8();
 
             // Only fetch these fields if commander has sufficient rights)
-            if (handler->HasPermission(RBAC_PERM_COMMANDS_PINFO_CHECK_PERSONAL_DATA) && // RBAC Perm. 48, Role 39
+            if (handler->HasPermission(rbac::RBAC_PERM_COMMANDS_PINFO_CHECK_PERSONAL_DATA) && // RBAC Perm. 48, Role 39
                (!handler->GetSession() || handler->GetSession()->GetSecurity() >= AccountTypes(security)))
             {
                 eMail     = fields[2].GetString();
@@ -1656,7 +1656,7 @@ public:
 
         // Output III. LANG_PINFO_BANNED if ban exists and is applied
         if (banTime >= 0)
-            handler->PSendSysMessage(LANG_PINFO_BANNED, banType.c_str(), banTime > 0 ? secsToTimeString(banTime - time(NULL), true).c_str() : "permanently", banReason.c_str(), bannedBy.c_str());
+            handler->PSendSysMessage(LANG_PINFO_BANNED, banType.c_str(), banReason.c_str(), banTime > 0 ? secsToTimeString(banTime - time(NULL), true).c_str() : "permanently", bannedBy.c_str());
 
         // Output IV. LANG_PINFO_MUTED if mute is applied
         if (muteTime > 0)
@@ -1763,7 +1763,7 @@ public:
 
         // accept only explicitly selected target (not implicitly self targeting case)
         Unit* target = handler->getSelectedUnit();
-        if (player->GetSelection() && target)
+        if (player->GetTarget() && target)
         {
             if (target->GetTypeId() != TYPEID_UNIT || target->IsPet())
             {
@@ -2108,7 +2108,7 @@ public:
         }
 
         Unit* target = handler->getSelectedUnit();
-        if (!target || !handler->GetSession()->GetPlayer()->GetSelection())
+        if (!target || !handler->GetSession()->GetPlayer()->GetTarget())
         {
             handler->SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
             handler->SetSentErrorMessage(true);
@@ -2281,7 +2281,7 @@ public:
             // stop combat + make player unattackable + duel stop + stop some spells
             player->setFaction(35);
             player->CombatStop();
-            if (player->IsNonMeleeSpellCasted(true))
+            if (player->IsNonMeleeSpellCast(true))
                 player->InterruptNonMeleeSpells(true);
             player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
@@ -2465,193 +2465,169 @@ public:
         player->StopCastingBindSight();
         return true;
     }
-	static bool HandlePlayerinfoCommand(ChatHandler* handler, char const* args)
-	{
-    Player* target;
-    uint64 target_guid;
-    std::string target_name;
-    uint64 targetGuid;
-    std::string targetName;
-    if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid, &targetName))
-        return false;
 
-    uint32 accId = 0;
-    uint32 money = 0;
-    uint32 total_player_time = 0;
-    uint8 level = 0;
-    uint32 latency = 0;
-    uint8 race;
-    uint8 Class;
-    int64 muteTime = 0;
-    int64 banTime = -1;
-    /*bool p_jail_isjailed;
-    uint32 p_jail_guid;
-    std::string p_jail_char;
-    uint32 p_jail_release;
-    bool p_jail_amnestietime;
-    std::string p_jail_reason;
-    uint32 p_jail_times;
-    uint32 p_jail_gmacc;
-    std::string p_jail_gmchar;
-    std::string p_jail_lasttime;
-    uint32 p_jail_duration;*/
-    std::string gmname;
-
-    // get additional information from Player object
-    if (target)
+    static bool HandlePlayerinfoCommand(ChatHandler* handler, char const* args)
     {
-        // check online security
+        Player* target;
+        uint64 target_guid;
+        std::string target_name;
+        uint64 targetGuid;
+        std::string targetName;
+        if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid, &targetName))
+            return false;
+        uint32 accId = 0;
+        uint32 money = 0;
+        uint32 total_player_time = 0;
+        uint8 level = 0;
+        uint32 latency = 0;
+        uint8 race;
+        uint8 Class;
+        int64 muteTime = 0;
+        int64 banTime = -1;
+        /*bool p_jail_isjailed;
+        uint32 p_jail_guid;
+        std::string p_jail_char;
+        uint32 p_jail_release;
+        bool p_jail_amnestietime;
+        std::string p_jail_reason;
+        uint32 p_jail_times;
+        uint32 p_jail_gmacc;
+        std::string p_jail_gmchar;
+        std::string p_jail_lasttime;
+        uint32 p_jail_duration;*/
+        std::string gmname;
+        // get additional information from Player object
+        if (target)
+        {
+            // check online security
             if (handler->HasLowerSecurity(target, 0))
                 return false;
-				
-        accId = target->GetSession()->GetAccountId();
-        money = target->GetMoney();
-        total_player_time = target->GetTotalPlayedTime();
-        level = target->getLevel();
-        latency = target->GetSession()->GetLatency();
-        race = target->getRace();
-        Class = target->getClass();
-        muteTime = target->GetSession()->m_muteTime;
-		gmname = target->GetName();
-    }
-    // get additional information from DB
-    else
-    {
-        // check offline security
-         if (handler->HasLowerSecurity(NULL, targetGuid))
-             return false;
-        //                                                     0          1      2      3        4     5
-        QueryResult result = CharacterDatabase.PQuery("SELECT totaltime, level, money, account, race, class FROM characters WHERE guid = '%u'", GUID_LOPART(target_guid));
-        if (!result)
-        {
-            return false;
-		}
-		else
-		{
-        Field *fields = result->Fetch();
-        total_player_time = fields[0].GetUInt32();
-        level = fields[1].GetUInt32();
-        money = fields[2].GetUInt32();
-        accId = fields[3].GetUInt32();
-        race = fields[4].GetUInt8();
-        Class = fields[5].GetUInt8();
-        		}
-		
-		/*QueryResult row = CharacterDatabase.PQuery("SELECT * FROM `jail` WHERE `guid`='%u' LIMIT 1", GUID_LOPART(target_guid));
-	    
-		if (!row)
-		{
-			 p_jail_isjailed = false;
-		}
-		else
-		{
-
-			Field *data = row->Fetch();
-			p_jail_isjailed = true;
-			p_jail_guid = data[0].GetUInt32();
-			p_jail_char = data[1].GetString();
-			p_jail_release = data[2].GetUInt32();
-			p_jail_amnestietime = data[3].GetUInt32();
-			p_jail_reason = data[4].GetString();
-			p_jail_times = data[5].GetUInt32();
-			p_jail_gmacc = data[6].GetUInt32();
-			p_jail_gmchar = data[7].GetString();
-			p_jail_lasttime = data[8].GetString();
-			p_jail_duration = data[9].GetUInt32();
-			gmname = "";
-		}*/
-    }
-
-    std::string username = handler->GetTrinityString(LANG_ERROR);
-    std::string email = handler->GetTrinityString(LANG_ERROR);
-    std::string last_ip = handler->GetTrinityString(LANG_ERROR);
-    uint32 security = 0;
-    std::string last_login = handler->GetTrinityString(LANG_ERROR);
-
-    QueryResult result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.email, a.last_ip, a.last_login, a.mutetime "
-                                                "FROM account a "
-                                                "LEFT JOIN account_access aa "
-                                                "ON (a.id = aa.id) "
-                                                "WHERE a.id = '%u'", accId);
-    if (result)
-    {
-        Field* fields = result->Fetch();
-        username = fields[0].GetString();
-        security = fields[1].GetUInt32();
-        email = fields[2].GetString();
-        muteTime = fields[5].GetUInt64();
-
-        if (email.empty())
-            email = "-";
-
-        if (!handler->GetSession() || handler->GetSession()->GetSecurity() >= AccountTypes(security))
-        {
-            last_ip = fields[3].GetString();
-            last_login = fields[4].GetString();
+            accId = target->GetSession()->GetAccountId();
+            money = target->GetMoney();
+            total_player_time = target->GetTotalPlayedTime();
+            level = target->getLevel();
+            latency = target->GetSession()->GetLatency();
+            race = target->getRace();
+            Class = target->getClass();
+            muteTime = target->GetSession()->m_muteTime;
+            gmname = target->GetName();
         }
+        // get additional information from DB
         else
         {
-            last_ip = "-";
-            last_login = "-";
+            // check offline security
+             if (handler->HasLowerSecurity(NULL, targetGuid))
+                 return false;
+            //                                                     0          1      2      3        4     5
+            QueryResult result = CharacterDatabase.PQuery("SELECT totaltime, level, money, account, race, class FROM characters WHERE guid = '%u'", GUID_LOPART(target_guid));
+            if (!result)
+                return false;
+            else
+            {
+                Field *fields = result->Fetch();
+                total_player_time = fields[0].GetUInt32();
+                level = fields[1].GetUInt32();
+                money = fields[2].GetUInt32();
+                accId = fields[3].GetUInt32();
+                race = fields[4].GetUInt8();
+                Class = fields[5].GetUInt8();
+            }
+            /*QueryResult row = CharacterDatabase.PQuery("SELECT * FROM `jail` WHERE `guid`='%u' LIMIT 1", GUID_LOPART(target_guid));
+            if (!row)
+                 p_jail_isjailed = false;
+            else
+            {
+                Field *data = row->Fetch();
+                p_jail_isjailed = true;
+                p_jail_guid = data[0].GetUInt32();
+                p_jail_char = data[1].GetString();
+                p_jail_release = data[2].GetUInt32();
+                p_jail_amnestietime = data[3].GetUInt32();
+                p_jail_reason = data[4].GetString();
+                p_jail_times = data[5].GetUInt32();
+                p_jail_gmacc = data[6].GetUInt32();
+                p_jail_gmchar = data[7].GetString();
+                p_jail_lasttime = data[8].GetString();
+                p_jail_duration = data[9].GetUInt32();
+                gmname = "";
+            }*/
         }
-    }
-
-    std::string nameLink = handler->playerLink(target_name);
-
-    handler->PSendSysMessage(LANG_PINFO_ACC_ACCOUNT, (target?"":handler->GetTrinityString(LANG_OFFLINE)), nameLink.c_str(), GUID_LOPART(target_guid), username.c_str(), accId, email.c_str(), security, last_ip.c_str(), last_login.c_str(), latency);
-
-    if (QueryResult result = LoginDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM account_banned WHERE id = '%u' AND active ORDER BY bandate ASC LIMIT 1", accId))
-    {
-        Field * fields = result->Fetch();
-        banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
-    }
-    else if (QueryResult result = CharacterDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM character_banned WHERE guid = '%u' AND active ORDER BY bandate ASC LIMIT 1", GUID_LOPART(target_guid)))
-    {
-        Field * fields = result->Fetch();
-        banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
-    }
-
-    muteTime = muteTime - time(NULL);
-    if (muteTime > 0 || banTime >= 0)
-        handler->PSendSysMessage(LANG_PINFO_MUTED, muteTime > 0 ? secsToTimeString(muteTime, true).c_str() : "---", !banTime ? "perm." : (banTime > 0 ? secsToTimeString(banTime - time(NULL), true).c_str() : "---"));
-
-    std::string race_s, Class_s;
-    switch(race)
-    {
-        case RACE_HUMAN:            race_s = "Human";       break;
-        case RACE_ORC:              race_s = "Orc";         break;
-        case RACE_DWARF:            race_s = "Dwarf";       break;
-        case RACE_NIGHTELF:         race_s = "Night Elf";   break;
-        case RACE_UNDEAD_PLAYER:    race_s = "Undead";      break;
-        case RACE_TAUREN:           race_s = "Tauren";      break;
-        case RACE_GNOME:            race_s = "Gnome";       break;
-        case RACE_TROLL:            race_s = "Troll";       break;
-        case RACE_BLOODELF:         race_s = "Blood Elf";   break;
-        case RACE_DRAENEI:          race_s = "Draenei";     break;
-    }
-    switch(Class)
-    {
-        case CLASS_WARRIOR:         Class_s = "Warrior";        break;
-        case CLASS_PALADIN:         Class_s = "Paladin";        break;
-        case CLASS_HUNTER:          Class_s = "Hunter";         break;
-        case CLASS_ROGUE:           Class_s = "Rogue";          break;
-        case CLASS_PRIEST:          Class_s = "Priest";         break;
-        case CLASS_DEATH_KNIGHT:    Class_s = "Death Knight";   break;
-        case CLASS_SHAMAN:          Class_s = "Shaman";         break;
-        case CLASS_MAGE:            Class_s = "Mage";           break;
-        case CLASS_WARLOCK:         Class_s = "Warlock";        break;
-        case CLASS_DRUID:           Class_s = "Druid";          break;
-    }
-
-    std::string timeStr = secsToTimeString(total_player_time, true, true);
-    uint32 gold = money /GOLD;
-    uint32 silv = (money % GOLD) / SILVER;
-    uint32 copp = (money % GOLD) % SILVER;
-    handler->PSendSysMessage(LANG_PINFO_CHR_LEVEL_LOW, race_s.c_str(), Class_s.c_str(), timeStr.c_str(), level, gold, silv, copp);
+        std::string username = handler->GetTrinityString(LANG_ERROR);
+        std::string email = handler->GetTrinityString(LANG_ERROR);
+        std::string last_ip = handler->GetTrinityString(LANG_ERROR);
+        uint32 security = 0;
+        std::string last_login = handler->GetTrinityString(LANG_ERROR);
+        QueryResult result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.email, a.last_ip, a.last_login, a.mutetime FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE a.id = '%u'", accId);
+        if (result)
+        {
+            Field* fields = result->Fetch();
+            username = fields[0].GetString();
+            security = fields[1].GetUInt32();
+            email = fields[2].GetString();
+            muteTime = fields[5].GetUInt64();
+            if (email.empty())
+                email = "-";
         
-    return true;
-}
-
+            if (!handler->GetSession() || handler->GetSession()->GetSecurity() >= AccountTypes(security))
+            {
+                last_ip = fields[3].GetString();
+                last_login = fields[4].GetString();
+            }
+            else
+            {
+                last_ip = "-";
+                last_login = "-";
+            }
+        }
+        std::string nameLink = handler->playerLink(target_name);
+        handler->PSendSysMessage(LANG_PINFO_ACC_ACCOUNT, (target?"":handler->GetTrinityString(LANG_OFFLINE)), nameLink.c_str(), GUID_LOPART(target_guid), username.c_str(), accId, email.c_str(), security, last_ip.c_str(), last_login.c_str(), latency);
+        if (QueryResult result = LoginDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM account_banned WHERE id = '%u' AND active ORDER BY bandate ASC LIMIT 1", accId))
+        {
+            Field * fields = result->Fetch();
+            banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
+        }
+        else if (QueryResult result = CharacterDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM character_banned WHERE guid = '%u' AND active ORDER BY bandate ASC LIMIT 1", GUID_LOPART(target_guid)))
+        {
+            Field * fields = result->Fetch();
+            banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
+        }
+        muteTime = muteTime - time(NULL);
+        if (muteTime > 0 || banTime >= 0)
+            handler->PSendSysMessage(LANG_PINFO_MUTED, muteTime > 0 ? secsToTimeString(muteTime, true).c_str() : "---", !banTime ? "perm." : (banTime > 0 ? secsToTimeString(banTime - time(NULL), true).c_str() : "---"));
+        std::string race_s, Class_s;
+        switch(race)
+        {
+            case RACE_HUMAN:            race_s = "Human";       break;
+            case RACE_ORC:              race_s = "Orc";         break;
+            case RACE_DWARF:            race_s = "Dwarf";       break;
+            case RACE_NIGHTELF:         race_s = "Night Elf";   break;
+            case RACE_UNDEAD_PLAYER:    race_s = "Undead";      break;
+            case RACE_TAUREN:           race_s = "Tauren";      break;
+            case RACE_GNOME:            race_s = "Gnome";       break;
+            case RACE_TROLL:            race_s = "Troll";       break;
+            case RACE_BLOODELF:         race_s = "Blood Elf";   break;
+            case RACE_DRAENEI:          race_s = "Draenei";     break;
+        }
+        switch(Class)
+        {
+            case CLASS_WARRIOR:         Class_s = "Warrior";        break;
+            case CLASS_PALADIN:         Class_s = "Paladin";        break;
+            case CLASS_HUNTER:          Class_s = "Hunter";         break;
+            case CLASS_ROGUE:           Class_s = "Rogue";          break;
+            case CLASS_PRIEST:          Class_s = "Priest";         break;
+            case CLASS_DEATH_KNIGHT:    Class_s = "Death Knight";   break;
+            case CLASS_SHAMAN:          Class_s = "Shaman";         break;
+            case CLASS_MAGE:            Class_s = "Mage";           break;
+            case CLASS_WARLOCK:         Class_s = "Warlock";        break;
+            case CLASS_DRUID:           Class_s = "Druid";          break;
+        }
+        std::string timeStr = secsToTimeString(total_player_time, true, true);
+        uint32 gold = money /GOLD;
+        uint32 silv = (money % GOLD) / SILVER;
+        uint32 copp = (money % GOLD) % SILVER;
+        handler->PSendSysMessage(LANG_PINFO_CHR_LEVEL_LOW, race_s.c_str(), Class_s.c_str(), timeStr.c_str(), level, gold, silv, copp);
+        return true;
+    }
 };
 
 void AddSC_misc_commandscript()

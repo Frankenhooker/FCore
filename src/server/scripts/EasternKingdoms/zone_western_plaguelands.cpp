@@ -172,11 +172,11 @@ public:
 
     struct npc_the_scourge_cauldronAI : public ScriptedAI
     {
-        npc_the_scourge_cauldronAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_the_scourge_cauldronAI(Creature* creature) : ScriptedAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void DoDie()
         {
@@ -189,7 +189,6 @@ public:
         }
 
         void MoveInLineOfSight(Unit* who) OVERRIDE
-
         {
             if (!who)
                 return;
@@ -372,18 +371,18 @@ public:
                     if (Ughost)
                     {
                         Ughost->SetDisableGravity(true);
-                        Ughost->AI()->Talk(SAY_WP_4, me->GetGUID());
+                        Ughost->AI()->Talk(SAY_WP_4, me);
                     }
                     m_uiChatTimer = 4000;
                     break;
                 case 24:
                     if (Ughost)
-                        Ughost->AI()->Talk(SAY_WP_5, me->GetGUID());
+                        Ughost->AI()->Talk(SAY_WP_5, me);
                     m_uiChatTimer = 4000;
                     break;
                 case 25:
                     if (Ughost)
-                        Ughost->AI()->Talk(SAY_WP_6, me->GetGUID());
+                        Ughost->AI()->Talk(SAY_WP_6, me);
                     m_uiChatTimer = 4000;
                     break;
                 case 26:
@@ -393,7 +392,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/)OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
          void JustDied(Unit* /*killer*/) OVERRIDE
         {

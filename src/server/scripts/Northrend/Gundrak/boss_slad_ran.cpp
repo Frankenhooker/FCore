@@ -184,9 +184,10 @@ public:
                 instance->SetData(DATA_SLAD_RAN_EVENT, DONE);
         }
 
-        void KilledUnit(Unit* /*victim*/) OVERRIDE
+        void KilledUnit(Unit* who) OVERRIDE
         {
-            Talk(SAY_SLAY);
+            if (who->GetTypeId() == TYPEID_PLAYER)
+                Talk(SAY_SLAY);
         }
 
         void JustSummoned(Creature* summoned) OVERRIDE
@@ -221,7 +222,7 @@ public:
 
     struct npc_slad_ran_constrictorAI : public ScriptedAI
     {
-        npc_slad_ran_constrictorAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_slad_ran_constrictorAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 uiGripOfSladRanTimer;
 
@@ -272,7 +273,7 @@ public:
 
     struct npc_slad_ran_viperAI : public ScriptedAI
     {
-        npc_slad_ran_viperAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_slad_ran_viperAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 uiVenomousBiteTimer;
 

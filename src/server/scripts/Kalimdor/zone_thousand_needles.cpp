@@ -75,7 +75,7 @@ public:
     {
         npc_kanatiAI(Creature* creature) : npc_escortAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
@@ -146,7 +146,7 @@ public:
     {
         if (quest->GetQuestId() == QUEST_FREE_AT_LAST)
         {
-            creature->AI()->Talk(SAY_LAKO_START, player->GetGUID());
+            creature->AI()->Talk(SAY_LAKO_START, player);
             creature->setFaction(FACTION_ESCORTEE_LAKO);
 
             if (npc_lakota_windsongAI* pEscortAI = CAST_AI(npc_lakota_windsong::npc_lakota_windsongAI, creature->AI()))
@@ -164,7 +164,7 @@ public:
     {
         npc_lakota_windsongAI(Creature* creature) : npc_escortAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
@@ -229,7 +229,7 @@ public:
     {
         if (quest->GetQuestId() == QUEST_HOMEWARD)
         {
-            creature->AI()->Talk(SAY_START, player->GetGUID());
+            creature->AI()->Talk(SAY_START, player);
             creature->setFaction(FACTION_ESCORTEE);
 
             if (npc_paoka_swiftmountainAI* pEscortAI = CAST_AI(npc_paoka_swiftmountain::npc_paoka_swiftmountainAI, creature->AI()))
@@ -247,7 +247,7 @@ public:
     {
         npc_paoka_swiftmountainAI(Creature* creature) : npc_escortAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
@@ -433,7 +433,7 @@ public:
 
     struct npc_enraged_pantherAI : public ScriptedAI
     {
-        npc_enraged_pantherAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_enraged_pantherAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {

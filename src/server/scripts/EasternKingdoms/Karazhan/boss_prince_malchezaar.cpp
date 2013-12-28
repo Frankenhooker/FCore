@@ -110,16 +110,16 @@ public:
     struct netherspite_infernalAI : public ScriptedAI
     {
         netherspite_infernalAI(Creature* creature) : ScriptedAI(creature),
-            HellfireTimer(0), CleanupTimer(0), malchezaar(0), point(NULL) {}
+            HellfireTimer(0), CleanupTimer(0), malchezaar(0), point(NULL) { }
 
         uint32 HellfireTimer;
         uint32 CleanupTimer;
         uint64 malchezaar;
         InfernalPoint *point;
 
-        void Reset() OVERRIDE {}
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void Reset() OVERRIDE { }
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -129,7 +129,6 @@ public:
                 if (HellfireTimer <= diff)
                 {
                     DoCast(me, SPELL_HELLFIRE);
-					DoCast(45996);
                     HellfireTimer = 0;
                 }
                 else HellfireTimer -= diff;
@@ -202,7 +201,6 @@ public:
         uint32 InfernalTimer;
         uint32 AxesTargetSwitchTimer;
         uint32 InfernalCleanupTimer;
-		uint32 NetherTimer;
 
         std::vector<uint64> infernals;
         std::vector<InfernalPoint*> positions;
@@ -444,7 +442,6 @@ public:
                 if (HealthBelowPct(30))
                 {
                     InfernalTimer = 15000;
-					NetherTimer   = 2000;
 
                     phase = 3;
 
@@ -488,8 +485,8 @@ public:
 
                 if (Cleave_Timer <= diff)
                 {
-                    DoCast(SPELL_CLEAVE);
-                    Cleave_Timer = urand(10000, 12000);
+                    DoCastVictim(SPELL_CLEAVE);
+                    Cleave_Timer = urand(6000, 12000);
                 } else Cleave_Timer -= diff;
             }
             else
@@ -529,12 +526,6 @@ public:
                 SummonInfernal(diff);
                 InfernalTimer = phase == 3 ? 14500 : 44500;    // 15 secs in phase 3, 45 otherwise
             } else InfernalTimer -= diff;
-
-			if(NetherTimer <= diff)
-			{
-				DoCastAOE(35859);
-				NetherTimer = 50000;
-			} else NetherTimer -= diff;
 
             if (ShadowNovaTimer <= diff)
             {
@@ -578,7 +569,7 @@ public:
 
         void DoMeleeAttacksIfReady()
         {
-            if (me->IsWithinMeleeRange(me->GetVictim()) && !me->IsNonMeleeSpellCasted(false))
+            if (me->IsWithinMeleeRange(me->GetVictim()) && !me->IsNonMeleeSpellCast(false))
             {
                 //Check for base attack
                 if (me->isAttackReady() && me->GetVictim())

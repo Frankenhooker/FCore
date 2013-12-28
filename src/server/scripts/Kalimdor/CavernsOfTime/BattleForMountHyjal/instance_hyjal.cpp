@@ -30,6 +30,7 @@ EndScriptData */
 #include "Player.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
+#include "Chat.h"
 
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event
@@ -54,7 +55,7 @@ public:
 
     struct instance_mount_hyjal_InstanceMapScript : public InstanceScript
     {
-        instance_mount_hyjal_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_mount_hyjal_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         void Initialize() OVERRIDE
         {
@@ -185,8 +186,8 @@ public:
                                     {
                                          if (i->GetSource())
                                          {
-                                            WorldPacket packet(SMSG_MESSAGECHAT, 200);
-                                            unit->BuildMonsterChat(&packet, CHAT_MSG_MONSTER_YELL, YELL_EFFORTS, 0, YELL_EFFORTS_NAME, i->GetSource()->GetGUID());
+                                            WorldPacket packet;
+                                            ChatHandler::BuildChatPacket(packet, CHAT_MSG_MONSTER_YELL, LANG_UNIVERSAL, unit, i->GetSource(), YELL_EFFORTS);
                                             i->GetSource()->GetSession()->SendPacket(&packet);
 
                                             WorldPacket data2(SMSG_PLAY_SOUND, 4);
@@ -245,7 +246,7 @@ public:
                     break;
             }
 
-             TC_LOG_DEBUG(LOG_FILTER_TSCR, "Instance Hyjal: Instance data updated for event %u (Data=%u)", type, data);
+             TC_LOG_DEBUG("scripts", "Instance Hyjal: Instance data updated for event %u (Data=%u)", type, data);
 
             if (data == DONE)
             {

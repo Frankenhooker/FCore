@@ -43,7 +43,7 @@ public:
 
     struct instance_onyxias_lair_InstanceMapScript : public InstanceScript
     {
-        instance_onyxias_lair_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_onyxias_lair_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         //Eruption is a BFS graph problem
         //One map to remember all floor, one map to keep floor that still need to erupt and one queue to know what needs to be removed
@@ -226,9 +226,9 @@ public:
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/ = NULL, uint32 /*miscvalue1*/ = 0)
+        bool CheckAchievementCriteriaMeet(uint32 criteriaId, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscValue1 = 0*/) OVERRIDE
         {
-            switch (criteria_id)
+            switch (criteriaId)
             {
                 case ACHIEV_CRITERIA_MANY_WHELPS_10_PLAYER:  // Criteria for achievement 4403: Many Whelps! Handle It! (10 player) Hatch 50 eggs in 10s
                 case ACHIEV_CRITERIA_MANY_WHELPS_25_PLAYER:  // Criteria for achievement 4406: Many Whelps! Handle It! (25 player) Hatch 50 eggs in 10s

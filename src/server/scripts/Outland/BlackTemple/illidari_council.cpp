@@ -161,13 +161,13 @@ public:
                 Council[1] = instance->GetData64(DATA_VERAS_DARKSHADOW);
                 Council[2] = instance->GetData64(DATA_LADY_MALANDE);
                 Council[3] = instance->GetData64(DATA_HIGH_NETHERMANCER_ZEREVOR);
-            } else TC_LOG_ERROR(LOG_FILTER_TSCR, ERROR_INST_DATA);
+            } else TC_LOG_ERROR("scripts", ERROR_INST_DATA);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
-        void AttackStart(Unit* /*who*/) OVERRIDE {}
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void AttackStart(Unit* /*who*/) OVERRIDE { }
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -277,9 +277,9 @@ public:
             me->SetDisplayId(11686);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
-        void AttackStart(Unit* /*who*/) OVERRIDE {}
-        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
+        void AttackStart(Unit* /*who*/) OVERRIDE { }
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE { }
 
 
         void StartEvent(Unit* target)
@@ -408,7 +408,7 @@ struct boss_illidari_councilAI : public ScriptedAI
         }
         else
         {
-            TC_LOG_ERROR(LOG_FILTER_TSCR, ERROR_INST_DATA);
+            TC_LOG_ERROR("scripts", ERROR_INST_DATA);
             EnterEvadeMode();
             return;
         }
@@ -456,7 +456,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (!instance)
         {
-            TC_LOG_ERROR(LOG_FILTER_TSCR, ERROR_INST_DATA);
+            TC_LOG_ERROR("scripts", ERROR_INST_DATA);
             return;
         }
 
@@ -481,7 +481,7 @@ public:
 
     struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
     {
-        boss_gathios_the_shattererAI(Creature* creature) : boss_illidari_councilAI(creature) {}
+        boss_gathios_the_shattererAI(Creature* creature) : boss_illidari_councilAI(creature) { }
 
         uint32 ConsecrationTimer;
         uint32 HammerOfJusticeTimer;
@@ -613,7 +613,7 @@ public:
 
     struct boss_high_nethermancer_zerevorAI : public boss_illidari_councilAI
     {
-        boss_high_nethermancer_zerevorAI(Creature* creature) : boss_illidari_councilAI(creature) {}
+        boss_high_nethermancer_zerevorAI(Creature* creature) : boss_illidari_councilAI(creature) { }
 
         uint32 BlizzardTimer;
         uint32 FlamestrikeTimer;
@@ -717,7 +717,7 @@ public:
 
     struct boss_lady_malandeAI : public boss_illidari_councilAI
     {
-        boss_lady_malandeAI(Creature* creature) : boss_illidari_councilAI(creature) {}
+        boss_lady_malandeAI(Creature* creature) : boss_illidari_councilAI(creature) { }
 
         uint32 EmpoweredSmiteTimer;
         uint32 CircleOfHealingTimer;
@@ -795,7 +795,7 @@ public:
 
     struct boss_veras_darkshadowAI : public boss_illidari_councilAI
     {
-        boss_veras_darkshadowAI(Creature* creature) : boss_illidari_councilAI(creature) {}
+        boss_veras_darkshadowAI(Creature* creature) : boss_illidari_councilAI(creature) { }
 
         uint64 EnvenomTargetGUID;
 

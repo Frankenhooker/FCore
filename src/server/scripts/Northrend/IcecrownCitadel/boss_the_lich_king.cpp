@@ -934,7 +934,7 @@ class boss_the_lich_king : public CreatureScript
                         case EVENT_NECROTIC_PLAGUE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, NecroticPlagueTargetCheck(me, NECROTIC_PLAGUE_LK, NECROTIC_PLAGUE_PLR)))
                             {
-                                Talk(EMOTE_NECROTIC_PLAGUE_WARNING, target->GetGUID());
+                                Talk(EMOTE_NECROTIC_PLAGUE_WARNING, target);
                                 DoCast(target, SPELL_NECROTIC_PLAGUE);
                             }
                             events.ScheduleEvent(EVENT_NECROTIC_PLAGUE, urand(30000, 33000), 0, PHASE_ONE);
@@ -1472,14 +1472,13 @@ class npc_valkyr_shadowguard : public CreatureScript
                 _events.Reset();
                 me->SetReactState(REACT_PASSIVE);
                 DoCast(me, SPELL_WINGS_OF_THE_DAMNED, false);
-                me->SetSpeed(MOVE_FLIGHT, 0.442857f, true);
+                me->SetSpeed(MOVE_FLIGHT, 0.642857f, true);
             }
 
             void IsSummonedBy(Unit* /*summoner*/) OVERRIDE
             {
                 _events.Reset();
                 _events.ScheduleEvent(EVENT_GRAB_PLAYER, 2500);
-				me->SetSpeed(MOVE_FLIGHT, 0.442857f, true);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32& damage) OVERRIDE
@@ -2423,7 +2422,7 @@ class spell_the_lich_king_raging_spirit : public SpellScriptLoader
 class ExactDistanceCheck
 {
     public:
-        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) {}
+        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) { }
 
         bool operator()(WorldObject* unit)
         {

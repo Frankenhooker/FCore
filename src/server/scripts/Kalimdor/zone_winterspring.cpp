@@ -159,7 +159,7 @@ public:
       _dialogueArray(dialogueArray),
           _currentEntry(NULL),
           _actionTimer(0)
-      {}
+      { }
       // The array MUST be terminated by {0, 0, 0, 0, 0}
 
       /// Function to initialize the dialogue helper for instances. If not used with instances, GetSpeakerByEntry MUST be overwritten to obtain the speakers
@@ -199,7 +199,7 @@ public:
 
 protected:
     /// Will be called when a dialogue step was done
-    virtual void JustDidDialogueStep(int32 /*entry*/) {}
+    virtual void JustDidDialogueStep(int32 /*entry*/) { }
     /// Will be called to get a speaker, MUST be implemented if not used in instances
     virtual Creature* GetSpeakerByEntry(int32 /*entry*/) { return NULL; }
 
@@ -524,7 +524,7 @@ public:
                     if (Player* player = GetPlayerForEscort())
                     {
                         me->SetFacingToObject(player);
-                        Talk(SAY_RANSHALLA_END_1, player->GetGUID());
+                        Talk(SAY_RANSHALLA_END_1, player);
                     }
                     break;
                 case SAY_RANSHALLA_END_2:
@@ -538,7 +538,7 @@ public:
                     if (Player* player = GetPlayerForEscort())
                     {
                         player->GroupEventHappens(QUEST_GUARDIANS_ALTAR, me);
-                        Talk(SAY_RANSHALLA_END_2, player->GetGUID());
+                        Talk(SAY_RANSHALLA_END_2, player);
                     }
                     me->DespawnOrUnsummon(4000);
                     break;

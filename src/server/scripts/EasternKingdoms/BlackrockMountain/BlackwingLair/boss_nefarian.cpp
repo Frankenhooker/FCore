@@ -218,7 +218,7 @@ public:
             }
         }
 
-        void JustSummoned(Creature* /*summon*/) OVERRIDE {}
+        void JustSummoned(Creature* /*summon*/) OVERRIDE { }
 
         void SetData(uint32 type, uint32 data) OVERRIDE
         {
@@ -264,7 +264,6 @@ public:
                             if (Unit* player = me->SelectNearestPlayer(60.0f))
                             {
                                 me->SetInFront(player);
-                                me->SendMovementFlagUpdate();
                                 Talk(SAY_SUCCESS);
                                 if (GameObject* portcullis1 = me->FindNearestGameObject(GO_PORTCULLIS_ACTIVE, 65.0f))
                                     portcullis1->SetGoState(GO_STATE_ACTIVE);
@@ -424,7 +423,7 @@ public:
             if (rand()%5)
                 return;
 
-            Talk(SAY_SLAY, victim->GetGUID());
+            Talk(SAY_SLAY, victim);
         }
 
         void MovementInform(uint32 type, uint32 id) OVERRIDE

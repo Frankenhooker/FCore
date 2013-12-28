@@ -265,7 +265,7 @@ class boss_tyrannus : public CreatureScript
                             Talk(SAY_MARK_RIMEFANG_1);
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
                             {
-                                Talk(SAY_MARK_RIMEFANG_2, target->GetGUID());
+                                Talk(SAY_MARK_RIMEFANG_2, target);
                                 DoCast(target, SPELL_MARK_OF_RIMEFANG);
                             }
                             events.ScheduleEvent(EVENT_MARK_OF_RIMEFANG, urand(24000, 26000));
@@ -400,7 +400,7 @@ class player_overlord_brandAI : public PlayerAI
                 me->CastCustomSpell(SPELL_OVERLORD_BRAND_HEAL, SPELLVALUE_BASE_POINT0, int32(addHealth * 5.5f), tyrannus, true, NULL, NULL, tyrannus->GetGUID());
         }
 
-        void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+        void UpdateAI(uint32 /*diff*/) OVERRIDE { }
 
     private:
         uint64 _tyrannusGUID;

@@ -162,8 +162,8 @@ public:
         uint32 delay;
         uint32 spell;
         uint32 spell2;
-        void Reset() OVERRIDE {}
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void Reset() OVERRIDE { }
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
         void SetType(uint32 _type)
         {
             switch (Creaturetype = _type)
@@ -233,7 +233,7 @@ public:
 
     struct npc_headAI : public ScriptedAI
     {
-        npc_headAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_headAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint64 bodyGUID;
 
@@ -254,14 +254,11 @@ public:
             laugh = urand(15000, 30000);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void SaySound(uint8 textEntry, Unit* target = 0)
         {
-            if (target)
-                Talk(textEntry, target->GetGUID());
-            else
-                Talk(textEntry);
+            Talk(textEntry, target);
 
             //DoCast(me, SPELL_HEAD_SPEAKS, true);
             if (Creature* speaker = DoSpawnCreature(HELPER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 1000))
@@ -348,7 +345,7 @@ public:
                     Creature* speaker = DoSpawnCreature(HELPER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 1000);
                     if (speaker)
                         speaker->CastSpell(speaker, SPELL_HEAD_SPEAKS, false);
-                    me->MonsterTextEmote(EMOTE_LAUGHS, 0);
+                    me->MonsterTextEmote(EMOTE_LAUGHS, NULL);
                 }
                 else laugh -= diff;
             }
@@ -528,10 +525,7 @@ public:
 
         void SaySound(uint8 textEntry, Unit* target = 0)
         {
-            if (target)
-                Talk(textEntry, target->GetGUID());
-            else
-                Talk(textEntry);
+            Talk(textEntry, target);
             laugh += 4000;
         }
 
@@ -580,7 +574,11 @@ public:
 
             Map::PlayerList const& players = me->GetMap()->GetPlayers();
             if (!players.isEmpty())
-                sLFGMgr->FinishDungeon(players.begin()->GetSource()->GetGroup()->GetGUID(), 285);
+            {
+                if (Group* group = players.begin()->GetSource()->GetGroup())
+                    if (group->isLFGGroup())
+                        sLFGMgr->FinishDungeon(group->GetGUID(), 285);
+            }
         }
 
         void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
@@ -724,7 +722,7 @@ public:
                 if (laugh <= diff)
                 {
                     laugh = urand(11000, 22000);
-                    me->MonsterTextEmote(EMOTE_LAUGHS, 0);
+                    me->MonsterTextEmote(EMOTE_LAUGHS, NULL);
                     DoPlaySoundToSet(me, RandomLaugh[rand()%3]);
                 }
                 else laugh -= diff;
@@ -792,7 +790,7 @@ public:
 
     struct npc_pulsing_pumpkinAI : public ScriptedAI
     {
-        npc_pulsing_pumpkinAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_pulsing_pumpkinAI(Creature* creature) : ScriptedAI(creature) { }
 
         bool sprouted;
         uint64 debuffGUID;
@@ -803,6 +801,7 @@ public:
             me->GetPosition(x, y, z);   //this visual aura some under ground
             me->SetPosition(x, y, z + 0.35f, 0.0f);
             Despawn();
+            debuffGUID = 0;
             Creature* debuff = DoSpawnCreature(HELPER, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 14500);
             if (debuff)
             {
@@ -817,7 +816,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void SpellHit(Unit* /*caster*/, const SpellInfo* spell) OVERRIDE
         {

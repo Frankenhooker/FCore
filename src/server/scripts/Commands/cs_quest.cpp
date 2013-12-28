@@ -37,15 +37,15 @@ public:
     {
         static ChatCommand questCommandTable[] =
         {
-            { "add",      RBAC_PERM_COMMAND_QUEST_ADD,      false, &HandleQuestAdd,      "", NULL },
-            { "complete", RBAC_PERM_COMMAND_QUEST_COMPLETE, false, &HandleQuestComplete, "", NULL },
-            { "remove",   RBAC_PERM_COMMAND_QUEST_REMOVE,   false, &HandleQuestRemove,   "", NULL },
-            { "reward",   RBAC_PERM_COMMAND_QUEST_REWARD,   false, &HandleQuestReward,   "", NULL },
+            { "add",      rbac::RBAC_PERM_COMMAND_QUEST_ADD,      false, &HandleQuestAdd,      "", NULL },
+            { "complete", rbac::RBAC_PERM_COMMAND_QUEST_COMPLETE, false, &HandleQuestComplete, "", NULL },
+            { "remove",   rbac::RBAC_PERM_COMMAND_QUEST_REMOVE,   false, &HandleQuestRemove,   "", NULL },
+            { "reward",   rbac::RBAC_PERM_COMMAND_QUEST_REWARD,   false, &HandleQuestReward,   "", NULL },
             { NULL,       0,                                false, NULL,                 "", NULL }
         };
         static ChatCommand commandTable[] =
         {
-            { "quest", RBAC_PERM_COMMAND_QUEST,  false, NULL, "", questCommandTable },
+            { "quest", rbac::RBAC_PERM_COMMAND_QUEST,  false, NULL, "", questCommandTable },
             { NULL,    0,                        false, NULL,              "", NULL }
         };
         return commandTable;
@@ -92,7 +92,7 @@ public:
         // ok, normal (creature/GO starting) quest
         if (player->CanAddQuest(quest, true))
         {
-            player->AddQuest(quest, NULL);
+            player->AddQuestAndCheckCompletion(quest, NULL);
 
             if (player->CanCompleteQuest(entry))
                 player->CompleteQuest(entry);
@@ -201,7 +201,7 @@ public:
             }
         }
 
-        // All creature/GO slain/casted (not required, but otherwise it will display "Creature slain 0/10")
+        // All creature/GO slain/cast (not required, but otherwise it will display "Creature slain 0/10")
         for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
             int32 creature = quest->RequiredNpcOrGo[i];

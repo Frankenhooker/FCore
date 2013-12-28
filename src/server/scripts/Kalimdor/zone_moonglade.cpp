@@ -420,7 +420,7 @@ public:
                         switch (Step)
                         {
                             case 0:
-                                Talk(CLINTAR_SPIRIT_SAY_START, PlayerGUID);
+                                Talk(CLINTAR_SPIRIT_SAY_START, player);
                                 EventTimer = 8000;
                                 Step = 1;
                                 break;
@@ -667,7 +667,7 @@ public:
 
     struct npc_giant_spotlightAI : public ScriptedAI
     {
-        npc_giant_spotlightAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_giant_spotlightAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
 

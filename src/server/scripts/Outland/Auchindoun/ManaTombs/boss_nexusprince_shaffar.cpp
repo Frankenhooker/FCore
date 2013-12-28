@@ -170,7 +170,7 @@ public:
 
             if (FrostNova_Timer <= diff)
             {
-                if (me->IsNonMeleeSpellCasted(false))
+                if (me->IsNonMeleeSpellCast(false))
                     me->InterruptNonMeleeSpells(true);
 
                 DoCast(me, SPELL_FROSTNOVA);
@@ -194,7 +194,7 @@ public:
             {
                 if (Blink_Timer <= diff)
                 {
-                    if (me->IsNonMeleeSpellCasted(false))
+                    if (me->IsNonMeleeSpellCast(false))
                         me->InterruptNonMeleeSpells(true);
 
                     //expire movement, will prevent from running right back to victim after cast
@@ -210,7 +210,7 @@ public:
 
             if (Beacon_Timer <= diff)
             {
-                if (me->IsNonMeleeSpellCasted(false))
+                if (me->IsNonMeleeSpellCast(false))
                     me->InterruptNonMeleeSpells(true);
 
                 if (!urand(0, 3))
@@ -301,7 +301,7 @@ public:
 
             if (Apprentice_Timer <= diff)
             {
-                if (me->IsNonMeleeSpellCasted(false))
+                if (me->IsNonMeleeSpellCast(false))
                     me->InterruptNonMeleeSpells(true);
 
                 DoCast(me, SPELL_ETHEREAL_APPRENTICE, true);
@@ -331,7 +331,7 @@ public:
 
     struct npc_ethereal_apprenticeAI : public ScriptedAI
     {
-        npc_ethereal_apprenticeAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_ethereal_apprenticeAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 Cast_Timer;
 
@@ -378,9 +378,9 @@ public:
 
     struct npc_yorAI : public ScriptedAI
     {
-        npc_yorAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_yorAI(Creature* creature) : ScriptedAI(creature) { }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {

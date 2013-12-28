@@ -81,7 +81,7 @@ public:
 
     struct boss_dathrohan_balnazzarAI : public ScriptedAI
     {
-        boss_dathrohan_balnazzarAI(Creature* creature) : ScriptedAI(creature) {}
+        boss_dathrohan_balnazzarAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 m_uiCrusadersHammer_Timer;
         uint32 m_uiCrusaderStrike_Timer;
@@ -162,7 +162,7 @@ public:
                 //BalnazzarTransform
                 if (HealthBelowPct(40))
                 {
-                    if (me->IsNonMeleeSpellCasted(false))
+                    if (me->IsNonMeleeSpellCast(false))
                         me->InterruptNonMeleeSpells(false);
 
                     //restore hp, mana and stun

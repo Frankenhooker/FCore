@@ -38,17 +38,17 @@ public:
     {
         static ChatCommand arenaCommandTable[] =
         {
-            { "create",         RBAC_PERM_COMMAND_ARENA_CREATE,   true, &HandleArenaCreateCommand,   "", NULL },
-            { "disband",        RBAC_PERM_COMMAND_ARENA_DISBAND,  true, &HandleArenaDisbandCommand,  "", NULL },
-            { "rename",         RBAC_PERM_COMMAND_ARENA_RENAME,   true, &HandleArenaRenameCommand,   "", NULL },
-            { "captain",        RBAC_PERM_COMMAND_ARENA_CAPTAIN, false, &HandleArenaCaptainCommand,  "", NULL },
-            { "info",           RBAC_PERM_COMMAND_ARENA_INFO,     true, &HandleArenaInfoCommand,     "", NULL },
-            { "lookup",         RBAC_PERM_COMMAND_ARENA_LOOKUP,  false, &HandleArenaLookupCommand,   "", NULL },
+            { "create",         rbac::RBAC_PERM_COMMAND_ARENA_CREATE,   true, &HandleArenaCreateCommand,   "", NULL },
+            { "disband",        rbac::RBAC_PERM_COMMAND_ARENA_DISBAND,  true, &HandleArenaDisbandCommand,  "", NULL },
+            { "rename",         rbac::RBAC_PERM_COMMAND_ARENA_RENAME,   true, &HandleArenaRenameCommand,   "", NULL },
+            { "captain",        rbac::RBAC_PERM_COMMAND_ARENA_CAPTAIN, false, &HandleArenaCaptainCommand,  "", NULL },
+            { "info",           rbac::RBAC_PERM_COMMAND_ARENA_INFO,     true, &HandleArenaInfoCommand,     "", NULL },
+            { "lookup",         rbac::RBAC_PERM_COMMAND_ARENA_LOOKUP,  false, &HandleArenaLookupCommand,   "", NULL },
             { NULL, 0, false, NULL, "", NULL }
         };
         static ChatCommand commandTable[] =
         {
-            { "arena",          RBAC_PERM_COMMAND_ARENA,     false, NULL,                       "", arenaCommandTable },
+            { "arena",          rbac::RBAC_PERM_COMMAND_ARENA,     false, NULL,                       "", arenaCommandTable },
             { NULL, 0, false, NULL, "", NULL }
         };
         return commandTable;
@@ -143,10 +143,10 @@ public:
         std::string name = arena->GetName();
         arena->Disband();
         if (handler->GetSession())
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "GameMaster: %s [GUID: %u] disbanded arena team type: %u [Id: %u].",
+            TC_LOG_DEBUG("bg.arena", "GameMaster: %s [GUID: %u] disbanded arena team type: %u [Id: %u].",
                 handler->GetSession()->GetPlayer()->GetName().c_str(), handler->GetSession()->GetPlayer()->GetGUIDLow(), arena->GetType(), teamId);
         else
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "Console: disbanded arena team type: %u [Id: %u].", arena->GetType(), teamId);
+            TC_LOG_DEBUG("bg.arena", "Console: disbanded arena team type: %u [Id: %u].", arena->GetType(), teamId);
 
         delete(arena);
 
@@ -208,10 +208,10 @@ public:
 
         handler->PSendSysMessage(LANG_ARENA_RENAME, arena->GetId(), oldArenaStr, newArenaStr);
         if (handler->GetSession())
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "GameMaster: %s [GUID: %u] rename arena team \"%s\"[Id: %u] to \"%s\"",
+            TC_LOG_DEBUG("bg.arena", "GameMaster: %s [GUID: %u] rename arena team \"%s\"[Id: %u] to \"%s\"",
                 handler->GetSession()->GetPlayer()->GetName().c_str(), handler->GetSession()->GetPlayer()->GetGUIDLow(), oldArenaStr, arena->GetId(), newArenaStr);
         else
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "Console: rename arena team \"%s\"[Id: %u] to \"%s\"", oldArenaStr, arena->GetId(), newArenaStr);
+            TC_LOG_DEBUG("bg.arena", "Console: rename arena team \"%s\"[Id: %u] to \"%s\"", oldArenaStr, arena->GetId(), newArenaStr);
 
         return true;
     }
@@ -284,10 +284,10 @@ public:
 
         handler->PSendSysMessage(LANG_ARENA_CAPTAIN, arena->GetName().c_str(), arena->GetId(), oldCaptainNameData->m_name.c_str(), target->GetName().c_str());
         if (handler->GetSession())
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "GameMaster: %s [GUID: %u] promoted player: %s [GUID: %u] to leader of arena team \"%s\"[Id: %u]",
+            TC_LOG_DEBUG("bg.arena", "GameMaster: %s [GUID: %u] promoted player: %s [GUID: %u] to leader of arena team \"%s\"[Id: %u]",
                 handler->GetSession()->GetPlayer()->GetName().c_str(), handler->GetSession()->GetPlayer()->GetGUIDLow(), target->GetName().c_str(), target->GetGUIDLow(), arena->GetName().c_str(), arena->GetId());
         else
-            TC_LOG_DEBUG(LOG_FILTER_ARENAS, "Console: promoted player: %s [GUID: %u] to leader of arena team \"%s\"[Id: %u]",
+            TC_LOG_DEBUG("bg.arena", "Console: promoted player: %s [GUID: %u] to leader of arena team \"%s\"[Id: %u]",
                 target->GetName().c_str(), target->GetGUIDLow(), arena->GetName().c_str(), arena->GetId());
 
         return true;

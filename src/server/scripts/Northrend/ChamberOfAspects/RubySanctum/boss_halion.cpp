@@ -491,7 +491,7 @@ class boss_twilight_halion : public CreatureScript
             }
 
             // Never evade
-            void EnterEvadeMode() OVERRIDE {}
+            void EnterEvadeMode() OVERRIDE { }
 
             void KilledUnit(Unit* victim) OVERRIDE
             {
@@ -852,9 +852,9 @@ class npc_halion_controller : public CreatureScript
                         halion->CastSpell(halion, GetSpell(_materialCorporealityValue, itr == DATA_TWILIGHT_HALION), true);
 
                         if (itr == DATA_TWILIGHT_HALION)
-                            halion->AI()->Talk(oldValue < _materialCorporealityValue ? EMOTE_CORPOREALITY_TOT : EMOTE_CORPOREALITY_TIT, halion->GetGUID());
+                            halion->AI()->Talk(oldValue < _materialCorporealityValue ? EMOTE_CORPOREALITY_TOT : EMOTE_CORPOREALITY_TIT, halion);
                         else // if (itr == DATA_HALION)
-                            halion->AI()->Talk(oldValue > _materialCorporealityValue ? EMOTE_CORPOREALITY_POT : EMOTE_CORPOREALITY_PIP, halion->GetGUID());
+                            halion->AI()->Talk(oldValue > _materialCorporealityValue ? EMOTE_CORPOREALITY_POT : EMOTE_CORPOREALITY_PIP, halion);
                     }
                 }
             }
@@ -1025,8 +1025,8 @@ class npc_meteor_strike_initial : public CreatureScript
                 }
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
-            void EnterEvadeMode() OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
+            void EnterEvadeMode() OVERRIDE { }
         private:
             InstanceScript* _instance;
             std::list<Creature*> _meteorList;
@@ -1166,7 +1166,7 @@ class npc_combustion_consumption : public CreatureScript
                 summoner->CastCustomSpell(_explosionSpell, SPELLVALUE_BASE_POINT0, damage, summoner);
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
 
         private:
             InstanceScript* _instance;
@@ -1620,7 +1620,7 @@ class spell_halion_clear_debuffs : public SpellScriptLoader
 class TwilightCutterSelector
 {
     public:
-        TwilightCutterSelector(Unit* caster, Unit* target) : _caster(caster), _channelTarget(target) {}
+        TwilightCutterSelector(Unit* caster, Unit* target) : _caster(caster), _channelTarget(target) { }
 
         bool operator()(WorldObject* unit)
         {

@@ -24,7 +24,7 @@ void LoginDatabaseConnection::DoPrepareStatements()
 
     PrepareStatement(LOGIN_SEL_REALMLIST, "SELECT id, name, address, localAddress, localSubnetMask, port, icon, flag, timezone, allowedSecurityLevel, population, gamebuild FROM realmlist WHERE flag <> 3 ORDER BY name", CONNECTION_SYNCH);
     PrepareStatement(LOGIN_DEL_EXPIRED_IP_BANS, "DELETE FROM ip_banned WHERE unbandate<>bandate AND unbandate<=UNIX_TIMESTAMP()", CONNECTION_ASYNC);
-    PrepareStatement(LOGIN_UPD_EXPIRED_ACCOUNT_BANS, "UPDATE account_banned SET active = 0 WHERE active = 1 AND unbandate<>bandate AND unbandate<=UNIX_TIMESTAMP()", CONNECTION_ASYNC);
+    PrepareStatement(LOGIN_UPD_EXPIRED_ACCOUNT_BANS, "UPDATE account_banned SET active = 0 WHERE active = 1 AND unbandate<>bandate AND unbandate<=UNIX_TIMESTAMP()", CONNECTION_SYNCH);
     PrepareStatement(LOGIN_SEL_IP_BANNED, "SELECT * FROM ip_banned WHERE ip = ?", CONNECTION_SYNCH);
     PrepareStatement(LOGIN_INS_IP_AUTO_BANNED, "INSERT INTO ip_banned (ip, bandate, unbandate, bannedby, banreason) VALUES (?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()+?, 'Trinity realmd', 'Failed login autoban')", CONNECTION_ASYNC);
     PrepareStatement(LOGIN_SEL_IP_BANNED_ALL, "SELECT ip, bandate, unbandate, bannedby, banreason FROM ip_banned WHERE (bandate = unbandate OR unbandate > UNIX_TIMESTAMP()) ORDER BY unbandate", CONNECTION_SYNCH);
@@ -97,14 +97,6 @@ void LoginDatabaseConnection::DoPrepareStatements()
     PrepareStatement(LOGIN_GET_EMAIL_BY_ID, "SELECT email FROM account WHERE id = ?", CONNECTION_SYNCH);
 
     PrepareStatement(LOGIN_SEL_ACCOUNT_ACCESS_BY_ID, "SELECT gmlevel, RealmID FROM account_access WHERE id = ? and (RealmID = ? OR RealmID = -1) ORDER BY gmlevel desc", CONNECTION_SYNCH);
-
-    PrepareStatement(LOGIN_SEL_RBAC_ACCOUNT_GROUPS, "SELECT groupId FROM rbac_account_groups WHERE accountId = ? AND (realmId = ? OR realmId = -1) GROUP BY groupId", CONNECTION_SYNCH);
-    PrepareStatement(LOGIN_INS_RBAC_ACCOUNT_GROUP, "INSERT INTO rbac_account_groups (accountId, groupId, realmId) VALUES (?, ?, ?)", CONNECTION_ASYNC);
-    PrepareStatement(LOGIN_DEL_RBAC_ACCOUNT_GROUP, "DELETE FROM rbac_account_groups WHERE accountId = ? AND groupId = ? AND (realmId = ? OR realmId = -1)", CONNECTION_ASYNC);
-
-    PrepareStatement(LOGIN_SEL_RBAC_ACCOUNT_ROLES, "SELECT roleId, granted FROM rbac_account_roles WHERE accountId = ? AND (realmId = ? OR realmId = -1) ORDER BY roleId, realmId", CONNECTION_SYNCH);
-    PrepareStatement(LOGIN_INS_RBAC_ACCOUNT_ROLE, "INSERT INTO rbac_account_roles (accountId, roleId, granted, realmId) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE granted = VALUES(granted)", CONNECTION_ASYNC);
-    PrepareStatement(LOGIN_DEL_RBAC_ACCOUNT_ROLE, "DELETE FROM rbac_account_roles WHERE accountId = ? AND roleId = ? AND (realmId = ? OR realmId = -1)", CONNECTION_ASYNC);
 
     PrepareStatement(LOGIN_SEL_RBAC_ACCOUNT_PERMISSIONS, "SELECT permissionId, granted FROM rbac_account_permissions WHERE accountId = ? AND (realmId = ? OR realmId = -1) ORDER BY permissionId, realmId", CONNECTION_SYNCH);
     PrepareStatement(LOGIN_INS_RBAC_ACCOUNT_PERMISSION, "INSERT INTO rbac_account_permissions (accountId, permissionId, granted, realmId) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE granted = VALUES(granted)", CONNECTION_ASYNC);

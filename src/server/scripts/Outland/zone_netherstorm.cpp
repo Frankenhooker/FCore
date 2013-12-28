@@ -81,7 +81,7 @@ public:
 
     struct npc_manaforge_control_consoleAI : public ScriptedAI
     {
-        npc_manaforge_control_consoleAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_manaforge_control_consoleAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 Event_Timer;
         uint32 Wave_Timer;
@@ -102,7 +102,7 @@ public:
             add = NULL;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         /*void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
         {
@@ -245,7 +245,7 @@ public:
                         {
                             Unit* u = Unit::GetUnit(*me, someplayer);
                             if (u && u->GetTypeId() == TYPEID_PLAYER)
-                                Talk(EMOTE_START, u->GetGUID());
+                                Talk(EMOTE_START, u);
                         }
                         Event_Timer = 60000;
                         Wave = true;
@@ -400,7 +400,7 @@ public:
 
     struct npc_commander_dawnforgeAI : public ScriptedAI
     {
-        npc_commander_dawnforgeAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+        npc_commander_dawnforgeAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint64 PlayerGUID;
         uint64 ardonisGUID;
@@ -410,9 +410,6 @@ public:
         uint32 PhaseSubphase;
         uint32 Phase_Timer;
         bool isEvent;
-
-        float angle_dawnforge;
-        float angle_ardonis;
 
         void Reset() OVERRIDE
         {
@@ -426,7 +423,7 @@ public:
             isEvent = false;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
         void JustSummoned(Creature* summoned) OVERRIDE
         {
@@ -438,21 +435,15 @@ public:
         {
             Creature* ardonis = ObjectAccessor::GetCreature(*me, ardonisGUID);
             Creature* pathaleon = ObjectAccessor::GetCreature(*me, pathaleonGUID);
-            Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID);
 
-            if (!ardonis || !pathaleon || !player)
+            if (!ardonis || !pathaleon)
                 return;
 
-            //Calculate the angle to Pathaleon
-            angle_dawnforge = me->GetAngle(pathaleon->GetPositionX(), pathaleon->GetPositionY());
-            angle_ardonis = ardonis->GetAngle(pathaleon->GetPositionX(), pathaleon->GetPositionY());
+            // Turn Dawnforge
+            me->SetFacingToObject(pathaleon);
 
-            //Turn Dawnforge and update
-            me->SetOrientation(angle_dawnforge);
-            me->SendUpdateToPlayer(player);
-            //Turn Ardonis and update
-            ardonis->SetOrientation(angle_ardonis);
-            ardonis->SendUpdateToPlayer(player);
+            // Turn Ardonis
+            ardonis->SetFacingToObject(pathaleon);
 
             //Set them to kneel
             me->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -464,20 +455,11 @@ public:
         {
             if (Unit* ardonis = ObjectAccessor::GetUnit(*me, ardonisGUID))
             {
-                Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID);
+                // Turn Dawnforge
+                me->SetFacingToObject(ardonis);
 
-                if (!player)
-                    return;
-
-                angle_dawnforge = me->GetAngle(ardonis->GetPositionX(), ardonis->GetPositionY());
-                angle_ardonis = ardonis->GetAngle(me->GetPositionX(), me->GetPositionY());
-
-                //Turn Dawnforge and update
-                me->SetOrientation(angle_dawnforge);
-                me->SendUpdateToPlayer(player);
-                //Turn Ardonis and update
-                ardonis->SetOrientation(angle_ardonis);
-                ardonis->SendUpdateToPlayer(player);
+                // Turn Ardonis
+                ardonis->SetFacingToObject(me);
 
                 //Set state
                 me->SetStandState(UNIT_STAND_STATE_STAND);
@@ -502,7 +484,7 @@ public:
                 return true;
             }
 
-            TC_LOG_DEBUG(LOG_FILTER_TSCR, "npc_commander_dawnforge event already in progress, need to wait.");
+            TC_LOG_DEBUG("scripts", "npc_commander_dawnforge event already in progress, need to wait.");
             return false;
         }
 
@@ -685,7 +667,7 @@ public:
 
     //OnQuestAccept:
     //if (quest->GetQuestId() == QUEST_DIMENSIUS)
-        //creature->AI()->Talk(WHISPER_DABIRI, player->GetGUID());
+        //creature->AI()->Talk(WHISPER_DABIRI, player);
 
     bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
     {
@@ -746,7 +728,7 @@ public:
 
     struct npc_phase_hunterAI : public ScriptedAI
     {
-        npc_phase_hunterAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_phase_hunterAI(Creature* creature) : ScriptedAI(creature) { }
 
         bool Weak;
         bool Materialize;
@@ -882,7 +864,7 @@ public:
 
     struct npc_bessyAI : public npc_escortAI
     {
-        npc_bessyAI(Creature* creature) : npc_escortAI(creature) {}
+        npc_bessyAI(Creature* creature) : npc_escortAI(creature) { }
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
@@ -914,7 +896,7 @@ public:
                     break;
                 case 13:
                     if (me->FindNearestCreature(N_THADELL, 30))
-                        Talk(SAY_THADELL_2, player->GetGUID());
+                        Talk(SAY_THADELL_2, player);
                     break;
             }
         }
@@ -953,7 +935,7 @@ public:
 
     struct npc_maxx_a_million_escortAI : public npc_escortAI
     {
-        npc_maxx_a_million_escortAI(Creature* creature) : npc_escortAI(creature) {}
+        npc_maxx_a_million_escortAI(Creature* creature) : npc_escortAI(creature) { }
 
         bool bTake;
         uint32 uiTakeTimer;

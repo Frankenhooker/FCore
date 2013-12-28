@@ -268,7 +268,7 @@ public:
                     if (Spell)
                         creature->CastSpell(player, Spell, false);
                     else
-                        TC_LOG_ERROR(LOG_FILTER_TSCR, "go_ethereum_prison summoned Creature (entry %u) but faction (%u) are not expected by script.", creature->GetEntry(), creature->getFaction());
+                        TC_LOG_ERROR("scripts", "go_ethereum_prison summoned Creature (entry %u) but faction (%u) are not expected by script.", creature->GetEntry(), creature->getFaction());
                 }
             }
         }
@@ -889,7 +889,7 @@ enum SoulWellData
 class go_soulwell : public GameObjectScript
 {
     public:
-        go_soulwell() : GameObjectScript("go_soulwell") {}
+        go_soulwell() : GameObjectScript("go_soulwell") { }
 
         struct go_soulwellAI : public GameObjectAI
         {
