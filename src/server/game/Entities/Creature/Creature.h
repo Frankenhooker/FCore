@@ -246,7 +246,10 @@ typedef UNORDERED_MAP<uint32, EquipmentInfoContainerInternal> EquipmentInfoConta
 // from `creature` table
 struct CreatureData
 {
-    CreatureData() : dbData(true) {}
+    CreatureData() : id(0), mapid(0), phaseMask(0), displayid(0), equipmentId(0),
+                     posX(0.0f), posY(0.0f), posZ(0.0f), orientation(0.0f), spawntimesecs(0),
+                     spawndist(0.0f), currentwaypoint(0), curhealth(0), curmana(0), movementType(0),
+                     spawnMask(0), npcflag(0), unit_flags(0), dynamicflags(0), dbData(true) { }
     uint32 id;                                              // entry in creature_template
     uint16 mapid;
     uint32 phaseMask;
@@ -325,7 +328,7 @@ typedef UNORDERED_MAP<uint32, CreatureAddon> CreatureAddonContainer;
 struct VendorItem
 {
     VendorItem(uint32 _item, int32 _maxcount, uint32 _incrtime, uint32 _ExtendedCost)
-        : item(_item), maxcount(_maxcount), incrtime(_incrtime), ExtendedCost(_ExtendedCost) {}
+        : item(_item), maxcount(_maxcount), incrtime(_incrtime), ExtendedCost(_ExtendedCost) { }
 
     uint32 item;
     uint32 maxcount;                                        // 0 for infinity item amount
@@ -367,7 +370,7 @@ struct VendorItemData
 struct VendorItemCount
 {
     explicit VendorItemCount(uint32 _item, uint32 _count)
-        : itemId(_item), count(_count), lastIncrementTime(time(NULL)) {}
+        : itemId(_item), count(_count), lastIncrementTime(time(NULL)) { }
 
     uint32 itemId;
     uint32 count;
@@ -399,7 +402,7 @@ typedef UNORDERED_MAP<uint32 /*spellid*/, TrainerSpell> TrainerSpellMap;
 
 struct TrainerSpellData
 {
-    TrainerSpellData() : trainerType(0) {}
+    TrainerSpellData() : trainerType(0) { }
     ~TrainerSpellData() { spellList.clear(); }
 
     TrainerSpellMap spellList;
@@ -415,36 +418,7 @@ typedef std::map<uint32, time_t> CreatureSpellCooldowns;
 
 #define MAX_VENDOR_ITEMS 150                                // Limitation in 3.x.x item count in SMSG_LIST_INVENTORY
 
-enum CreatureCellMoveState
-{
-    CREATURE_CELL_MOVE_NONE,    // not in move list
-    CREATURE_CELL_MOVE_ACTIVE,  // in move list
-    CREATURE_CELL_MOVE_INACTIVE // in move list but should not move
-};
-
-class MapCreature
-{
-    friend class Map;              // map for moving creatures
-    friend class ObjectGridLoader; // grid loader for loading creatures
-
-protected:
-    MapCreature() : _moveState(CREATURE_CELL_MOVE_NONE) {}
-
-private:
-    Cell _currentCell;
-    Cell const& GetCurrentCell() const { return _currentCell; }
-    void SetCurrentCell(Cell const& cell) { _currentCell = cell; }
-
-    CreatureCellMoveState _moveState;
-    Position _newPosition;
-    void SetNewCellPosition(float x, float y, float z, float o)
-    {
-        _moveState = CREATURE_CELL_MOVE_ACTIVE;
-        _newPosition.Relocate(x, y, z, o);
-    }
-};
-
-class Creature : public Unit, public GridObject<Creature>, public MapCreature
+class Creature : public Unit, public GridObject<Creature>, public MapObject
 {
     public:
 
@@ -560,12 +534,6 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
         std::string GetScriptName() const;
         uint32 GetScriptId() const;
 
-        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId, language, TargetGuid); }
-        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
-        void TextEmote(int32 textId, uint64 TargetGuid, bool IsBossEmote = false) { MonsterTextEmote(textId, TargetGuid, IsBossEmote); }
-        void Whisper(int32 textId, uint64 receiver, bool IsBossWhisper = false) { MonsterWhisper(textId, receiver, IsBossWhisper); }
-        void YellToZone(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYellToZone(textId, language, TargetGuid); }
-
         // override WorldObject function for proper name localization
         std::string const& GetNameForLocaleIdx(LocaleConstant locale_idx) const;
 
@@ -609,7 +577,7 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
 
         void SendAIReaction(AiReaction reactionType);
 
-        Unit* SelectNearestTarget(float dist = 0) const;
+        Unit* SelectNearestTarget(float dist = 0, bool playerOnly = false) const;
         Unit* SelectNearestTargetInAttackDistance(float dist = 0) const;
         Player* SelectNearestPlayer(float distance = 0) const;
         Unit* SelectNearestHostileUnitInAggroRange(bool useLOS = false) const;
@@ -670,15 +638,15 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
         void GetTransportHomePosition(float &x, float &y, float &z, float &ori) { m_transportHomePosition.GetPosition(x, y, z, ori); }
         Position GetTransportHomePosition() { return m_transportHomePosition; }
 
-        uint32 GetWaypointPath(){return m_path_id;}
+        uint32 GetWaypointPath() const { return m_path_id; }
         void LoadPath(uint32 pathid) { m_path_id = pathid; }
 
         uint32 GetCurrentWaypointID() const { return m_waypointID; }
         void UpdateWaypointID(uint32 wpID) { m_waypointID = wpID; }
 
         void SearchFormation();
-        CreatureGroup* GetFormation() {return m_formation;}
-        void SetFormation(CreatureGroup* formation) {m_formation = formation;}
+        CreatureGroup* GetFormation() { return m_formation; }
+        void SetFormation(CreatureGroup* formation) { m_formation = formation; }
 
         Unit* SelectVictim();
 
@@ -696,12 +664,14 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
 
         float m_SightDistance, m_CombatDistance;
 
-        void SetGUIDTransport(uint32 guid) { guid_transport=guid; }
-        uint32 GetGUIDTransport() { return guid_transport; }
-
         void FarTeleportTo(Map* map, float X, float Y, float Z, float O);
 
         bool m_isTempWorldObject; //true when possessed
+
+        // Handling caster facing during spellcast
+        void SetTarget(uint64 guid);
+        void FocusTarget(Spell const* focusSpell, WorldObject const* target);
+        void ReleaseFocus(Spell const* focusSpell);
 
     protected:
         bool CreateFromProto(uint32 guidlow, uint32 Entry, uint32 vehId, uint32 team, const CreatureData* data = NULL);
@@ -748,10 +718,10 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
         CreatureData const* m_creatureData;
 
         uint16 m_LootMode;                                  // Bitmask (default: LOOT_MODE_DEFAULT) that determines what loot will be lootable
-        uint32 guid_transport;
 
         bool IsInvisibleDueToDespawn() const;
         bool CanAlwaysSee(WorldObject const* obj) const;
+
     private:
         void ForcedDespawn(uint32 timeMSToDespawn = 0);
 
@@ -762,6 +732,8 @@ class Creature : public Unit, public GridObject<Creature>, public MapCreature
         //Formation var
         CreatureGroup* m_formation;
         bool TriggerJustRespawned;
+
+        Spell const* _focusSpell;   ///> Locks the target during spell cast for proper facing
 };
 
 class AssistDelayEvent : public BasicEvent

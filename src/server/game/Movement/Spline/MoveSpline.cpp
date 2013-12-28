@@ -92,7 +92,7 @@ inline uint32 computeDuration(float length, float velocity)
 
 struct FallInitializer
 {
-    FallInitializer(float _start_elevation) : start_elevation(_start_elevation) {}
+    FallInitializer(float _start_elevation) : start_elevation(_start_elevation) { }
     float start_elevation;
     inline int32 operator()(Spline<int32>& s, int32 i)
     {
@@ -106,7 +106,7 @@ enum{
 
 struct CommonInitializer
 {
-    CommonInitializer(float _velocity) : velocityInv(1000.f/_velocity), time(minimal_duration) {}
+    CommonInitializer(float _velocity) : velocityInv(1000.f/_velocity), time(minimal_duration) { }
     float velocityInv;
     int32 time;
     inline int32 operator()(Spline<int32>& s, int32 i)
@@ -147,7 +147,7 @@ void MoveSpline::init_spline(const MoveSplineInitArgs& args)
     /// @todo what to do in such cases? problem is in input data (all points are at same coords)
     if (spline.length() < minimal_duration)
     {
-        TC_LOG_ERROR(LOG_FILTER_GENERAL, "MoveSpline::init_spline: zero length spline, wrong input data?");
+        TC_LOG_ERROR("misc", "MoveSpline::init_spline: zero length spline, wrong input data?");
         spline.set_length(spline.last(), spline.isCyclic() ? 1000 : 1);
     }
     point_Idx = spline.first();
@@ -164,6 +164,13 @@ void MoveSpline::Initialize(MoveSplineInitArgs const& args)
     time_passed = 0;
     vertical_acceleration = 0.f;
     effect_start_time = 0;
+
+    // Check if its a stop spline
+    if (args.flags.done)
+    {
+        spline.clear();
+        return;
+    }
 
     init_spline(args);
 
@@ -194,7 +201,7 @@ bool MoveSplineInitArgs::Validate(Unit* unit) const
 #define CHECK(exp) \
     if (!(exp))\
     {\
-        TC_LOG_ERROR(LOG_FILTER_GENERAL, "MoveSplineInitArgs::Validate: expression '%s' failed for GUID: %u Entry: %u", #exp, unit->GetTypeId() == TYPEID_PLAYER ? unit->GetGUIDLow() : unit->ToCreature()->GetDBTableGUIDLow(), unit->GetEntry());\
+        TC_LOG_ERROR("misc", "MoveSplineInitArgs::Validate: expression '%s' failed for GUID: %u Entry: %u", #exp, unit->GetTypeId() == TYPEID_PLAYER ? unit->GetGUIDLow() : unit->ToCreature()->GetDBTableGUIDLow(), unit->GetEntry());\
         return false;\
     }
     CHECK(path.size() > 1);
@@ -221,7 +228,7 @@ bool MoveSplineInitArgs::_checkPathBounds() const
             offset = path[i] - middle;
             if (fabs(offset.x) >= MAX_OFFSET || fabs(offset.y) >= MAX_OFFSET || fabs(offset.z) >= MAX_OFFSET)
             {
-                TC_LOG_ERROR(LOG_FILTER_GENERAL, "MoveSplineInitArgs::_checkPathBounds check failed");
+                TC_LOG_ERROR("misc", "MoveSplineInitArgs::_checkPathBounds check failed");
                 return false;
             }
         }
@@ -233,12 +240,6 @@ bool MoveSplineInitArgs::_checkPathBounds() const
 
 MoveSpline::UpdateResult MoveSpline::_updateState(int32& ms_time_diff)
 {
-	if (ms_time_diff < 0)
-	{
-		ms_time_diff = 0;
-		return Result_Arrived;
-	}
-
     if (Finalized())
     {
         ms_time_diff = 0;
@@ -265,7 +266,7 @@ MoveSpline::UpdateResult MoveSpline::_updateState(int32& ms_time_diff)
             {
                 point_Idx = spline.first();
                 time_passed = time_passed % Duration();
-                result = Result_NextSegment;
+                result = Result_NextCycle;
             }
             else
             {

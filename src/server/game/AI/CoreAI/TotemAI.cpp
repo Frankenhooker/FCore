@@ -40,9 +40,7 @@ TotemAI::TotemAI(Creature* c) : CreatureAI(c), i_victimGuid(0)
     ASSERT(c->IsTotem());
 }
 
-void TotemAI::MoveInLineOfSight(Unit* /*who*/)
-{
-}
+void TotemAI::MoveInLineOfSight(Unit* /*who*/) { }
 
 void TotemAI::EnterEvadeMode()
 {
@@ -54,7 +52,7 @@ void TotemAI::UpdateAI(uint32 /*diff*/)
     if (me->ToTotem()->GetTotemType() != TOTEM_ACTIVE)
         return;
 
-    if (!me->IsAlive() || me->IsNonMeleeSpellCasted(false))
+    if (!me->IsAlive() || me->IsNonMeleeSpellCast(false))
         return;
 
     // Search spell
@@ -106,6 +104,6 @@ void TotemAI::AttackStart(Unit* /*victim*/)
                 data << me->GetGUID();
                 data << me->GetPositionX();
                 data << me->GetPositionY();
-                player->GetSession()->SendPacket(&data);
+                player->SendDirectMessage(&data);
             }
 }

@@ -457,7 +457,7 @@ typedef std::pair<QuestRelations::const_iterator, QuestRelations::const_iterator
 
 struct PetLevelInfo
 {
-    PetLevelInfo() : health(0), mana(0) { for (uint8 i=0; i < MAX_STATS; ++i) stats[i] = 0; }
+    PetLevelInfo() : health(0), mana(0), armor(0) { for (uint8 i=0; i < MAX_STATS; ++i) stats[i] = 0; }
 
     uint16 stats[MAX_STATS];
     uint16 health;
@@ -467,8 +467,8 @@ struct PetLevelInfo
 
 struct MailLevelReward
 {
-    MailLevelReward() : raceMask(0), mailTemplateId(0), senderEntry(0) {}
-    MailLevelReward(uint32 _raceMask, uint32 _mailTemplateId, uint32 _senderEntry) : raceMask(_raceMask), mailTemplateId(_mailTemplateId), senderEntry(_senderEntry) {}
+    MailLevelReward() : raceMask(0), mailTemplateId(0), senderEntry(0) { }
+    MailLevelReward(uint32 _raceMask, uint32 _mailTemplateId, uint32 _senderEntry) : raceMask(_raceMask), mailTemplateId(_mailTemplateId), senderEntry(_senderEntry) { }
 
     uint32 raceMask;
     uint32 mailTemplateId;
@@ -556,8 +556,8 @@ struct QuestPOIPoint
     int32 x;
     int32 y;
 
-    QuestPOIPoint() : x(0), y(0) {}
-    QuestPOIPoint(int32 _x, int32 _y) : x(_x), y(_y) {}
+    QuestPOIPoint() : x(0), y(0) { }
+    QuestPOIPoint(int32 _x, int32 _y) : x(_x), y(_y) { }
 };
 
 struct QuestPOI
@@ -566,13 +566,13 @@ struct QuestPOI
     int32 ObjectiveIndex;
     uint32 MapId;
     uint32 AreaId;
-    uint32 Unk2;
+    uint32 FloorId;
     uint32 Unk3;
     uint32 Unk4;
     std::vector<QuestPOIPoint> points;
 
-    QuestPOI() : Id(0), ObjectiveIndex(0), MapId(0), AreaId(0), Unk2(0), Unk3(0), Unk4(0) {}
-    QuestPOI(uint32 id, int32 objIndex, uint32 mapId, uint32 areaId, uint32 unk2, uint32 unk3, uint32 unk4) : Id(id), ObjectiveIndex(objIndex), MapId(mapId), AreaId(areaId), Unk2(unk2), Unk3(unk3), Unk4(unk4) {}
+    QuestPOI() : Id(0), ObjectiveIndex(0), MapId(0), AreaId(0), FloorId(0), Unk3(0), Unk4(0) { }
+    QuestPOI(uint32 id, int32 objIndex, uint32 mapId, uint32 areaId, uint32 floorId, uint32 unk3, uint32 unk4) : Id(id), ObjectiveIndex(objIndex), MapId(mapId), AreaId(areaId), FloorId(floorId), Unk3(unk3), Unk4(unk4) { }
 };
 
 typedef std::vector<QuestPOI> QuestPOIVector;
@@ -854,13 +854,13 @@ class ObjectMgr
         void LoadQuests();
         void LoadQuestStartersAndEnders()
         {
-            TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Loading GO Start Quest Data...");
+            TC_LOG_INFO("server.loading", "Loading GO Start Quest Data...");
             LoadGameobjectQuestStarters();
-            TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Loading GO End Quest Data...");
+            TC_LOG_INFO("server.loading", "Loading GO End Quest Data...");
             LoadGameobjectQuestEnders();
-            TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Loading Creature Start Quest Data...");
+            TC_LOG_INFO("server.loading", "Loading Creature Start Quest Data...");
             LoadCreatureQuestStarters();
-            TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, "Loading Creature End Quest Data...");
+            TC_LOG_INFO("server.loading", "Loading Creature End Quest Data...");
             LoadCreatureQuestEnders();
         }
         void LoadGameobjectQuestStarters();
@@ -1019,6 +1019,11 @@ class ObjectMgr
             return _mapObjectGuidsStore[MAKE_PAIR32(mapid, spawnMode)][cell_id];
         }
 
+        CellObjectGuidsMap const& GetMapObjectGuids(uint16 mapid, uint8 spawnMode)
+        {
+            return _mapObjectGuidsStore[MAKE_PAIR32(mapid, spawnMode)];
+        }
+
         /**
          * Gets temp summon data for all creatures of specified group.
          *
@@ -1156,6 +1161,7 @@ class ObjectMgr
             return &itr->second;
         }
         GameTele const* GetGameTele(std::string const& name) const;
+        GameTele const* GetGameTeleExactName(std::string const& name) const;
         GameTeleContainer const& GetGameTeleMap() const { return _gameTeleStore; }
         bool AddGameTele(GameTele& data);
         bool DeleteGameTele(std::string const& name);

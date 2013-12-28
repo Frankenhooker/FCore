@@ -166,7 +166,7 @@ bool BattlefieldWG::SetupBattlefield()
     {
         Position towerCannonPos;
         WGTurret[i].GetPosition(&towerCannonPos);
-        if (Creature* creature = SpawnCreature(NPC_TOWER_CANNON, towerCannonPos, TEAM_ALLIANCE))
+        if (Creature* creature = SpawnCreature(NPC_WINTERGRASP_TOWER_CANNON, towerCannonPos, TEAM_ALLIANCE))
         {
             CanonList.insert(creature->GetGUID());
             HideNpc(creature);
@@ -228,7 +228,7 @@ void BattlefieldWG::OnBattleStart()
         m_titansRelicGUID = relic->GetGUID();
     }
     else
-        TC_LOG_ERROR(LOG_FILTER_BATTLEFIELD, "WG: Failed to spawn titan relic.");
+        TC_LOG_ERROR("bg.battlefield", "WG: Failed to spawn titan relic.");
 
 
     // Update tower visibility and update faction
@@ -473,7 +473,7 @@ uint8 BattlefieldWG::GetSpiritGraveyardId(uint32 areaId) const
         case AREA_THE_CHILLED_QUAGMIRE:
             return BATTLEFIELD_WG_GY_HORDE;
         default:
-            TC_LOG_ERROR(LOG_FILTER_BATTLEFIELD, "BattlefieldWG::GetSpiritGraveyardId: Unexpected Area Id %u", areaId);
+            TC_LOG_ERROR("bg.battlefield", "BattlefieldWG::GetSpiritGraveyardId: Unexpected Area Id %u", areaId);
             break;
     }
 
@@ -804,7 +804,7 @@ uint32 BattlefieldWG::GetData(uint32 data) const
 {
     switch (data)
     {
-        // Used to determine when the phasing spells must be casted
+        // Used to determine when the phasing spells must be cast
         // See: SpellArea::IsFitToRequirements
         case AREA_THE_SUNKEN_RING:
         case AREA_THE_BROKEN_TEMPLATE:
@@ -1064,4 +1064,5 @@ void WintergraspCapturePoint::ChangeTeam(TeamId /*oldTeam*/)
 BfGraveyardWG::BfGraveyardWG(BattlefieldWG* battlefield) : BfGraveyard(battlefield)
 {
     m_Bf = battlefield;
+    m_GossipTextId = 0;
 }

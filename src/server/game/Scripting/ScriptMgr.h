@@ -24,6 +24,7 @@
 #include <ace/Atomic_Op.h>
 
 #include "DBCStores.h"
+#include "QuestDef.h"
 #include "SharedDefines.h"
 #include "World.h"
 #include "Weather.h"
@@ -311,7 +312,7 @@ template<class TMap> class MapScript : public UpdatableScript<TMap>
             : _mapEntry(sMapStore.LookupEntry(mapId))
         {
             if (!_mapEntry)
-                TC_LOG_ERROR(LOG_FILTER_TSCR, "Invalid MapScript for %u; no such map ID.", mapId);
+                TC_LOG_ERROR("scripts", "Invalid MapScript for %u; no such map ID.", mapId);
         }
 
     public:
@@ -396,6 +397,12 @@ class UnitScript : public ScriptObject
         UnitScript(const char* name, bool addToScripts = true);
 
     public:
+        // Called when a unit deals healing to another unit
+        virtual void OnHeal(Unit* /*healer*/, Unit* /*reciever*/, uint32& /*gain*/) { }
+
+        // Called when a unit deals damage to another unit
+        virtual void OnDamage(Unit* /*attacker*/, Unit* /*victim*/, uint32& /*damage*/) { }
+
         // Called when DoT's Tick Damage is being Dealt
         virtual void ModifyPeriodicDamageAurasTick(Unit* /*target*/, Unit* /*attacker*/, uint32& /*damage*/) { }
 
@@ -441,7 +448,7 @@ class CreatureScript : public UnitScript, public UpdatableScript<Creature>
         virtual bool OnQuestReward(Player* /*player*/, Creature* /*creature*/, Quest const* /*quest*/, uint32 /*opt*/) { return false; }
 
         // Called when the dialog status between a player and the creature is requested.
-        virtual uint32 GetDialogStatus(Player* /*player*/, Creature* /*creature*/) { return 100; }
+        virtual uint32 GetDialogStatus(Player* /*player*/, Creature* /*creature*/) { return DIALOG_STATUS_SCRIPTED_NO_STATUS; }
 
         // Called when a CreatureAI object is needed for the creature.
         virtual CreatureAI* GetAI(Creature* /*creature*/) const { return NULL; }
@@ -476,7 +483,7 @@ class GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
         virtual bool OnQuestReward(Player* /*player*/, GameObject* /*go*/, Quest const* /*quest*/, uint32 /*opt*/) { return false; }
 
         // Called when the dialog status between a player and the gameobject is requested.
-        virtual uint32 GetDialogStatus(Player* /*player*/, GameObject* /*go*/) { return 100; }
+        virtual uint32 GetDialogStatus(Player* /*player*/, GameObject* /*go*/) { return DIALOG_STATUS_SCRIPTED_NO_STATUS; }
 
         // Called when the game object is destroyed (destructible buildings only).
         virtual void OnDestroyed(GameObject* /*go*/, Player* /*player*/) { }
@@ -1054,6 +1061,8 @@ class ScriptMgr
 
     public: /* UnitScript */
 
+        void OnHeal(Unit* healer, Unit* reciever, uint32& gain);
+        void OnDamage(Unit* attacker, Unit* victim, uint32& damage);
         void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage);
         void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage);
         void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage);

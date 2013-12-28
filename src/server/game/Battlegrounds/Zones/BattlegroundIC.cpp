@@ -45,6 +45,7 @@ BattlegroundIC::BattlegroundIC()
 
     closeFortressDoorsTimer = CLOSE_DOORS_TIME; // the doors are closed again... in a special way
     doorsClosed = false;
+    docksTimer = DOCKS_UPDATE_TIME;
     resourceTimer = IC_RESOURCE_TIME;
 
     for (uint8 i = NODE_TYPE_REFINERY; i < MAX_NODE_TYPES; ++i)
@@ -56,11 +57,7 @@ BattlegroundIC::BattlegroundIC()
     gunshipAlliance = NULL;
 }
 
-BattlegroundIC::~BattlegroundIC()
-{
-    delete gunshipHorde;
-    delete gunshipAlliance;
-}
+BattlegroundIC::~BattlegroundIC() { }
 
 void BattlegroundIC::HandlePlayerResurrect(Player* player)
 {
@@ -69,22 +66,6 @@ void BattlegroundIC::HandlePlayerResurrect(Player* player)
 
     if (nodePoint[NODE_TYPE_REFINERY].nodeState == (player->GetTeamId() == TEAM_ALLIANCE ? NODE_STATE_CONTROLLED_A : NODE_STATE_CONTROLLED_H))
         player->CastSpell(player, SPELL_OIL_REFINERY, true);
-}
-
-void BattlegroundIC::SendTransportInit(Player* player)
-{
-    if (!gunshipAlliance || !gunshipHorde)
-        return;
-
-    UpdateData transData;
-
-    gunshipAlliance->BuildCreateUpdateBlockForPlayer(&transData, player);
-    gunshipHorde->BuildCreateUpdateBlockForPlayer(&transData, player);
-
-    WorldPacket packet;
-
-    transData.BuildPacket(&packet);
-    player->SendDirectMessage(&packet);
 }
 
 void BattlegroundIC::DoAction(uint32 action, uint64 var)
@@ -285,7 +266,7 @@ void BattlegroundIC::StartingEventOpenDoors()
                        BG_IC_Teleporters[i].z, BG_IC_Teleporters[i].o,
                        0, 0, 0, 0, RESPAWN_ONE_DAY))
         {
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest | Starting Event Open Doors: There was an error spawning gameobject %u", BG_IC_Teleporters[i].entry);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest | Starting Event Open Doors: There was an error spawning gameobject %u", BG_IC_Teleporters[i].entry);
         }
     }
 }
@@ -300,8 +281,6 @@ void BattlegroundIC::AddPlayer(Player* player)
 
     if (nodePoint[NODE_TYPE_REFINERY].nodeState == (player->GetTeamId() == TEAM_ALLIANCE ? NODE_STATE_CONTROLLED_A : NODE_STATE_CONTROLLED_H))
         player->CastSpell(player, SPELL_OIL_REFINERY, true);
-
-    SendTransportInit(player);
 }
 
 void BattlegroundIC::RemovePlayer(Player* player, uint64 /*guid*/, uint32 /*team*/)
@@ -383,7 +362,7 @@ bool BattlegroundIC::SetupBattleground()
             BG_IC_ObjSpawnlocs[i].z, BG_IC_ObjSpawnlocs[i].o,
             0, 0, 0, 0, RESPAWN_ONE_DAY))
         {
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning gameobject %u", BG_IC_ObjSpawnlocs[i].entry);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning gameobject %u", BG_IC_ObjSpawnlocs[i].entry);
             return false;
         }
     }
@@ -395,7 +374,7 @@ bool BattlegroundIC::SetupBattleground()
             BG_IC_NpcSpawnlocs[i].z, BG_IC_NpcSpawnlocs[i].o,
             RESPAWN_ONE_DAY))
         {
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[i].entry);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[i].entry);
             return false;
         }
     }
@@ -405,24 +384,17 @@ bool BattlegroundIC::SetupBattleground()
         || !AddSpiritGuide(BG_IC_NPC_SPIRIT_GUIDE_1+3, BG_IC_SpiritGuidePos[7][0], BG_IC_SpiritGuidePos[7][1], BG_IC_SpiritGuidePos[7][2], BG_IC_SpiritGuidePos[7][3], ALLIANCE)
         || !AddSpiritGuide(BG_IC_NPC_SPIRIT_GUIDE_1+4, BG_IC_SpiritGuidePos[8][0], BG_IC_SpiritGuidePos[8][1], BG_IC_SpiritGuidePos[8][2], BG_IC_SpiritGuidePos[8][3], HORDE))
     {
-        TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: Failed to spawn initial spirit guide!");
+        TC_LOG_ERROR("bg.battleground", "Isle of Conquest: Failed to spawn initial spirit guide!");
         return false;
     }
 
-    gunshipHorde = CreateTransport(GO_HORDE_GUNSHIP, TRANSPORT_PERIOD_TIME);
-    gunshipAlliance = CreateTransport(GO_ALLIANCE_GUNSHIP, TRANSPORT_PERIOD_TIME);
+    gunshipHorde = sTransportMgr->CreateTransport(GO_HORDE_GUNSHIP, 0, GetBgMap());
+    gunshipAlliance = sTransportMgr->CreateTransport(GO_ALLIANCE_GUNSHIP, 0, GetBgMap());
 
     if (!gunshipAlliance || !gunshipHorde)
     {
-        TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error creating gunships!");
+        TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error creating gunships!");
         return false;
-    }
-
-    //Send transport init packet to all player in map
-    for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
-    {
-        if (Player* player = ObjectAccessor::FindPlayer(itr->first))
-            SendTransportInit(player);
     }
 
     // setting correct factions for Keep Cannons
@@ -546,7 +518,7 @@ void BattlegroundIC::EventPlayerClickedOnFlag(Player* player, GameObject* target
             DelObject(nodePoint[i].gameobject_type);
             if (!AddObject(nodePoint[i].gameobject_type, nodePoint[i].gameobject_entry, cords[0], cords[1], cords[2], cords[3], 0, 0, 0, 0, RESPAWN_ONE_DAY))
             {
-                TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning a banner (type: %u, entry: %u). Isle of Conquest BG cancelled.", nodePoint[i].gameobject_type, nodePoint[i].gameobject_entry);
+                TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning a banner (type: %u, entry: %u). Isle of Conquest BG cancelled.", nodePoint[i].gameobject_type, nodePoint[i].gameobject_entry);
                 Battleground::EndBattleground(WINNER_NONE);
             }
 
@@ -587,7 +559,7 @@ void BattlegroundIC::UpdateNodeWorldState(ICNodePoint* nodePoint)
             continue;
         UpdateWorldState(nodePoint->worldStates[i], 0);
     }
-		
+
     UpdateWorldState(worldstate, 1);
 }
 
@@ -612,7 +584,7 @@ uint32 BattlegroundIC::GetNextBanner(ICNodePoint* nodePoint, uint32 team, bool r
         return nodePoint->last_entry;
 
     // we should never be here...
-    TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle Of Conquest: Unexpected return in GetNextBanner function");
+    TC_LOG_ERROR("bg.battleground", "Isle Of Conquest: Unexpected return in GetNextBanner function");
     return 0;
 }
 
@@ -620,8 +592,8 @@ void BattlegroundIC::HandleContestedNodes(ICNodePoint* nodePoint)
 {
     if (nodePoint->nodeType == NODE_TYPE_HANGAR)
     {
-        if (gunshipAlliance && gunshipHorde)
-            (nodePoint->faction == TEAM_ALLIANCE ? gunshipHorde : gunshipAlliance)->BuildStopMovePacket(GetBgMap());
+         if (gunshipAlliance && gunshipHorde)
+             (nodePoint->faction == TEAM_ALLIANCE ? gunshipHorde : gunshipAlliance)->EnableMovement(false);
 
         for (uint8 u = BG_IC_GO_HANGAR_TELEPORTER_1; u < BG_IC_GO_HANGAR_TELEPORTER_3; ++u)
             DelObject(u);
@@ -636,7 +608,7 @@ void BattlegroundIC::HandleCapturedNodes(ICNodePoint* nodePoint, bool recapture)
             BG_IC_SpiritGuidePos[nodePoint->nodeType][0], BG_IC_SpiritGuidePos[nodePoint->nodeType][1],
             BG_IC_SpiritGuidePos[nodePoint->nodeType][2], BG_IC_SpiritGuidePos[nodePoint->nodeType][3],
             (nodePoint->faction == TEAM_ALLIANCE ? ALLIANCE : HORDE)))
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: Failed to spawn spirit guide! point: %u, team: %u, ", nodePoint->nodeType, nodePoint->faction);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest: Failed to spawn spirit guide! point: %u, team: %u, ", nodePoint->nodeType, nodePoint->faction);
     }
 
     switch (nodePoint->gameobject_type)
@@ -654,14 +626,14 @@ void BattlegroundIC::HandleCapturedNodes(ICNodePoint* nodePoint, bool recapture)
                     BG_IC_HangarTeleporters[u].GetPositionZ(), BG_IC_HangarTeleporters[u].GetOrientation(),
                     0, 0, 0, 0, RESPAWN_ONE_DAY))
                 {
-                    TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning a gunship portal. Type: %u", BG_IC_GO_HANGAR_TELEPORTER_1+u);
+                    TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning a gunship portal. Type: %u", BG_IC_GO_HANGAR_TELEPORTER_1+u);
                 }
             }
 
-            //TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "BG_IC_GO_HANGAR_BANNER CAPTURED Faction: %u", nodePoint->faction);
+            //TC_LOG_ERROR("bg.battleground", "BG_IC_GO_HANGAR_BANNER CAPTURED Faction: %u", nodePoint->faction);
 
-            (nodePoint->faction == TEAM_ALLIANCE ? gunshipAlliance : gunshipHorde)->BuildStartMovePacket(GetBgMap());
-            (nodePoint->faction == TEAM_ALLIANCE ? gunshipHorde : gunshipAlliance)->BuildStopMovePacket(GetBgMap());
+            (nodePoint->faction == TEAM_ALLIANCE ? gunshipAlliance : gunshipHorde)->EnableMovement(true);
+            (nodePoint->faction == TEAM_ALLIANCE ? gunshipHorde : gunshipAlliance)->EnableMovement(false);
             // we should spawn teleporters
             break;
         case BG_IC_GO_QUARRY_BANNER:
@@ -856,21 +828,18 @@ void BattlegroundIC::DestroyGate(Player* player, GameObject* go)
     if (go->GetEntry() == GO_HORDE_GATE_1 || go->GetEntry() == GO_HORDE_GATE_2 || go->GetEntry() == GO_HORDE_GATE_3)
     {
         if (!GetBgMap()->GetCreature(BgCreatures[BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].type]) && !AddCreature(BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].entry, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].type, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].team, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].x, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].y, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].z, BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].o, RESPAWN_ONE_DAY))
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].entry);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[BG_IC_NPC_OVERLORD_AGMAR].entry);
     }
     else if (go->GetEntry() == GO_ALLIANCE_GATE_1 || go->GetEntry() == GO_ALLIANCE_GATE_2 || go->GetEntry() == GO_ALLIANCE_GATE_3)
     {
         if (!GetBgMap()->GetCreature(BgCreatures[BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].type]) && !AddCreature(BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].entry, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].type, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].team, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].x, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].y, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].z, BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].o, RESPAWN_ONE_DAY))
-            TC_LOG_ERROR(LOG_FILTER_BATTLEGROUND, "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].entry);
+            TC_LOG_ERROR("bg.battleground", "Isle of Conquest: There was an error spawning creature %u", BG_IC_NpcSpawnlocs[BG_IC_NPC_HIGH_COMMANDER_HALFORD_WYRMBANE].entry);
     }
 
     SendMessage2ToAll(lang_entry, CHAT_MSG_BG_SYSTEM_NEUTRAL, NULL, (player->GetTeamId() == TEAM_ALLIANCE ? LANG_BG_IC_HORDE_KEEP : LANG_BG_IC_ALLIANCE_KEEP));
 }
 
-void BattlegroundIC::EventPlayerDamagedGO(Player* /*player*/, GameObject* /*go*/, uint32 /*eventType*/)
-{
-
-}
+void BattlegroundIC::EventPlayerDamagedGO(Player* /*player*/, GameObject* /*go*/, uint32 /*eventType*/) { }
 
 WorldSafeLocsEntry const* BattlegroundIC::GetClosestGraveYard(Player* player)
 {
@@ -909,52 +878,6 @@ WorldSafeLocsEntry const* BattlegroundIC::GetClosestGraveYard(Player* player)
         good_entry = sWorldSafeLocsStore.LookupEntry(BG_IC_GraveyardIds[teamIndex+MAX_NODE_TYPES]);
 
     return good_entry;
-}
-
-Transport* BattlegroundIC::CreateTransport(uint32 goEntry, uint32 period)
-{
-    Transport* t = new Transport(period, 0);
-
-    GameObjectTemplate const* goinfo = sObjectMgr->GetGameObjectTemplate(goEntry);
-
-    if (!goinfo)
-    {
-        TC_LOG_ERROR(LOG_FILTER_SQL, "Transport ID: %u will not be loaded, gameobject_template missing", goEntry);
-        delete t;
-        return NULL;
-    }
-
-    std::set<uint32> mapsUsed;
-
-    if (!t->GenerateWaypoints(goinfo->moTransport.taxiPathId, mapsUsed))
-        // skip transports with empty waypoints list
-    {
-        TC_LOG_ERROR(LOG_FILTER_SQL, "Transport (path id %u) path size = 0. Transport ignored, check DBC files or transport GO data0 field.", goinfo->moTransport.taxiPathId);
-        delete t;
-        return NULL;
-    }
-
-    uint32 mapid = t->m_WayPoints[0].mapid;
-
-    float x = t->m_WayPoints[0].x;
-    float y = t->m_WayPoints[0].y;
-    float z = t->m_WayPoints[0].z;
-    float o = 1;
-
-    // creates the Gameobject
-    if (!t->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_MO_TRANSPORT), goEntry, mapid, x, y, z, o, 255, 0))
-    {
-        delete t;
-        return NULL;
-    }
-
-    //If we someday decide to use the grid to track transports, here:
-    t->SetMap(GetBgMap());
-
-    for (uint8 i = 0; i < 5; ++i)
-        t->AddNPCPassenger(0, (goEntry == GO_HORDE_GUNSHIP ? NPC_HORDE_GUNSHIP_CANNON : NPC_ALLIANCE_GUNSHIP_CANNON), (goEntry == GO_HORDE_GUNSHIP ? hordeGunshipPassengers[i].GetPositionX() : allianceGunshipPassengers[i].GetPositionX()), (goEntry == GO_HORDE_GUNSHIP ? hordeGunshipPassengers[i].GetPositionY() : allianceGunshipPassengers[i].GetPositionY()), (goEntry == GO_HORDE_GUNSHIP ? hordeGunshipPassengers[i].GetPositionZ() : allianceGunshipPassengers[i].GetPositionZ()), (goEntry == GO_HORDE_GUNSHIP ? hordeGunshipPassengers[i].GetOrientation() : allianceGunshipPassengers[i].GetOrientation()));
-
-    return t;
 }
 
 bool BattlegroundIC::IsAllNodesControlledByTeam(uint32 team) const

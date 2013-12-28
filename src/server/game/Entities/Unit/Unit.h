@@ -786,7 +786,7 @@ struct DiminishingReturn
 {
     DiminishingReturn(DiminishingGroup group, uint32 t, uint32 count)
         : DRGroup(group), stack(0), hitTime(t), hitCount(count)
-    {}
+    { }
 
     DiminishingGroup        DRGroup:16;
     uint16                  stack:16;
@@ -804,7 +804,7 @@ class DispelInfo
 {
 public:
     explicit DispelInfo(Unit* dispeller, uint32 dispellerSpellId, uint8 chargesRemoved) :
-    _dispellerUnit(dispeller), _dispellerSpell(dispellerSpellId), _chargesRemoved(chargesRemoved) {}
+    _dispellerUnit(dispeller), _dispellerSpell(dispellerSpellId), _chargesRemoved(chargesRemoved) { }
 
     Unit* GetDispeller() const { return _dispellerUnit; }
     uint32 GetDispellerSpellId() const { return _dispellerSpell; }
@@ -822,7 +822,7 @@ private:
 struct CleanDamage
 {
     CleanDamage(uint32 mitigated, uint32 absorbed, WeaponAttackType _attackType, MeleeHitOutcome _hitOutCome) :
-    absorbed_damage(absorbed), mitigated_damage(mitigated), attackType(_attackType), hitOutCome(_hitOutCome) {}
+    absorbed_damage(absorbed), mitigated_damage(mitigated), attackType(_attackType), hitOutCome(_hitOutCome) { }
 
     uint32 absorbed_damage;
     uint32 mitigated_damage;
@@ -951,7 +951,7 @@ struct SpellNonMeleeDamage
     SpellNonMeleeDamage(Unit* _attacker, Unit* _target, uint32 _SpellID, uint32 _schoolMask)
         : target(_target), attacker(_attacker), SpellID(_SpellID), damage(0), overkill(0), schoolMask(_schoolMask),
         absorb(0), resist(0), physicalLog(false), unused(false), blocked(0), HitInfo(0), cleanDamage(0)
-    {}
+    { }
 
     Unit   *target;
     Unit   *attacker;
@@ -972,7 +972,7 @@ struct SpellNonMeleeDamage
 struct SpellPeriodicAuraLogInfo
 {
     SpellPeriodicAuraLogInfo(AuraEffect const* _auraEff, uint32 _damage, uint32 _overDamage, uint32 _absorb, uint32 _resist, float _multiplier, bool _critical)
-        : auraEff(_auraEff), damage(_damage), overDamage(_overDamage), absorb(_absorb), resist(_resist), multiplier(_multiplier), critical(_critical){}
+        : auraEff(_auraEff), damage(_damage), overDamage(_overDamage), absorb(_absorb), resist(_resist), multiplier(_multiplier), critical(_critical){ }
 
     AuraEffect const* auraEff;
     uint32 damage;
@@ -1027,7 +1027,7 @@ enum CurrentSpellTypes
 
 struct GlobalCooldown
 {
-    explicit GlobalCooldown(uint32 _dur = 0, uint32 _time = 0) : duration(_dur), cast_time(_time) {}
+    explicit GlobalCooldown(uint32 _dur = 0, uint32 _time = 0) : duration(_dur), cast_time(_time) { }
 
     uint32 duration;
     uint32 cast_time;
@@ -1038,7 +1038,7 @@ typedef UNORDERED_MAP<uint32 /*category*/, GlobalCooldown> GlobalCooldownList;
 class GlobalCooldownMgr                                     // Shared by Player and CharmInfo
 {
 public:
-    GlobalCooldownMgr() {}
+    GlobalCooldownMgr() { }
 
 public:
     bool HasGlobalCooldown(SpellInfo const* spellInfo) const;
@@ -1080,7 +1080,7 @@ enum CommandStates
 
 struct UnitActionBarEntry
 {
-    UnitActionBarEntry() : packedData(uint32(ACT_DISABLED) << 24) {}
+    UnitActionBarEntry() : packedData(uint32(ACT_DISABLED) << 24) { }
 
     uint32 packedData;
 
@@ -1816,15 +1816,15 @@ class Unit : public WorldObject
         float GetNegStat(Stats stat) const { return GetFloatValue(UNIT_FIELD_NEGSTAT0+stat); }
         float GetCreateStat(Stats stat) const { return m_createStats[stat]; }
 
-        void SetCurrentCastedSpell(Spell* pSpell);
+        void SetCurrentCastSpell(Spell* pSpell);
         virtual void ProhibitSpellSchool(SpellSchoolMask /*idSchoolMask*/, uint32 /*unTimeMs*/) { }
         void InterruptSpell(CurrentSpellTypes spellType, bool withDelayed = true, bool withInstant = true);
         void FinishSpell(CurrentSpellTypes spellType, bool ok = true);
 
-        // set withDelayed to true to account delayed spells as casted
-        // delayed+channeled spells are always accounted as casted
+        // set withDelayed to true to account delayed spells as cast
+        // delayed+channeled spells are always accounted as cast
         // we can skip channeled or delayed checks using flags
-        bool IsNonMeleeSpellCasted(bool withDelayed, bool skipChanneled = false, bool skipAutorepeat = false, bool isAutoshoot = false, bool skipInstant = true) const;
+        bool IsNonMeleeSpellCast(bool withDelayed, bool skipChanneled = false, bool skipAutorepeat = false, bool isAutoshoot = false, bool skipInstant = true) const;
 
         // set withDelayed to true to interrupt delayed spells too
         // delayed+channeled spells are always interrupted
@@ -1894,7 +1894,7 @@ class Unit : public WorldObject
         uint32 m_lastSanctuaryTime;
 
         // Threat related methods
-        bool CanHaveThreatList() const;
+        bool CanHaveThreatList(bool skipAliveCheck = false) const;
         void AddThreat(Unit* victim, float fThreat, SpellSchoolMask schoolMask = SPELL_SCHOOL_MASK_NORMAL, SpellInfo const* threatSpell = NULL);
         float ApplyTotalThreatModifier(float fThreat, SpellSchoolMask schoolMask = SPELL_SCHOOL_MASK_NORMAL);
         void DeleteThreatList();
@@ -2005,8 +2005,8 @@ class Unit : public WorldObject
         static Player* GetPlayer(WorldObject& object, uint64 guid);
         static Creature* GetCreature(WorldObject& object, uint64 guid);
 
-        MotionMaster* GetMotionMaster() { return &i_motionMaster; }
-        const MotionMaster* GetMotionMaster() const { return &i_motionMaster; }
+        MotionMaster* GetMotionMaster() { return i_motionMaster; }
+        const MotionMaster* GetMotionMaster() const { return i_motionMaster; }
 
         bool IsStopped() const { return !(HasUnitState(UNIT_STATE_MOVING)); }
         void StopMoving();
@@ -2078,12 +2078,6 @@ class Unit : public WorldObject
         bool IsOnVehicle(const Unit* vehicle) const;
         Unit* GetVehicleBase()  const;
         Creature* GetVehicleCreatureBase() const;
-        float GetTransOffsetX() const { return m_movementInfo.transport.pos.GetPositionX(); }
-        float GetTransOffsetY() const { return m_movementInfo.transport.pos.GetPositionY(); }
-        float GetTransOffsetZ() const { return m_movementInfo.transport.pos.GetPositionZ(); }
-        float GetTransOffsetO() const { return m_movementInfo.transport.pos.GetOrientation(); }
-        uint32 GetTransTime()   const { return m_movementInfo.transport.time; }
-        int8 GetTransSeat()     const { return m_movementInfo.transport.seat; }
         uint64 GetTransGUID()   const;
         /// Returns the transport this unit is on directly (if on vehicle and transport, return vehicle)
         TransportBase* GetDirectTransport() const;
@@ -2124,11 +2118,8 @@ class Unit : public WorldObject
         TempSummon* ToTempSummon() { if (IsSummon()) return reinterpret_cast<TempSummon*>(this); else return NULL; }
         TempSummon const* ToTempSummon() const { if (IsSummon()) return reinterpret_cast<TempSummon const*>(this); else return NULL; }
 
-        void SetTarget(uint64 guid);
-
-        // Handling caster facing during spellcast
-        void FocusTarget(Spell const* focusSpell, WorldObject const* target);
-        void ReleaseFocus(Spell const* focusSpell);
+        uint64 GetTarget() const { return GetUInt64Value(UNIT_FIELD_TARGET); }
+        virtual void SetTarget(uint64 /*guid*/) = 0;
 
         // Movement info
         Movement::MoveSpline * movespline;
@@ -2167,7 +2158,7 @@ class Unit : public WorldObject
 
         typedef std::list<GameObject*> GameObjectList;
         GameObjectList m_gameObj;
-        bool m_isSorted;
+
         uint32 m_transform;
 
         Spell* m_currentSpells[CURRENT_MAX_SPELL];
@@ -2179,8 +2170,8 @@ class Unit : public WorldObject
         uint32 m_removedAurasCount;
 
         AuraEffectList m_modAuras[TOTAL_AURAS];
-        AuraList m_scAuras;                        // casted singlecast auras
-        AuraApplicationList m_interruptableAuras;             // auras which have interrupt mask applied on unit
+        AuraList m_scAuras;                        // cast singlecast auras
+        AuraApplicationList m_interruptableAuras;  // auras which have interrupt mask applied on unit
         AuraStateAurasMap m_auraStateAuras;        // Used for improve performance of aura state checks on aura apply/remove
         uint32 m_interruptMask;
 
@@ -2196,7 +2187,7 @@ class Unit : public WorldObject
 
         virtual SpellSchoolMask GetMeleeDamageSchoolMask() const;
 
-        MotionMaster i_motionMaster;
+        MotionMaster* i_motionMaster;
 
         uint32 m_reactiveTimer[MAX_REACTIVE];
         uint32 m_regenTimer;
@@ -2223,6 +2214,7 @@ class Unit : public WorldObject
         bool HandleAuraRaidProcFromCharge(AuraEffect* triggeredByAura);
 
         void UpdateSplineMovement(uint32 t_diff);
+        void UpdateSplinePosition();
 
         // player or player's pet
         float GetCombatRatingReduction(CombatRating cr) const;
@@ -2253,7 +2245,6 @@ class Unit : public WorldObject
         bool m_cleanupDone; // lock made to not add stuff after cleanup before delete
         bool m_duringRemoveFromWorld; // lock made to not add stuff after begining removing from world
 
-        Spell const* _focusSpell;   ///> Locks the target during spell cast for proper facing
         bool _isWalkingBeforeCharm; // Are we walking before we were charmed?
 
         time_t _lastDamagedTime; // Part of Evade mechanics
@@ -2265,7 +2256,7 @@ namespace Trinity
     class PowerPctOrderPred
     {
         public:
-            PowerPctOrderPred(Powers power, bool ascending = true) : m_power(power), m_ascending(ascending) {}
+            PowerPctOrderPred(Powers power, bool ascending = true) : m_power(power), m_ascending(ascending) { }
             bool operator() (const Unit* a, const Unit* b) const
             {
                 float rA = a->GetMaxPower(m_power) ? float(a->GetPower(m_power)) / float(a->GetMaxPower(m_power)) : 0.0f;
@@ -2281,7 +2272,7 @@ namespace Trinity
     class HealthPctOrderPred
     {
         public:
-            HealthPctOrderPred(bool ascending = true) : m_ascending(ascending) {}
+            HealthPctOrderPred(bool ascending = true) : m_ascending(ascending) { }
             bool operator() (const Unit* a, const Unit* b) const
             {
                 float rA = a->GetMaxHealth() ? float(a->GetHealth()) / float(a->GetMaxHealth()) : 0.0f;

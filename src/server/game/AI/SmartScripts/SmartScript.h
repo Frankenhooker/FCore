@@ -89,7 +89,7 @@ class SmartScript
         Unit* DoSelectLowestHpFriendly(float range, uint32 MinHPDiff);
         void DoFindFriendlyCC(std::list<Creature*>& _list, float range);
         void DoFindFriendlyMissingBuff(std::list<Creature*>& list, float range, uint32 spellid);
-        Unit* DoFindClosestFriendlyInRange(float range);
+        Unit* DoFindClosestFriendlyInRange(float range, bool playerOnly);
 
         void StoreTargetList(ObjectList* targets, uint32 id)
         {
@@ -118,7 +118,7 @@ class SmartScript
                 smart = false;
 
             if (!smart)
-                TC_LOG_ERROR(LOG_FILTER_SQL, "SmartScript: Action target Creature (GUID: %u Entry: %u) is not using SmartAI, action skipped to prevent crash.", c ? c->GetDBTableGUIDLow() : (me ? me->GetDBTableGUIDLow() : 0), c ? c->GetEntry() : (me ? me->GetEntry() : 0));
+                TC_LOG_ERROR("sql.sql", "SmartScript: Action target Creature (GUID: %u Entry: %u) is not using SmartAI, action skipped to prevent crash.", c ? c->GetDBTableGUIDLow() : (me ? me->GetDBTableGUIDLow() : 0), c ? c->GetEntry() : (me ? me->GetEntry() : 0));
 
             return smart;
         }
@@ -132,7 +132,7 @@ class SmartScript
             if (!go || go->GetAIName() != "SmartGameObjectAI")
                 smart = false;
             if (!smart)
-                TC_LOG_ERROR(LOG_FILTER_SQL, "SmartScript: Action target GameObject (GUID: %u Entry: %u) is not using SmartGameObjectAI, action skipped to prevent crash.", g ? g->GetDBTableGUIDLow() : (go ? go->GetDBTableGUIDLow() : 0), g ? g->GetEntry() : (go ? go->GetEntry() : 0));
+                TC_LOG_ERROR("sql.sql", "SmartScript: Action target GameObject (GUID: %u Entry: %u) is not using SmartGameObjectAI, action skipped to prevent crash.", g ? g->GetDBTableGUIDLow() : (go ? go->GetDBTableGUIDLow() : 0), g ? g->GetEntry() : (go ? go->GetEntry() : 0));
 
             return smart;
         }
@@ -237,14 +237,13 @@ class SmartScript
 
         uint32 mTextTimer;
         uint32 mLastTextID;
-        uint64 mTextGUID;
         uint32 mTalkerEntry;
         bool mUseTextTimer;
 
         SMARTAI_TEMPLATE mTemplate;
         void InstallEvents();
 
-        void RemoveStoredEvent (uint32 id)
+        void RemoveStoredEvent(uint32 id)
         {
             if (!mStoredEvents.empty())
             {
@@ -258,7 +257,7 @@ class SmartScript
                 }
             }
         }
-        SmartScriptHolder FindLinkedEvent (uint32 link)
+        SmartScriptHolder FindLinkedEvent(uint32 link)
         {
             if (!mEvents.empty())
             {

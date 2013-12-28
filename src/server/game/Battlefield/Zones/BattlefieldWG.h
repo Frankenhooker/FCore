@@ -208,7 +208,6 @@ enum WintergraspNpcs
 
     NPC_TAUNKA_SPIRIT_GUIDE                         = 31841, // Horde spirit guide for Wintergrasp
     NPC_DWARVEN_SPIRIT_GUIDE                        = 31842, // Alliance spirit guide for Wintergrasp
-    NPC_TOWER_CANNON                                = 28366,
 
     NPC_WINTERGRASP_SIEGE_ENGINE_ALLIANCE           = 28312,
     NPC_WINTERGRASP_SIEGE_ENGINE_HORDE              = 32627,
@@ -1189,7 +1188,7 @@ struct BfWGGameObjectBuilding
                 if (m_WG->GetRelic())
                     m_WG->GetRelic()->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
                 else
-                    TC_LOG_ERROR(LOG_FILTER_GENERAL, "BattlefieldWG: Relic not found.");
+                    TC_LOG_ERROR("misc", "BattlefieldWG: Relic not found.");
                 break;
         }
 
@@ -1338,7 +1337,7 @@ struct BfWGGameObjectBuilding
             {
                 Position towerCannonPos;
                 TowerCannon[towerid].TurretTop[i].GetPosition(&towerCannonPos);
-                if (Creature* turret = m_WG->SpawnCreature(28366, towerCannonPos, TeamId(0)))
+                if (Creature* turret = m_WG->SpawnCreature(NPC_WINTERGRASP_TOWER_CANNON, towerCannonPos, TeamId(0)))
                 {
                     m_TurretTopList.insert(turret->GetGUID());
                     switch (go->GetEntry())
@@ -1482,6 +1481,7 @@ struct WGWorkshop
         bf = _bf;
         workshopId = _workshopId;
         teamControl = BATTLEFIELD_WG_TEAM_NEUTRAL;
+        state = BATTLEFIELD_WG_OBJECTSTATE_NONE;
     }
 
     void GiveControlTo(uint8 team, bool init /* for first call in setup*/)
