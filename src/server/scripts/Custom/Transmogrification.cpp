@@ -138,13 +138,13 @@ void Transmogrification::LoadPlayerSets(uint64 pGUID)
                     break;
                 if(slot >= EQUIPMENT_SLOT_END)
                 {
-                    sLog->outError(LOG_FILTER_SQL, "Item entry (FakeEntry: %u, playerGUID: %u, slot: %u, presetId: %u) has invalid slot, ignoring.", entry, GUID_LOPART(pGUID), slot, uint32(PresetID));
+                    TC_LOG_ERROR("sql.sql", "Item entry (FakeEntry: %u, playerGUID: %u, slot: %u, presetId: %u) has invalid slot, ignoring.", entry, GUID_LOPART(pGUID), slot, uint32(PresetID));
                     continue;
                 }
                 if (sObjectMgr->GetItemTemplate(entry))
                     presetById[pGUID][PresetID][slot] = entry; // Transmogrification::Preset(presetName, fakeEntry);
                 else
-                    sLog->outError(LOG_FILTER_SQL, "Item entry (FakeEntry: %u, playerGUID: %u, slot: %u, presetId: %u) does not exist, ignoring.", entry, GUID_LOPART(pGUID), uint32(slot), uint32(PresetID));
+                    TC_LOG_ERROR("sql.sql", "Item entry (FakeEntry: %u, playerGUID: %u, slot: %u, presetId: %u) does not exist, ignoring.", entry, GUID_LOPART(pGUID), uint32(slot), uint32(PresetID));
             }
 
             if (!presetById[pGUID][PresetID].empty())
@@ -276,7 +276,7 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
     // slot of the transmogrified item
     if (slot >= EQUIPMENT_SLOT_END)
     {
-        TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify an item (lowguid: %u) with a wrong slot (%u) when transmogrifying items.", player->GetGUIDLow(), player->GetName().c_str(), GUID_LOPART(itemGUID), slot);
+        TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify an item (lowguid: %u) with a wrong slot (%u) when transmogrifying items.", player->GetGUIDLow(), player->GetName().c_str(), GUID_LOPART(itemGUID), slot);
         return LANG_ERR_TRANSMOG_INVALID_SLOT;
     }
 
@@ -287,7 +287,7 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
     ItemTemplate const* proto = sObjectMgr->GetItemTemplate(newEntry);
     if (!proto)
     {
-    TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify to an invalid item (entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), newEntry);
+    TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify to an invalid item (entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), newEntry);
     return LANG_ERR_TRANSMOG_INVALID_SRC_ENTRY;
     }
     }
@@ -300,7 +300,7 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
         itemTransmogrifier = player->GetItemByGuid(itemGUID);
         if (!itemTransmogrifier)
         {
-            TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify with an invalid item (lowguid: %u).", player->GetGUIDLow(), player->GetName().c_str(), GUID_LOPART(itemGUID));
+            TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify with an invalid item (lowguid: %u).", player->GetGUIDLow(), player->GetName().c_str(), GUID_LOPART(itemGUID));
             return LANG_ERR_TRANSMOG_MISSING_SRC_ITEM;
         }
     }
@@ -309,7 +309,7 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
     Item* itemTransmogrified = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
     if (!itemTransmogrified)
     {
-        TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify an invalid item in a valid slot (slot: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot);
+        TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) tried to transmogrify an invalid item in a valid slot (slot: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot);
         return LANG_ERR_TRANSMOG_MISSING_DEST_ITEM;
     }
 
@@ -317,14 +317,14 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
     //// has to be able to equip item transmogrified item
     //if (!player->CanEquipItem(slot, tempDest, itemTransmogrified, true, true))
     //{
-    //    TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) can't equip the item to be transmogrified (slot: %u, entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot, itemTransmogrified->GetEntry());
+    //    TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) can't equip the item to be transmogrified (slot: %u, entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot, itemTransmogrified->GetEntry());
     //    return;
     //}
     //
     //// has to be able to equip item transmogrifier item
     //if (!player->CanEquipItem(slot, tempDest, itemTransmogrifier, true, true))
     //{
-    //    TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) can't equip the transmogrifier item (slot: %u, entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot, itemTransmogrifier->GetEntry());
+    //    TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) can't equip the transmogrifier item (slot: %u, entry: %u).", player->GetGUIDLow(), player->GetName().c_str(), slot, itemTransmogrifier->GetEntry());
     //    return;
     //}
 
@@ -340,7 +340,7 @@ TransmogTrinityStrings Transmogrification::Transmogrify(Player* player, uint64 i
     {
         if (!CanTransmogrifyItemWithItem(player, itemTransmogrified->GetTemplate(), itemTransmogrifier->GetTemplate()))
         {
-            TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) failed CanTransmogrifyItemWithItem (%u with %u).", player->GetGUIDLow(), player->GetName().c_str(), itemTransmogrified->GetEntry(), itemTransmogrifier->GetEntry());
+            TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - Player (GUID: %u, name: %s) failed CanTransmogrifyItemWithItem (%u with %u).", player->GetGUIDLow(), player->GetName().c_str(), itemTransmogrified->GetEntry(), itemTransmogrifier->GetEntry());
             return LANG_ERR_TRANSMOG_INVALID_ITEMS;
         }
 
@@ -671,7 +671,7 @@ void Transmogrification::LoadConfig(bool reload)
 
     if (!sObjectMgr->GetItemTemplate(TokenEntry))
     {
-        sLog->outError(LOG_FILTER_SERVER_LOADING, "Transmogrification.TokenEntry (%u) does not exist. Using default.", TokenEntry);
+        TC_LOG_ERROR("server.loading", "Transmogrification.TokenEntry (%u) does not exist. Using default.", TokenEntry);
         TokenEntry = 49426;
     }
 }
