@@ -31,7 +31,9 @@ enum OutdoorPvPTypes
     OUTDOOR_PVP_TF = 3,
     OUTDOOR_PVP_ZM = 4,
     OUTDOOR_PVP_SI = 5,
-    OUTDOOR_PVP_EP = 6
+    OUTDOOR_PVP_EP = 6,
+	OUTDOOR_PVP_GH = 7,
+	OUTDOOR_PVP_CA = 8
 };
 
 #define MAX_OUTDOORPVP_TYPES 7

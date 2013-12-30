@@ -1228,6 +1228,16 @@ enum TrinityStrings
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
 
+	// AzharaCrater OutdoorPvP
+    LANG_OPVP_CA_LOOSE_TOWER_A_A        = 12000,
+    LANG_OPVP_CA_LOOSE_TOWER_B_A        = 12001,
+    LANG_OPVP_CA_LOOSE_TOWER_C_A        = 12002,
+    LANG_OPVP_CA_LOOSE_TOWER_D_H        = 12003,
+    LANG_OPVP_CA_LOOSE_TOWER_E_H        = 12004,
+    LANG_OPVP_CA_LOOSE_TOWER_F_H        = 12005,
+    LANG_OPVP_CA_KILLED_N_BOSS_A        = 12006,
+    LANG_OPVP_CA_KILLED_N_BOSS_H        = 12007,
+
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
     // For other tables maybe             2000010000-2147483647 (max index)
