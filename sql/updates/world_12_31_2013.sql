@@ -1,4 +1,4 @@
-SET NAMES 'utf8';
+--SET NAMES 'utf8';
 
 -- OutdoorPvP Zone: Azhara Crater - Dota
 REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) 
@@ -252,41 +252,37 @@ INSERT INTO `script_waypoint` VALUES ('500107', '1', '1019.04', '287.425', '331.
 INSERT INTO `script_waypoint` VALUES ('500107', '0', '1019.04', '287.425', '331.035', '36000', '');
 
 DELETE FROM `trinity_string` WHERE ((entry > '11999') and (entry < '12008'));
-INSERT INTO `trinity_string` VALUES (12000, 'The Alliance lost the first Tower!','','','','','','','','Орда уничтожила первую вышку!');
-INSERT INTO `trinity_string` VALUES (12001, 'The Alliance lost the second Tower!','','','','','','','','Орда уничтожила вторую вышку!');
-INSERT INTO `trinity_string` VALUES (12002, 'The Alliance lost the third Tower!','','','','','','','','Орда уничтожила третью вышку!');
-INSERT INTO `trinity_string` VALUES (12003, 'The Horde lost the first Tower!','','','','','','','','Альянс уничтожил первую вышку!');
-INSERT INTO `trinity_string` VALUES (12004, 'The Alliance lost the second Tower!','','','','','','','','Альянс уничтожил вторую вышку!');
-INSERT INTO `trinity_string` VALUES (12005, 'The Alliance lost the third Tower!','','','','','','','','Альянс уничтожил третью вышку!');
-INSERT INTO `trinity_string` VALUES (12006, 'The Alliance killed neutral BOSS!','','','','','','','','Альянс уничтожил нейтрального босса!');
-INSERT INTO `trinity_string` VALUES (12007, 'The Horde killed neutral BOSS!','','','','','','','','Орда уничтожила нейтрального босса!');
+INSERT INTO `trinity_string` VALUES (12000, 'The Alliance lost the first Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12001, 'The Alliance lost the second Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12002, 'The Alliance lost the third Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12003, 'The Horde lost the first Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12004, 'The Alliance lost the second Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12005, 'The Alliance lost the third Tower!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12006, 'The Alliance killed neutral BOSS!','','','','','','','','');
+INSERT INTO `trinity_string` VALUES (12007, 'The Horde killed neutral BOSS!','','','','','','','','');
 
 DELETE FROM `locales_creature` WHERE ((entry > '500099') and (entry < '500126'));
-INSERT INTO `locales_creature` VALUES ('500100', '', '', '', '', '', '', '', 'Древо Альянса', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500101', '', '', '', '', '', '', '', 'Древо Альянса', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500102', '', '', '', '', '', '', '', 'Древо Альянса', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500110', '', '', '', '', '', '', '', 'Древо Орды', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500111', '', '', '', '', '', '', '', 'Древо Орды', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500112', '', '', '', '', '', '', '', 'Древо Орды', null, null, null, null, null, null, null, 'Башня');
-INSERT INTO `locales_creature` VALUES ('500108', '', '', '', '', '', '', '', 'Старое Древо', null, null, null, null, null, null, null, 'Барраки Альянса');
-INSERT INTO `locales_creature` VALUES ('500118', '', '', '', '', '', '', '', 'Старое Древо', null, null, null, null, null, null, null, 'Барраки Орды');
-INSERT INTO `locales_creature` VALUES ('500120', '', '', '', '', '', '', '', 'Рошан', null, null, null, null, null, null, null, 'Dota AllStars');
-INSERT INTO `locales_creature` VALUES ('500107', '', '', '', '', '', '', '', 'Крип', null, null, null, null, null, null, null, 'Альянс');
-INSERT INTO `locales_creature` VALUES ('500117', '', '', '', '', '', '', '', 'Крип', null, null, null, null, null, null, null, 'Орда');
-INSERT INTO `locales_creature` VALUES ('500109', '', '', '', '', '', '', '', 'Сайрен Усмерительница', null, null, null, null, null, null, null, 'Управляющая Аванпостом Альянса');
-INSERT INTO `locales_creature` VALUES ('500119', '', '', '', '', '', '', '', 'Дейсон Кровавый', null, null, null, null, null, null, null, 'Управляющий Аванпостом Орды');
+INSERT INTO `locales_creature` VALUES ('500100', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500101', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500102', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500110', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500111', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500112', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500108', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500118', '', '', '', '', '', '', '', ' ', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500120', '', '', '', '', '', '', '', '', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500107', '', '', '', '', '', '', '', '', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500117', '', '', '', '', '', '', '', '', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500109', '', '', '', '', '', '', '', '', null, null, null, null, null, null, null, '');
+INSERT INTO `locales_creature` VALUES ('500119', '', '', '', '', '', '', '', '', null, null, null, null, null, null, null, '');
 
-DELETE FROM `creature_equip_template` WHERE `entry` IN (10000,10001);
-INSERT INTO `creature_equip_template` VALUES 
-(10000,47266,47266,0),
-(10001,19362,28825,0);
+--DELETE FROM `creature_equip_template` WHERE `entry` IN (10000,10001);
+--INSERT INTO `creature_equip_template` VALUES 
+--(10000,47266,47266,0,0),
+--(10001,19362,28825,0,0);
 
 DELETE FROM `creature_template` WHERE `entry` IN (500005,5000006);
 INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (500005, 0, 0, 0, 0, 0, 20807, 0, 20807, 0, 'OutdoorPvP: Azhara Crater', 'Wow Fun', '', 0, 80, 80, 0, 35, 35, 1, 1, 1, 50, 150, 0, 1000, 100, 2000, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_tp_ca');
 INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (500006, 0, 0, 0, 0, 0, 20807, 0, 20807, 0, 'OutdoorPvP: Capital', 'Battle End', '', 0, 80, 80, 0, 35, 35, 1, 1, 1, 50, 150, 0, 1000, 100, 2000, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_tp_capital');
-DELETE FROM `locales_creature` WHERE `entry` IN (500005,500006);
-INSERT INTO `locales_creature` (`entry`, `name_loc8`) VALUES 
-(500006, 'Окончить бой'),
-(500005, 'Поле Битвы: Кратер Азшары');
