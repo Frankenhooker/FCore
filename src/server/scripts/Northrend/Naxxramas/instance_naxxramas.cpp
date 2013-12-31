@@ -519,7 +519,30 @@ class instance_naxxramas : public InstanceMapScript
         }
 };
 
+class go_naxxramas_portal : public GameObjectScript
+{
+    public:
+        go_naxxramas_portal() : GameObjectScript("go_naxxramas_portal") {}
+
+        bool OnGossipHello(Player* player, GameObject* go)
+        {
+            SpellInfo const* spell = sSpellMgr->GetSpellInfo(28444);
+            if (!spell)
+                return false;
+
+            if (player->IsInCombat())
+            {
+                Spell::SendCastResult(player, spell, 0, SPELL_FAILED_AFFECTING_COMBAT);
+                return true;
+            }
+            player->CastSpell(player, 28444, true);
+
+            return true;
+        }
+ };
+
 void AddSC_instance_naxxramas()
 {
     new instance_naxxramas();
+	new go_naxxramas_portal();
 }
