@@ -290,6 +290,7 @@ class SpellInfo
 {
 public:
     uint32 Id;
+	SpellCategoryEntry const* CategoryEntry;
     uint32 Category;
     uint32 Dispel;
     uint32 Mechanic;
@@ -368,6 +369,7 @@ public:
     SpellInfo(SpellEntry const* spellEntry);
     ~SpellInfo();
 
+	uint32 GetCategory() const;
     bool HasEffect(SpellEffects effect) const;
     bool HasAura(AuraType aura) const;
     bool HasAreaAuraEffect() const;

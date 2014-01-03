@@ -14,6 +14,7 @@ set(scripts_STAT_SRCS
 	Custom/Transmogrification.cpp
 	Custom/Transmogrifier.cpp
 	Custom/npc_info.cpp
+	Custom/Reforging.cpp
 )
 
 message("  -> Prepared: Custom")

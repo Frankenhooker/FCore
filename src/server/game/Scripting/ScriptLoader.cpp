@@ -1403,6 +1403,7 @@ void AddBattlegroundScripts()
 
 void AddSC_CPWS_Transmogrification();
 void AddSC_npc_info();
+void AddSC_REFORGER_NPC();
 #endif
 
 void AddCustomScripts()
@@ -1412,5 +1413,6 @@ void AddCustomScripts()
 
     AddSC_CPWS_Transmogrification();
 	AddSC_npc_info();
+	AddSC_REFORGER_NPC();
 #endif
 }
