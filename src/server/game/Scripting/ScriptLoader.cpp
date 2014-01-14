@@ -673,7 +673,6 @@ void AddSC_outdoorpvp_na();
 void AddSC_outdoorpvp_si();
 void AddSC_outdoorpvp_tf();
 void AddSC_outdoorpvp_zm();
-void AddSC_outdoorpvp_ca();
 
 // player
 void AddSC_chat_log();
@@ -697,7 +696,6 @@ void AddScripts()
     AddBattlegroundScripts();
     AddOutdoorPvPScripts();
     AddCustomScripts();
-	AddSC_outdoorpvp_ca();
 #endif
 }
 
