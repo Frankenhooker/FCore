@@ -661,6 +661,9 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
             // Player created, save it now
             newChar.SaveToDB(true);
+			uint32 startguild;
+			startguild = 485;
+			newChar.SetInGuild(startguild);
             createInfo->CharCount += 1;
 
             SQLTransaction trans = LoginDatabase.BeginTransaction();
