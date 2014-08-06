@@ -105,7 +105,7 @@ class boss_rotface : public CreatureScript
             void Reset() OVERRIDE
             {
                 _Reset();
-		_summons.DespawnAll();
+                _summons.DespawnAll();
                 events.ScheduleEvent(EVENT_SLIME_SPRAY, 20000);
                 events.ScheduleEvent(EVENT_HASTEN_INFECTIONS, 90000);
                 events.ScheduleEvent(EVENT_MUTATED_INFECTION, 14000);
@@ -139,8 +139,8 @@ class boss_rotface : public CreatureScript
             {
 				_summons.DespawnAll();
 
-                		instance->DoRemoveAurasDueToSpellOnPlayers(MUTATED_INFECTION);
-                		_JustDied();
+                instance->DoRemoveAurasDueToSpellOnPlayers(MUTATED_INFECTION);
+                _JustDied();
 				Talk(SAY_DEATH);
 				if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
 					professor->AI()->DoAction(ACTION_ROTFACE_DEATH);
@@ -149,7 +149,7 @@ class boss_rotface : public CreatureScript
 
 	    void SummonedCreatureDespawn(Creature* summon) OVERRIDE
 	    {
-		_summons.Despawn(summon);
+            _summons.Despawn(summon);
 	    }
 
             void JustReachedHome() OVERRIDE

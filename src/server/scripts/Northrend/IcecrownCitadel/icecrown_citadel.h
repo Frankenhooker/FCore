@@ -187,6 +187,8 @@ enum CreaturesIds
 
     // Rotface
     NPC_ROTFACE                                 = 36627,
+    NPC_SMALL_OOZE                              = 36897,
+    NPC_BIG_OOZE                                = 36899,
     NPC_OOZE_SPRAY_STALKER                      = 37986,
     NPC_PUDDLE_STALKER                          = 37013,
     NPC_UNSTABLE_EXPLOSION_STALKER              = 38107,

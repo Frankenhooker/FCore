@@ -101,7 +101,7 @@ Position const PosSummonChainedSpirits[CHAINED_SPIRT_COUNT] =
 Position const PosMandokir[2] =
 {
     { -12167.8f, -1927.25f, 153.73f, 3.76991f },
-    { -12197.86f, -1949.392f, 130.2745f, 0.0f }
+    { -12196.795f, -1948.80f, 130.28f, 0.0f }
 };
 
 class boss_mandokir : public CreatureScript
@@ -114,15 +114,13 @@ class boss_mandokir : public CreatureScript
 
             void Reset() OVERRIDE
             {
-                if (me->GetPositionZ() > 140.0f)
-                {
-                    _Reset();
-                    killCount = 0;
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC);
-                    events.ScheduleEvent(EVENT_CHECK_START, 1000);
-                    if (Creature* speaker = Creature::GetCreature(*me, instance->GetData64(NPC_VILEBRANCH_SPEAKER)))
-                        if (!speaker->IsAlive())
-                            speaker->Respawn(true);
+                _Reset();
+                killCount = 0;
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
+                events.ScheduleEvent(EVENT_CHECK_START, 1000);
+                if (Creature* speaker = Creature::GetCreature(*me, instance->GetData64(NPC_VILEBRANCH_SPEAKER)))
+                    if (!speaker->IsAlive())
+                        speaker->Respawn(true);
                 }
                 summons.DespawnAll();
                 me->Mount(MODEL_OHGAN_MOUNT);
@@ -184,9 +182,9 @@ class boss_mandokir : public CreatureScript
                     me->SetWalk(false);
                     if (id == POINT_MANDOKIR_END)
                     {
-                        me->SetHomePosition(PosMandokir[0]);
+                        me->SetHomePosition(PosMandokir[1]);
                         instance->SetBossState(DATA_MANDOKIR, NOT_STARTED);
-                        me->DespawnOrUnsummon(6000); // No idea how to respawn on wipe.
+                        Reset();
                     }
                 }
             }
@@ -214,7 +212,7 @@ class boss_mandokir : public CreatureScript
                                     break;
                                 case EVENT_STARTED:
                                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC);
-                                    me->GetMotionMaster()->MovePath(PATH_MANDOKIR, false);
+                                    //me->GetMotionMaster()->MovePath(PATH_MANDOKIR, false);
                                     break;
                                 default:
                                     break;
