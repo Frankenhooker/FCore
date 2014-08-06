@@ -96,7 +96,7 @@ class boss_rotface : public CreatureScript
 
         struct boss_rotfaceAI : public BossAI
         {
-            boss_rotfaceAI(Creature* creature) : BossAI(creature, DATA_ROTFACE)
+			boss_rotfaceAI(Creature* creature) : BossAI(creature, DATA_ROTFACE), _summons(me)
             {
                 infectionStage = 0;
                 infectionCooldown = 14000;
@@ -105,6 +105,9 @@ class boss_rotface : public CreatureScript
             void Reset() OVERRIDE
             {
                 _Reset();
+
+				_summons.DespawnAll();
+
                 events.ScheduleEvent(EVENT_SLIME_SPRAY, 20000);
                 events.ScheduleEvent(EVENT_HASTEN_INFECTIONS, 90000);
                 events.ScheduleEvent(EVENT_MUTATED_INFECTION, 14000);
@@ -126,8 +129,9 @@ class boss_rotface : public CreatureScript
 
                 me->setActive(true);
                 Talk(SAY_AGGRO);
-                if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
-                    professor->AI()->DoAction(ACTION_ROTFACE_COMBAT);
+
+                /*if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
+                    professor->AI()->DoAction(ACTION_ROTFACE_COMBAT);*/
 
                 DoZoneInCombat();
                 DoCast(me, SPELL_GREEN_ABOMINATION_HITTIN__YA_PROC, true);
@@ -135,12 +139,17 @@ class boss_rotface : public CreatureScript
 
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
+				_summons.DespawnAll();
+
                 instance->DoRemoveAurasDueToSpellOnPlayers(MUTATED_INFECTION);
                 _JustDied();
-                Talk(SAY_DEATH);
-                if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
-                    professor->AI()->DoAction(ACTION_ROTFACE_DEATH);
+				Talk(SAY_DEATH);
             }
+
+			void SummonedCreatureDespawn(Creature* summon) OVERRIDE
+			{
+				_summons.Despawn(summon);
+			}
 
             void JustReachedHome() OVERRIDE
             {
@@ -178,6 +187,9 @@ class boss_rotface : public CreatureScript
                 if (summon->GetEntry() == NPC_VILE_GAS_STALKER)
                     if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                         professor->CastSpell(summon, SPELL_VILE_GAS_H, true);
+
+					if (summon->GetEntry() == NPC_SMALL_OOZE || summon->GetEntry() == NPC_BIG_OOZE)
+					_summons.Summon(summon);
             }
 
             void UpdateAI(uint32 diff) OVERRIDE
@@ -229,6 +241,7 @@ class boss_rotface : public CreatureScript
         private:
             uint32 infectionCooldown;
             uint32 infectionStage;
+			SummonList _summons;
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
@@ -240,11 +253,13 @@ class boss_rotface : public CreatureScript
 class npc_little_ooze : public CreatureScript
 {
     public:
-        npc_little_ooze() : CreatureScript("npc_little_ooze") { }
+        npc_little_ooze() : CreatureScript("npc_little_ooze")
+		{
+		}
 
         struct npc_little_oozeAI : public ScriptedAI
         {
-            npc_little_oozeAI(Creature* creature) : ScriptedAI(creature)
+			npc_little_oozeAI(Creature* creature) : ScriptedAI(creature), instance(creature->GetInstanceScript())
             {
             }
 
@@ -255,6 +270,9 @@ class npc_little_ooze : public CreatureScript
                 DoCast(me, SPELL_GREEN_ABOMINATION_HITTIN__YA_PROC, true);
                 events.ScheduleEvent(EVENT_STICKY_OOZE, 5000);
                 me->AddThreat(summoner, 500000.0f);
+				// register in Rotface's summons - not summoned with Rotface as owner
+				if (Creature* rotface = Unit::GetCreature(*me, instance->GetData64(DATA_ROTFACE)))
+					rotface->AI()->JustSummoned(me);
             }
 
             void JustDied(Unit* /*killer*/) OVERRIDE
@@ -263,7 +281,17 @@ class npc_little_ooze : public CreatureScript
             }
 
             void UpdateAI(uint32 diff) OVERRIDE
-            {
+			{
+				if (InstanceMap* instance = me->GetMap()->ToInstanceMap())
+				{
+					uint64 id = instance->GetInstanceScript()->GetData64(DATA_ROTFACE);
+
+					if (Creature* rotface = Unit::GetCreature(*me, id))
+						if (!rotface->IsAlive())
+							me->DespawnOrUnsummon();
+
+				}
+
                 if (!UpdateVictim())
                     return;
 
@@ -275,16 +303,18 @@ class npc_little_ooze : public CreatureScript
                     events.ScheduleEvent(EVENT_STICKY_OOZE, 15000);
                 }
 
+
                 DoMeleeAttackIfReady();
             }
 
         private:
             EventMap events;
+			InstanceScript* instance;
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return GetIcecrownCitadelAI<npc_little_oozeAI>(creature);
+			return GetIcecrownCitadelAI<npc_little_oozeAI>(creature);
         }
 };
 
@@ -327,6 +357,16 @@ class npc_big_ooze : public CreatureScript
 
             void UpdateAI(uint32 diff) OVERRIDE
             {
+				if (InstanceMap* instance = me->GetMap()->ToInstanceMap())
+				{
+					uint64 id = instance->GetInstanceScript()->GetData64(DATA_ROTFACE);
+
+					if (Creature* rotface = Unit::GetCreature(*me, id))
+					if (!rotface->IsAlive())
+						me->DespawnOrUnsummon();
+
+				}
+
                 if (!UpdateVictim())
                     return;
 
