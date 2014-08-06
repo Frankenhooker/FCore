@@ -96,7 +96,7 @@ class boss_rotface : public CreatureScript
 
         struct boss_rotfaceAI : public BossAI
         {
-			boss_rotfaceAI(Creature* creature) : BossAI(creature, DATA_ROTFACE), _summons(me)
+	    boss_rotfaceAI(Creature* creature) : BossAI(creature, DATA_ROTFACE), _summons(me)
             {
                 infectionStage = 0;
                 infectionCooldown = 14000;
@@ -105,9 +105,7 @@ class boss_rotface : public CreatureScript
             void Reset() OVERRIDE
             {
                 _Reset();
-
-				_summons.DespawnAll();
-
+		_summons.DespawnAll();
                 events.ScheduleEvent(EVENT_SLIME_SPRAY, 20000);
                 events.ScheduleEvent(EVENT_HASTEN_INFECTIONS, 90000);
                 events.ScheduleEvent(EVENT_MUTATED_INFECTION, 14000);
@@ -130,8 +128,8 @@ class boss_rotface : public CreatureScript
                 me->setActive(true);
                 Talk(SAY_AGGRO);
 
-                /*if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
-                    professor->AI()->DoAction(ACTION_ROTFACE_COMBAT);*/
+                if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
+                    professor->AI()->DoAction(ACTION_ROTFACE_COMBAT);
 
                 DoZoneInCombat();
                 DoCast(me, SPELL_GREEN_ABOMINATION_HITTIN__YA_PROC, true);
@@ -141,15 +139,18 @@ class boss_rotface : public CreatureScript
             {
 				_summons.DespawnAll();
 
-                instance->DoRemoveAurasDueToSpellOnPlayers(MUTATED_INFECTION);
-                _JustDied();
+                		instance->DoRemoveAurasDueToSpellOnPlayers(MUTATED_INFECTION);
+                		_JustDied();
+				Talk(SAY_DEATH);
+				if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
+					professor->AI()->DoAction(ACTION_ROTFACE_DEATH);
 				Talk(SAY_DEATH);
             }
 
-			void SummonedCreatureDespawn(Creature* summon) OVERRIDE
-			{
-				_summons.Despawn(summon);
-			}
+	    void SummonedCreatureDespawn(Creature* summon) OVERRIDE
+	    {
+		_summons.Despawn(summon);
+	    }
 
             void JustReachedHome() OVERRIDE
             {
