@@ -119,6 +119,7 @@ class boss_mandokir : public CreatureScript
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
                 events.ScheduleEvent(EVENT_CHECK_START, 1000);
                 if (Creature* speaker = Creature::GetCreature(*me, instance->GetData64(NPC_VILEBRANCH_SPEAKER)))
+				{
                     if (!speaker->IsAlive())
                         speaker->Respawn(true);
                 }

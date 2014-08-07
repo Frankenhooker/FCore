@@ -1013,7 +1013,7 @@ class boss_the_lich_king : public CreatureScript
                             events.SetPhase(PHASE_FROSTMOURNE); // will stop running UpdateVictim (no evading)
                             me->SetReactState(REACT_PASSIVE);
                             me->AttackStop();
-                            events.RescheduleEvents(EVENT_GROUP_VILE_SPIRITS, 60000);
+                            events.RescheduleEvent(EVENT_GROUP_VILE_SPIRITS, 60000);
                             events.RescheduleEvent(EVENT_DEFILE, 50000, 0, PHASE_THREE);
                             events.RescheduleEvent(EVENT_SOUL_REAPER, urand(57000, 62000), 0, PHASE_THREE);
                             events.ScheduleEvent(EVENT_START_ATTACK, 49000);
