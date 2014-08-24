@@ -246,8 +246,11 @@ class boss_professor_putricide : public CreatureScript
 
             void EnterCombat(Unit* who) OVERRIDE
             {
-                if (events.IsInPhase(PHASE_ROTFACE) || events.IsInPhase(PHASE_FESTERGUT))
-                    return;
+				if (events.IsInPhase(PHASE_ROTFACE) || events.IsInPhase(PHASE_FESTERGUT))
+				{
+					me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE); // Sonst ist der Prof beim zuschauen angreifbar
+					return;
+				}
 
                 /*if (!instance->CheckRequiredBosses(DATA_PROFESSOR_PUTRICIDE, who->ToPlayer()))
                 {
@@ -422,9 +425,16 @@ class boss_professor_putricide : public CreatureScript
                         me->SetSpeed(MOVE_RUN, _baseSpeed*2.0f, true);
                         me->GetMotionMaster()->MovePoint(POINT_FESTERGUT, festergutWatchPos);
                         me->SetReactState(REACT_PASSIVE);
+						me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE); // Sonst ist der Prof beim zuschauen angreifbar
                         DoZoneInCombat(me);
-                        if (IsHeroic())
-                            events.ScheduleEvent(EVENT_FESTERGUT_GOO, urand(13000, 18000), 0, PHASE_FESTERGUT);
+
+						//Prof verwaltet das Event für das Schleimwerfen bei Festergut nicht selbst, 
+						//sondern Festergut macht das, da ein Spell buggt, somit kann Prof es nicht (richtig) casten.
+
+						//Workaround in:  "boss_festergut.cpp"
+
+                        //if (IsHeroic())
+                            //events.ScheduleEvent(EVENT_FESTERGUT_GOO, urand(13000, 18000), 0, PHASE_FESTERGUT);
                         break;
                     case ACTION_FESTERGUT_GAS:
                         Talk(SAY_FESTERGUT_GASEOUS_BLIGHT);
