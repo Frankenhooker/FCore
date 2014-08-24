@@ -20,8 +20,6 @@
 #include "ScriptedCreature.h"
 #include "SpellAuras.h"
 #include "icecrown_citadel.h"
-#include "Group.h"
-#include "MapManager.h"
 
 enum ScriptTexts
 {
@@ -48,10 +46,6 @@ enum Spells
     SPELL_VILE_GAS              = 69240,
     SPELL_INOCULATED            = 69291,
 
-	//Prof Spells fürn HC
-	SPELL_MALLEABLE_GOO			= 72296,
-	SPELL_MALLEABLE_GOO_SUMMON  = 72299,
-
     // Stinky
     SPELL_MORTAL_WOUND          = 71127,
     SPELL_DECIMATE              = 71123,
@@ -75,9 +69,6 @@ enum Events
 
     EVENT_DECIMATE      = 6,
     EVENT_MORTAL_WOUND  = 7,
-
-	//Alle 30 Sek. ein Schleim.
-	EVENT_GOO			= 8,
 };
 
 enum Misc
@@ -105,12 +96,6 @@ class boss_festergut : public CreatureScript
                 me->SetReactState(REACT_DEFENSIVE);
                 events.ScheduleEvent(EVENT_BERSERK, 300000);
                 events.ScheduleEvent(EVENT_INHALE_BLIGHT, urand(25000, 30000));
-				//Prof wirft Schleim alle 30 sek, nur im HC
-				if (IsHeroic())
-				{
-					events.ScheduleEvent(EVENT_GOO, urand(13000, 18000));
-				}
-
                 events.ScheduleEvent(EVENT_GAS_SPORE, urand(20000, 25000));
                 events.ScheduleEvent(EVENT_GASTRIC_BLOAT, urand(12500, 15000));
                 _maxInoculatedStack = 0;
@@ -218,59 +203,7 @@ class boss_festergut : public CreatureScript
 
                             events.ScheduleEvent(EVENT_INHALE_BLIGHT, urand(33500, 35000));
                             break;
-						}
-
-						//FIX: Prof wirft Castzeit auf Spieler
-						case EVENT_GOO:
-						{
-							if (Creature* professor = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
-							{
-								if (Is25ManRaid())
-								{
-									std::list<Unit*> targets;
-									SelectTargetList(targets, 2, SELECT_TARGET_RANDOM, 0, 0.0f, true);
-									if (!targets.empty())
-									{
-										for (std::list<Unit*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
-											professor->AI()->DoCast(*itr, SPELL_MALLEABLE_GOO);
-
-										events.ScheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
-										//Dieser Spell muss sein, sonst wird DBM nichts ansagen.
-
-										std::list<Unit*> targets2;
-										SelectTargetList(targets2, 25, SELECT_TARGET_RANDOM);
-										if (!targets2.empty())
-										{
-											for (std::list<Unit*>::iterator itr2 = targets2.begin(); itr2 != targets2.end(); ++itr2)
-											{
-												me->AI()->DoCast(*itr2, SPELL_MALLEABLE_GOO_SUMMON);
-											}
-										}
-									}
-								}
-								else
-								{
-									if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
-									{
-										professor->AI()->DoCast(target, SPELL_MALLEABLE_GOO);
-
-										events.ScheduleEvent(EVENT_GOO, 30000 + urand(0, 5000));
-										//Dieser Spell muss sein, sonst wird DBM nichts ansagen.
-
-										std::list<Unit*> targets2;
-										SelectTargetList(targets2, 10, SELECT_TARGET_RANDOM);
-										if (!targets2.empty())
-										{
-											for (std::list<Unit*>::iterator itr2 = targets2.begin(); itr2 != targets2.end(); ++itr2)
-											{
-												me->AI()->DoCast(*itr2, SPELL_MALLEABLE_GOO_SUMMON);
-											}
-										}
-									}
-								}
-							}
-							break;
-						}
+                        }
                         case EVENT_VILE_GAS:
                         {
                             std::list<Unit*> ranged, melee;
