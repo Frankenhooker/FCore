@@ -61,6 +61,7 @@ enum Spells
     SPELL_FROSTBOLT_VOLLEY          = 72905,
     SPELL_TOUCH_OF_INSIGNIFICANCE   = 71204,
     SPELL_SUMMON_SHADE              = 71363,
+	SPELL_SUMMON_SHADE_VISUAL		= 71203,
     SPELL_SHADOW_CHANNELING         = 43897, // Prefight, during intro
     SPELL_DARK_TRANSFORMATION_T     = 70895,
     SPELL_DARK_EMPOWERMENT_T        = 70896,
@@ -180,6 +181,8 @@ enum DeprogrammingData
 
 uint32 const SummonEntries[2] = {NPC_CULT_FANATIC, NPC_CULT_ADHERENT};
 
+uint64 LadyGUID = 0;
+
 #define GUID_CULTIST    1
 
 Position const SummonPositions[7] =
@@ -226,8 +229,8 @@ class boss_lady_deathwhisper : public CreatureScript
                 me->SetPower(POWER_MANA, me->GetMaxPower(POWER_MANA));
                 events.SetPhase(PHASE_ONE);
                 _waveCounter = 0;
-                _nextVengefulShadeTargetGUID = 0;
                 _darnavanGUID = 0;
+				LadyGUID = me->GetGUID();
                 DoCast(me, SPELL_SHADOW_CHANNELING);
                 me->RemoveAurasDueToSpell(SPELL_BERSERK);
                 me->RemoveAurasDueToSpell(SPELL_MANA_BARRIER);
@@ -269,10 +272,11 @@ class boss_lady_deathwhisper : public CreatureScript
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
                 }*/
+				LadyGUID = me->GetGUID(); //Wird für das despawnen der Adds gebraucht
 
                 me->setActive(true);
                 DoZoneInCombat();
-
+				
                 events.Reset();
                 events.SetPhase(PHASE_ONE);
                 // phase-independent events
@@ -381,19 +385,24 @@ class boss_lady_deathwhisper : public CreatureScript
 
             void JustSummoned(Creature* summon) OVERRIDE
             {
+
                 if (summon->GetEntry() == NPC_DARNAVAN)
                     _darnavanGUID = summon->GetGUID();
                 else
                     summons.Summon(summon);
 
+				/*if (summon->GetEntry() == NPC_VENGEFUL_SHADE) //erstmal nichts angreifen
+				{
+					if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
+					{
+						summon->AI()->AttackStart();
+						return;
+					}
+				}*/
+
                 Unit* target = NULL;
-                if (summon->GetEntry() == NPC_VENGEFUL_SHADE)
-                {
-                    target = ObjectAccessor::GetUnit(*me, _nextVengefulShadeTargetGUID);   // Vengeful Shade
-                    _nextVengefulShadeTargetGUID = 0;
-                }
-                else
-                    target = SelectTarget(SELECT_TARGET_RANDOM);                        // Wave adds
+
+                target = SelectTarget(SELECT_TARGET_RANDOM);                        // Wave adds
 
                 summon->AI()->AttackStart(target);                                      // CAN be NULL
                 if (summon->GetEntry() == NPC_REANIMATED_FANATIC)
@@ -475,12 +484,29 @@ class boss_lady_deathwhisper : public CreatureScript
                             events.ScheduleEvent(EVENT_P2_TOUCH_OF_INSIGNIFICANCE, urand(9000, 13000), 0, PHASE_TWO);
                             break;
                         case EVENT_P2_SUMMON_SHADE:
-                            if (Unit* shadeTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
-                            {
-                                _nextVengefulShadeTargetGUID = shadeTarget->GetGUID();
-                                DoCast(shadeTarget, SPELL_SUMMON_SHADE);
-                            }
-                            events.ScheduleEvent(EVENT_P2_SUMMON_SHADE, urand(18000, 23000), 0, PHASE_TWO);
+
+							/*
+							WORKAROUND: Da der Spell "SPELL_SUMMON_SHADE" nicht geht, manuelles Spawnen...
+							TODO: Bessere Möglichkeit zufällig Ort auszuwählen finden.
+									Unter Ümständen ist der Fehler des Spells auch behebbar.	
+
+							DoCast(shadeTarget, SPELL_SUMMON_SHADE);
+							*/
+
+							//FIX:
+							if (!Is25ManRaid())
+							{
+								SpawnShade(); // Spawnt einen Schatten manuell an einer Zufälligen Position im Raum.
+							}
+							else
+							{
+								for (uint8_t i = 0; i < 3; i++)
+								{
+									SpawnShade(); // Spawnt einen Schatten manuell an einer Zufälligen Position im Raum.
+								}
+							}
+								
+                            events.ScheduleEvent(EVENT_P2_SUMMON_SHADE, urand(11000, 16000), 0, PHASE_TWO);
                             break;
                         case EVENT_P2_SUMMON_WAVE:
                             SummonWaveP2();
@@ -499,6 +525,23 @@ class boss_lady_deathwhisper : public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
+
+			void SpawnShade()
+			{
+				uint32 x = urand(558, 636);
+				uint32 y = urand(2172, 2251);
+				uint32 z = 53;
+
+				int32 x_real = -(int32)x;
+
+				Position Spawn = { x_real, y, z }; //Zufällige Position in dem Raum der Lady
+
+				if (TempSummon* summon = me->SummonCreature(NPC_VENGEFUL_SHADE, Spawn, TEMPSUMMON_TIMED_DESPAWN, 10000))
+				{
+					DoCast(summon->ToUnit(), SPELL_SUMMON_SHADE_VISUAL);
+				}
+				
+			}
 
             // summoning function for first phase
             void SummonWaveP1()
@@ -574,7 +617,7 @@ class boss_lady_deathwhisper : public CreatureScript
 
             void SpellHitTarget(Unit* target, SpellInfo const* spell) OVERRIDE
             {
-                if (spell->Id == SPELL_DARK_MARTYRDOM_T)
+                /*if (spell->Id == SPELL_DARK_MARTYRDOM_T)
                 {
                     Position pos;
                     target->GetPosition(&pos);
@@ -585,7 +628,7 @@ class boss_lady_deathwhisper : public CreatureScript
 
                     if (TempSummon* summon = target->ToTempSummon())
                         summon->UnSummon();
-                }
+                }*/
             }
 
             void EmpowerCultist()
@@ -610,7 +653,6 @@ class boss_lady_deathwhisper : public CreatureScript
             }
 
         private:
-            uint64 _nextVengefulShadeTargetGUID;
             uint64 _darnavanGUID;
             std::deque<uint64> _reanimationQueue;
             uint32 _waveCounter;
@@ -653,8 +695,25 @@ class npc_cult_fanatic : public CreatureScript
                 {
                     Events.CancelEvent(EVENT_CULTIST_DARK_MARTYRDOM);
                     me->InterruptNonMeleeSpells(true);
-                    DoCast(me, SPELL_DARK_TRANSFORMATION);
+					DoCast(me, SPELL_DARK_TRANSFORMATION);
                 }
+				else if (spell->Id == SPELL_DARK_MARTYRDOM_FANATIC)
+				{
+					Position pos;
+					me->GetPosition(&pos);
+
+					if (LadyGUID != 0)
+					{
+						if (Creature* lady = Unit::GetCreature(*me, LadyGUID))
+						{
+							if (TempSummon* target = lady->SummonCreature(NPC_REANIMATED_FANATIC, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+							{
+								if (TempSummon* summon = me->ToTempSummon())
+									summon->UnSummon();
+							}
+						}
+					}
+				}
             }
 
             void UpdateAI(uint32 diff) OVERRIDE
@@ -731,8 +790,25 @@ class npc_cult_adherent : public CreatureScript
                 {
                     Events.CancelEvent(EVENT_CULTIST_DARK_MARTYRDOM);
                     me->InterruptNonMeleeSpells(true);
-                    DoCast(me, SPELL_DARK_EMPOWERMENT);
+					DoCast(me, SPELL_DARK_EMPOWERMENT);
                 }
+				else if (spell->Id == SPELL_DARK_MARTYRDOM_ADHERENT)
+				{
+					Position pos;
+					me->GetPosition(&pos);
+
+					if (LadyGUID != 0)
+					{
+						if (Creature* lady = Unit::GetCreature(*me, LadyGUID))
+						{
+							if (TempSummon* target = lady->SummonCreature(NPC_REANIMATED_ADHERENT, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
+							{
+								if (TempSummon* summon = me->ToTempSummon())
+									summon->UnSummon();
+							}
+						}
+					}
+				}
             }
 
             void UpdateAI(uint32 diff) OVERRIDE
@@ -799,7 +875,7 @@ class npc_vengeful_shade : public CreatureScript
             npc_vengeful_shadeAI(Creature* creature) : ScriptedAI(creature)
             {
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+				me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
 
             void Reset() OVERRIDE
@@ -821,6 +897,46 @@ class npc_vengeful_shade : public CreatureScript
                         break;
                 }
             }
+
+			bool flag = false;
+
+			void UpdateAI(uint32 diff) OVERRIDE
+			{
+				if (!UpdateVictim())
+				return;
+
+				if (!flag)
+				{
+					me->AI()->DoCast(me, SPELL_TELEPORT_VISUAL);
+					flag = true;
+				}
+
+				if (IsHeroic())
+				{
+					if (Is25ManRaid())
+					{
+						DoCastVictim(SPELL_VENGEFUL_BLAST_25H); // 25ner HC
+					}
+					else
+					{
+						DoCastVictim(SPELL_VENGEFUL_BLAST_10H); // 10ner HC
+					}
+				}
+				else // NH
+				{
+					if (Is25ManRaid())
+					{
+						DoCastVictim(SPELL_VENGEFUL_BLAST_25N); // 25ner NH
+					}
+					else
+					{
+						DoCastVictim(SPELL_VENGEFUL_BLAST); // 10ner NH
+					}
+				}
+
+				DoMeleeAttackIfReady();
+			}
+
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
