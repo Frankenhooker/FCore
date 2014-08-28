@@ -500,7 +500,7 @@ class boss_lady_deathwhisper : public CreatureScript
 							}
 							else
 							{
-								for (uint8_t i = 0; i < 3; i++)
+								for (uint8 i = 0; i < 3; i++)
 								{
 									SpawnShade(); // Spawnt einen Schatten manuell an einer Zufälligen Position im Raum.
 								}
@@ -878,9 +878,12 @@ class npc_vengeful_shade : public CreatureScript
 				me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
 
+			bool flag;
+
             void Reset() OVERRIDE
             {
                 me->AddAura(SPELL_VENGEFUL_BLAST_PASSIVE, me);
+				flag = false;
             }
 
             void SpellHitTarget(Unit* /*target*/, SpellInfo const* spell) OVERRIDE
@@ -897,8 +900,6 @@ class npc_vengeful_shade : public CreatureScript
                         break;
                 }
             }
-
-			bool flag = false;
 
 			void UpdateAI(uint32 diff) OVERRIDE
 			{
