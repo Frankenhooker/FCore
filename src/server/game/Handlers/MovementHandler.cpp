@@ -388,15 +388,45 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recvData)
 
     if (plrMover)                                            // nothing is charmed, or player charmed
     {
+        if (plrMover->IsSitState() && (movementInfo.flags & (MOVEMENTFLAG_MASK_MOVING | MOVEMENTFLAG_MASK_TURNING)))
+            plrMover->SetStandState(UNIT_STAND_STATE_STAND);
+
         plrMover->UpdateFallInformationIfNeed(movementInfo, opcode);
 
-        if (movementInfo.pos.GetPositionZ() < -500.0f)
+       float underMapValueZ;   
+      switch (plrMover->GetMapId())    
+       {
+            case 617: underMapValueZ = 3.0f; break; // Dalaran Sewers
+            case 618: underMapValueZ = 28.0f; break; // Ring of Valor
+            case 562: underMapValueZ = -10.0f; break; // Blade Edge Arena
+            case 559: underMapValueZ = -18.0f; break; // Nagrand arena
+            case 572: underMapValueZ = 28.0f; break; // Lordearon
+            case 571: underMapValueZ = -400.0f; break; // Northrend
+            default: underMapValueZ = -500.0f; break;
+         }
+
+        if (movementInfo.pos.GetPositionZ() < underMapValueZ)
         {
-            if (!(plrMover->GetBattleground() && plrMover->GetBattleground()->HandlePlayerUnderMap(_player)))
+           if (underMapValueZ != -500) // Only Case Values
+           {
+               // Hackfix
+               if (plrMover->GetMapId() == 572) // Lordaeron Arena 
+                     plrMover->TeleportTo(572, 1286.14868f, 1667.32f, 41.0f, 1.6f); 
+                   
+              if (plrMover->GetMapId() == 559) // Nagrand Arena 
+                     plrMover->TeleportTo(559, 4052.79868f, 2926.32f, 16.0f, 1.6f); 
+           
+              if (plrMover->GetMapId() == 562) // Blade Edge arena 
+                     plrMover->TeleportTo(562, 6237.79768f, 261.142f, 2.0f, 4.0f); 
+                    
+              if (plrMover->GetMapId() == 617) // Dalaran Arena 
+                     plrMover->TeleportTo(617, 1292.34868f, 790.40f, 8.5f, 1.6f); 
+           
+             }
+              else if (!(plrMover->GetBattleground() && plrMover->GetBattleground()->HandlePlayerUnderMap(_player)))
             {
                 // NOTE: this is actually called many times while falling
                 // even after the player has been teleported away
-                /// @todo discard movement packets after the player is rooted
                 if (plrMover->IsAlive())
                 {
                     plrMover->EnvironmentalDamage(DAMAGE_FALL_TO_VOID, GetPlayer()->GetMaxHealth());
