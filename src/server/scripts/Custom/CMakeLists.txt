@@ -15,6 +15,9 @@ set(scripts_STAT_SRCS
 	Custom/Transmogrifier.cpp
 	Custom/npc_info.cpp
 	Custom/Reforging.cpp
+	Custom/npc_arena1v1.cpp
+
+	Custom/npc_arena1v1.h
 )
 
 message("  -> Prepared: Custom")

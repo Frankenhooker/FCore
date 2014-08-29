@@ -665,6 +665,7 @@ void AddSC_priest_pet_scripts();
 void AddSC_shaman_pet_scripts();
 
 // battlegrounds
+void AddSC_npc_1v1arena();
 
 // outdoor pvp
 void AddSC_outdoorpvp_ep();
@@ -1410,5 +1411,6 @@ void AddCustomScripts()
     AddSC_CPWS_Transmogrification();
 	AddSC_npc_info();
 	AddSC_REFORGER_NPC();
+	AddSC_npc_1v1arena();
 #endif
 }
