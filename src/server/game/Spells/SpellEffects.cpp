@@ -2913,7 +2913,7 @@ void Spell::EffectEnchantItemTmp(SpellEffIndex effIndex)
         duration = 86400;                                    // 1 day
     // shaman family enchantments
     else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_SHAMAN)
-        duration = 1800;                                    // 30 mins
+        duration = 86400;                                    // 1 day
     // other cases with this SpellVisual already selected
     else if (m_spellInfo->SpellVisual[0] == 215)
         duration = 1800;                                    // 30 mins
