@@ -742,9 +742,9 @@ void ArenaTeam::FinishGame(int32 mod)
             ++Stats.Rank;
     }
 
-	if (Type == ARENA_TEAM_5v5)
+	if (Type == ARENA_TEAM_5v5 && GetRating() > 1900)
 	{
-		Stats.Rating = 0; //FIX: Kein Rating im 1on1!
+		Stats.Rating = 1900; //FIX: Max Rating: 1900
 	}
 }
 
