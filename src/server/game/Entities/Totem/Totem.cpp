@@ -77,12 +77,8 @@ void Totem::InitStats(uint32 duration)
         if (totemSpell->CalcCastTime())   // If spell has cast time -> its an active totem
             m_type = TOTEM_ACTIVE;
 
-		if (GetEntry() == SENTRY_TOTEM_ENTRY)
-		{
-			Position pos;
-			GetOwner()->GetPosition(&pos);
-			Relocate(&pos);
-		}
+    if (GetEntry() == SENTRY_TOTEM_ENTRY)
+        SetReactState(REACT_AGGRESSIVE);
 
     m_duration = duration;
 
