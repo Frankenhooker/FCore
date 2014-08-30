@@ -19,7 +19,7 @@ public:
 		if(!player || !me)
 			return false;
 
-		uint32 forbidden_entry; // Spieler, die heilspezifische Spells im Talentbaum geskillt haben, werden geblockt
+		uint32 forbidden_entry = 0;// Spieler, die heilspezifische Spells im Talentbaum geskillt haben, werden geblockt
 		const char* message;
 
 		//Priest - Disci

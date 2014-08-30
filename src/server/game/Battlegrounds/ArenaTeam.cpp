@@ -95,6 +95,10 @@ bool ArenaTeam::AddMember(uint64 playerGuid)
     if (GetMembersSize() >= GetType() * 2)
         return false;
 
+	if (Type == ARENA_TEAM_5v5 && GetMembersSize() >= 1) // Im 1on1 Team kann auch nur 1 Spieler sein.
+		return false;
+		
+
     // Get player name and class either from db or ObjectMgr
     Player* player = ObjectAccessor::FindPlayer(playerGuid);
     if (player)
@@ -132,6 +136,9 @@ bool ArenaTeam::AddMember(uint64 playerGuid)
     else if (GetRating() >= 1000)
         personalRating = 1000;
 
+	if (Type == ARENA_TEAM_5v5) // Im 1on1 kein Rating (0)
+		personalRating = 0;
+
     // Try to get player's match maker rating from db and fall back to config setting if not found
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_MATCH_MAKER_RATING);
     stmt->setUInt32(0, GUID_LOPART(playerGuid));
@@ -143,6 +150,9 @@ bool ArenaTeam::AddMember(uint64 playerGuid)
         matchMakerRating = (*result)[0].GetUInt16();
     else
         matchMakerRating = sWorld->getIntConfig(CONFIG_ARENA_START_MATCHMAKER_RATING);
+
+	if (Type == ARENA_TEAM_5v5) // Im 1on1 kein Rating (0)
+		matchMakerRating = 0;
 
     // Remove all player signatures from other petitions
     // This will prevent player from joining too many arena teams and corrupt arena team data integrity
@@ -609,8 +619,10 @@ uint32 ArenaTeam::GetPoints(uint32 memberRating)
     // Type penalties for teams < 5v5
     if (Type == ARENA_TEAM_2v2)
         points *= 0.76f;
-    else if (Type == ARENA_TEAM_3v3)
-        points *= 0.88f;
+	else if (Type == ARENA_TEAM_3v3)
+		points *= 0.88f;
+	else if (Type == ARENA_TEAM_5v5)
+		points *= 0.06655f; //FIX: Modifier für 1on1, bei 2000 Rating, 100 Arenapunkte.
 
     return (uint32) points;
 }
@@ -729,6 +741,11 @@ void ArenaTeam::FinishGame(int32 mod)
         if (i->second->GetType() == Type && i->second->GetStats().Rating > Stats.Rating)
             ++Stats.Rank;
     }
+
+	if (Type == ARENA_TEAM_5v5)
+	{
+		Stats.Rating = 0; //FIX: Kein Rating im 1on1!
+	}
 }
 
 int32 ArenaTeam::WonAgainst(uint32 Own_MMRating, uint32 Opponent_MMRating, int32& rating_change)
