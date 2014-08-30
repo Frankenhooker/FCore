@@ -78,7 +78,11 @@ void Totem::InitStats(uint32 duration)
             m_type = TOTEM_ACTIVE;
 
     if (GetEntry() == SENTRY_TOTEM_ENTRY)
-        SetReactState(REACT_AGGRESSIVE);
+		{
+			Position pos;
+			GetOwner()->GetPosition(&pos);
+			Relocate(&pos);
+		}
 
     m_duration = duration;
 
