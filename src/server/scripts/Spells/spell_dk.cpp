@@ -497,6 +497,9 @@ class spell_dk_death_grip : public SpellScriptLoader
                 Position const* pos = GetExplTargetDest();
                 if (Unit* target = GetHitUnit())
                 {
+					if (target->GetEntry() == 36619) //FIX: Dk cant grab BoneSpikes anymore!
+						return;
+
                     if (!target->HasAuraType(SPELL_AURA_DEFLECT_SPELLS)) // Deterrence
                         target->CastSpell(pos->GetPositionX(), pos->GetPositionY(), pos->GetPositionZ(), damage, true);
                 }
