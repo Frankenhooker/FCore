@@ -46,6 +46,7 @@
 #include "Player.h"
 #include "QuestDef.h"
 #include "ReputationMgr.h"
+#include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellAuras.h"
 #include "Spell.h"
@@ -10854,6 +10855,32 @@ uint32 Unit::SpellHealingBonusTaken(Unit* caster, SpellInfo const* spellProto, u
     float maxval = float(GetMaxPositiveAuraModifier(SPELL_AURA_MOD_HEALING_PCT));
     if (maxval)
         AddPct(TakenTotalMod, maxval);
+
+	/*
+		HACKFIX: Rotface Plague does not have Healreduce, adding it here.
+	*/
+	if (spellProto->Id == -69674) //Mutated Infection
+	{
+		if (InstanceScript* const instance = caster->GetInstanceScript())
+		{
+			if (Creature* rotface = Unit::GetCreature(*caster, instance->GetData64(5))) //5 == Rotface
+			{
+				BossAI* ai = (BossAI*)rotface->GetAI();
+				if (ai->IsHeroic())
+				{
+					AddPct(TakenTotalMod, -75); //75% Heal reduce in HC
+				}
+				else
+				{
+					AddPct(TakenTotalMod, -50); //75% Heal reduce in HC
+				}
+			}
+				
+		}
+	}
+	/*
+		FIX: END
+	*/
 
     // Tenacity increase healing % taken
     if (AuraEffect const* Tenacity = GetAuraEffect(58549, 0))
