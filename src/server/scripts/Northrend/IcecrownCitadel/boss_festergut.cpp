@@ -109,6 +109,7 @@ class boss_festergut : public CreatureScript
 				if (IsHeroic())
 				{
 					events.ScheduleEvent(EVENT_GOO, urand(13000, 18000));
+					_lastGUID = NULL;
 				}
 
                 events.ScheduleEvent(EVENT_GAS_SPORE, urand(20000, 25000));
@@ -227,7 +228,27 @@ class boss_festergut : public CreatureScript
 							{
 								if (Is25ManRaid())
 								{
-									std::list<Unit*> targets;
+									for (int i = 0; i < 2; i++)
+									{
+										Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true);
+										if (target && _lastGUID != target->GetGUID()) //Erstes Target gefunden:
+										{
+											professor->AI()->DoCast(target, SPELL_MALLEABLE_GOO);
+											events.RescheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
+											_lastGUID = target->GetGUID();
+										}
+										else //Kein Target gefunden ODER schon das erste Target gefunden. (Der Fall kein Target wird ignoriert, da dann keine Spieler da wären.
+										{
+											Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true);
+											if (target && _lastGUID != target->GetGUID()) //Zweites Target gefunden:
+											{
+												professor->AI()->DoCast(target, SPELL_MALLEABLE_GOO);
+												events.RescheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
+											}
+											_lastGUID = 0; // Es wurde schon ein Schleim geworfen / kein Ziel gefunden -> Reset, da sonst die schleime aufhören zu spawnen
+										}
+									}
+									/*std::list<Unit*> targets;
 									SelectTargetList(targets, 2, SELECT_TARGET_RANDOM, 0, 0.0f, true);
 									if (!targets.empty())
 									{
@@ -235,37 +256,16 @@ class boss_festergut : public CreatureScript
 											professor->AI()->DoCast(*itr, SPELL_MALLEABLE_GOO);
 
 										events.ScheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
-										//Dieser Spell muss sein, sonst wird DBM nichts ansagen.
-
-										std::list<Unit*> targets2;
-										SelectTargetList(targets2, 25, SELECT_TARGET_RANDOM);
-										if (!targets2.empty())
-										{
-											for (std::list<Unit*>::iterator itr2 = targets2.begin(); itr2 != targets2.end(); ++itr2)
-											{
-												me->AI()->DoCast(*itr2, SPELL_MALLEABLE_GOO_SUMMON);
-											}
-										}
 									}
+
+									*/
 								}
 								else
 								{
 									if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
 									{
 										professor->AI()->DoCast(target, SPELL_MALLEABLE_GOO);
-
-										events.ScheduleEvent(EVENT_GOO, 30000 + urand(0, 5000));
-										//Dieser Spell muss sein, sonst wird DBM nichts ansagen.
-
-										std::list<Unit*> targets2;
-										SelectTargetList(targets2, 10, SELECT_TARGET_RANDOM);
-										if (!targets2.empty())
-										{
-											for (std::list<Unit*>::iterator itr2 = targets2.begin(); itr2 != targets2.end(); ++itr2)
-											{
-												me->AI()->DoCast(*itr2, SPELL_MALLEABLE_GOO_SUMMON);
-											}
-										}
+										events.RescheduleEvent(EVENT_GOO, 30000 + urand(0, 5000));
 									}
 								}
 							}
@@ -348,6 +348,7 @@ class boss_festergut : public CreatureScript
             uint64 _gasDummyGUID;
             uint32 _maxInoculatedStack;
             uint32 _inhaleCounter;
+			uint64 _lastGUID;
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE

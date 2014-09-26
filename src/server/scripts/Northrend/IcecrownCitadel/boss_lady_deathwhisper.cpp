@@ -878,12 +878,10 @@ class npc_vengeful_shade : public CreatureScript
 				me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
 
-			bool flag;
-
             void Reset() OVERRIDE
             {
                 me->AddAura(SPELL_VENGEFUL_BLAST_PASSIVE, me);
-				flag = false;
+				_flag = false;
             }
 
             void SpellHitTarget(Unit* /*target*/, SpellInfo const* spell) OVERRIDE
@@ -906,10 +904,54 @@ class npc_vengeful_shade : public CreatureScript
 				if (!UpdateVictim())
 				return;
 
-				if (!flag)
+
+
+				if (!_flag)
 				{
 					me->AI()->DoCast(me, SPELL_TELEPORT_VISUAL);
-					flag = true;
+
+					if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, true))
+					{
+						_targetGUID = target->GetGUID();
+					}
+					else
+						_targetGUID = NULL;
+
+					_flag = true;
+				}
+
+				if (_targetGUID)
+				{
+					if (Unit* target = ObjectAccessor::GetObjectInMap(_targetGUID, me->GetMap(), (Unit*)NULL))//Ziel wurde gefunden
+					{
+						if (target->IsAlive())//keine Toten angreifen...
+						{
+							me->Attack(target, true); //nur das Ziel angreifen !
+						}
+						else //Ziel ist Tot.
+						{
+							//Neues Ziel auswählen.
+							if (Unit* target_new = SelectTarget(SELECT_TARGET_RANDOM, true))
+							{
+								_targetGUID = target_new->GetGUID();
+							}
+						}
+					}
+					else
+					{
+						//Es wurde zwar ein Ziel aufgewählt, dieses kann aber nun nichtmehr gefunden werden.
+						// -> neues Target
+
+						//Neues Ziel auswählen.
+						if (Unit* target_new = SelectTarget(SELECT_TARGET_RANDOM, true))
+						{
+							_targetGUID = target_new->GetGUID();
+						}
+					}
+				}
+				else //kein zufälliges Target für den Geist gefunden -> normale aggro laufen lassen:
+				{
+					//SOLLTE nie erreicht werden können... (Da dann alle Spieler Tot wären und der Geist nun schon despawnt wäre wg. Reset...)
 				}
 
 				if (IsHeroic())
@@ -938,6 +980,9 @@ class npc_vengeful_shade : public CreatureScript
 				DoMeleeAttackIfReady();
 			}
 
+		private:
+			uint64 _targetGUID;
+			bool _flag;
         };
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
