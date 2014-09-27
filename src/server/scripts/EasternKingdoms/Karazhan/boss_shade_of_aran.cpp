@@ -175,6 +175,7 @@ public:
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             Talk(SAY_AGGRO);
+			DoZoneInCombat();
 			//DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true); zu hart für die kacklappen von fantasy
             if (instance)
             {
