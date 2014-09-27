@@ -43,9 +43,9 @@ enum ShadeOfAran
 //  SAY_ATIESH                  = 9, Unused
 
     //Spells
-    SPELL_FROSTBOLT             = 29954,
-    SPELL_FIREBALL              = 29953,
-    SPELL_ARCMISSLE             = 29955,
+    SPELL_FROSTBOLT             = 64152,
+    SPELL_FIREBALL              = 65026,
+    SPELL_ARCMISSLE             = 67999,
     SPELL_CHAINSOFICE           = 29991,
     SPELL_DRAGONSBREATH         = 29964,
     SPELL_MASSSLOW              = 30035,
@@ -59,7 +59,8 @@ enum ShadeOfAran
     SPELL_CONJURE               = 29975,
     SPELL_DRINK                 = 30024,
     SPELL_POTION                = 32453,
-    SPELL_AOE_PYROBLAST         = 29978,
+    SPELL_AOE_PYROBLAST         = 29953,
+	SPELL_NEGATIVE_ENERGY_E     = 46284,
 
     //Creature Spells
     SPELL_CIRCULAR_BLIZZARD     = 29951,
@@ -174,7 +175,7 @@ public:
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             Talk(SAY_AGGRO);
-
+			//DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true); zu hart für die kacklappen von fantasy
             if (instance)
             {
                 instance->SetData(TYPE_ARAN, IN_PROGRESS);
