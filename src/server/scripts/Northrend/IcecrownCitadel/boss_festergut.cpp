@@ -245,20 +245,14 @@ class boss_festergut : public CreatureScript
 												professor->AI()->DoCast(target, SPELL_MALLEABLE_GOO);
 												events.RescheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
 											}
-											_lastGUID = 0; // Es wurde schon ein Schleim geworfen / kein Ziel gefunden -> Reset, da sonst die schleime aufhören zu spawnen
+											_lastGUID = 0;
+											// Es wurde schon ein Schleim geworfen / kein Ziel gefunden -> Reset, da sonst die schleime aufhören zu spawnen
+
+											// Es besteht die Chance von 1/625 (0,16%) (Bei 25 Spielern, 1/(Anzahl der Spieler im Kampf * Anzahl der Spieler im Kampf)),
+											// dass nur ein Schleim geworfen wird,
+											// da zweimal das selbe Ziel ausgewählt wurde. Dies wird hier vernachlässigt.
 										}
 									}
-									/*std::list<Unit*> targets;
-									SelectTargetList(targets, 2, SELECT_TARGET_RANDOM, 0, 0.0f, true);
-									if (!targets.empty())
-									{
-										for (std::list<Unit*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
-											professor->AI()->DoCast(*itr, SPELL_MALLEABLE_GOO);
-
-										events.ScheduleEvent(EVENT_GOO, 10000 + urand(0, 5000));
-									}
-
-									*/
 								}
 								else
 								{
