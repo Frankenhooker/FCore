@@ -189,7 +189,7 @@ class FrostBombExplosion : public BasicEvent
 
         bool Execute(uint64 /*eventTime*/, uint32 /*updateTime*/)
         {
-           // _owner->CastSpell((Unit*)NULL, SPELL_FROST_BOMB, false, NULL, NULL, _sindragosaGUID);
+            _owner->CastSpell((Unit*)NULL, SPELL_FROST_BOMB, false, NULL, NULL, _sindragosaGUID);
             _owner->RemoveAurasDueToSpell(SPELL_FROST_BOMB_VISUAL);
             return true;
         }
@@ -199,21 +199,19 @@ class FrostBombExplosion : public BasicEvent
         uint64 _sindragosaGUID;
 };
 
-class FrostBeaconSelector
+/*class FrostBeaconSelector
 {
     public:
         FrostBeaconSelector(Unit* source) : _source(source) { }
 
         bool operator()(Unit* target) const
         {
-            return target->GetTypeId() == TYPEID_PLAYER &&
-                target != _source->GetVictim() &&
-                !target->HasAura(SPELL_ICE_TOMB_UNTARGETABLE);
+			return (target->GetTypeId() == TYPEID_PLAYER) & (target != _source->GetVictim()) & !(target->HasAura(SPELL_ICE_TOMB_UNTARGETABLE));
         }
 
     private:
         Unit* _source;
-};
+};*/
 
 class boss_sindragosa : public CreatureScript
 {
@@ -247,6 +245,12 @@ class boss_sindragosa : public CreatureScript
                     me->SetCanFly(true);
                     me->SetDisableGravity(true);
                 }
+				else //Sonst fliegt Sindra nach einem Wipe in der Flugphase...
+				{
+					me->SetCanFly(false);
+					me->SetDisableGravity(false);
+					me->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_HOVER);
+				}
             }
 
             void JustDied(Unit* /* killer */) OVERRIDE
@@ -348,12 +352,12 @@ class boss_sindragosa : public CreatureScript
                         break;
                     case POINT_AIR_PHASE:
                         me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), NULL);
-                        me->SetFacingTo(float(M_PI));
+						me->SetOrientation(3.1415f);
                         events.ScheduleEvent(EVENT_AIR_MOVEMENT_FAR, 1);
-                        //events.ScheduleEvent(EVENT_FROST_BOMB, 9000);
+                        events.ScheduleEvent(EVENT_FROST_BOMB, 9000);
                         break;
                     case POINT_AIR_PHASE_FAR:
-                        me->SetFacingTo(float(M_PI));
+						me->SetOrientation(3.1415f);
                         events.ScheduleEvent(EVENT_LAND, 30000);
                         break;
                     case POINT_LAND:
@@ -474,7 +478,7 @@ class boss_sindragosa : public CreatureScript
                             me->AttackStop();
                             Position pos;
                             pos.Relocate(me);
-                            pos.m_positionZ += 17.0f;
+                            pos.m_positionZ += 7.0f;
                             me->GetMotionMaster()->MoveTakeoff(POINT_TAKEOFF, pos);
                             events.CancelEventGroup(EVENT_GROUP_LAND_PHASE);
                             events.ScheduleEvent(EVENT_AIR_PHASE, 110000);
@@ -487,12 +491,36 @@ class boss_sindragosa : public CreatureScript
                             me->GetMotionMaster()->MovePoint(POINT_AIR_PHASE_FAR, SindragosaAirPosFar);
                             break;
                         case EVENT_ICE_TOMB:
-                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, FrostBeaconSelector(me)))
+                            /*if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, FrostBeaconSelector(me)))
                             {
                                 Talk(EMOTE_WARN_FROZEN_ORB, target->GetGUID());
+								Talk(SAY_PHASE_2);
                                 DoCast(target, SPELL_ICE_TOMB_DUMMY, true);
                             }
-                            events.ScheduleEvent(EVENT_ICE_TOMB, urand(16000, 23000));
+							Talk(SAY_PHASE_2);
+							events.ScheduleEvent(EVENT_ICE_TOMB, urand(16000, 23000));*/ //<--BUGGY, FrostBeaconSelector() Geht nicht..., wird entfernt
+
+							if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, true))
+							{
+								int i = 0;
+								while (target->GetTypeId() != TYPEID_PLAYER || target == me->GetVictim() || target->HasAura(SPELL_ICE_TOMB_UNTARGETABLE))
+								{
+									// Nur 10mal Auführen (Wg. Performance des Servers) -> Chance das IMMER ein Ziel, 
+									// welches NICHT ausgewählt werden soll, ausgewählt wird liegt bei 10^10 im 10er. (0,00000001%), im 25er noch niedriger
+
+									if (target = SelectTarget(SELECT_TARGET_RANDOM, true)){} // Select new Target
+									
+									i++;
+									if (i >= 10)
+										break; // Es wurde kein passendes Ziel gefunden in den 10 Versuchen -> Abbrechen
+								}
+
+								Talk(EMOTE_WARN_FROZEN_ORB, target->GetGUID());
+								DoCast(target, SPELL_FROST_BEACON, true);
+								DoCast(target, SPELL_ICE_TOMB_DUMMY, true);
+
+								events.ScheduleEvent(EVENT_ICE_TOMB, urand(16000, 23000));
+							}
                             break;
                         case EVENT_FROST_BOMB:
                         {
