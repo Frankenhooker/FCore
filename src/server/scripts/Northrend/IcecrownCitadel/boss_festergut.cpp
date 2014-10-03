@@ -251,6 +251,7 @@ class boss_festergut : public CreatureScript
 											// Es besteht die Chance von 1/625 (0,16%) (Bei 25 Spielern, 1/(Anzahl der Spieler im Kampf * Anzahl der Spieler im Kampf)),
 											// dass nur ein Schleim geworfen wird,
 											// da zweimal das selbe Ziel ausgewählt wurde. Dies wird hier vernachlässigt.
+											// Könnte durch noch ein Target-Auswähl Versuch auf 0,0064% verringert werden (1/15625)
 										}
 									}
 								}
