@@ -176,7 +176,8 @@ public:
         {
             Talk(SAY_AGGRO);
 			DoZoneInCombat();
-			//DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true); zu hart für die kacklappen von fantasy
+			instance->SetBossState(0, IN_PROGRESS);
+			DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true);
             if (instance)
             {
                 instance->SetData(TYPE_ARAN, IN_PROGRESS);
