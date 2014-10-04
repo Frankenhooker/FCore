@@ -273,6 +273,7 @@ class boss_sindragosa : public CreatureScript
                 }*/
 
                 //BossAI::EnterCombat(victim);
+				instance->SetBossState(DATA_SINDRAGOSA, IN_PROGRESS);
 				me->setActive(true);
                 DoZoneInCombat();
                 DoCast(me, SPELL_FROST_AURA);
