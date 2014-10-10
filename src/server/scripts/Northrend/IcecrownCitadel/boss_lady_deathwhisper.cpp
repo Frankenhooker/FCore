@@ -958,22 +958,22 @@ class npc_vengeful_shade : public CreatureScript
 				{
 					if (Is25ManRaid())
 					{
-						DoCastVictim(SPELL_VENGEFUL_BLAST_25H); // 25ner HC
+						DoCast(ObjectAccessor::GetObjectInMap(_targetGUID, me->GetMap(), (Unit*)NULL), SPELL_VENGEFUL_BLAST_25H); // 25ner HC
 					}
 					else
 					{
-						DoCastVictim(SPELL_VENGEFUL_BLAST_10H); // 10ner HC
+						DoCast(ObjectAccessor::GetObjectInMap(_targetGUID, me->GetMap(), (Unit*)NULL), SPELL_VENGEFUL_BLAST_10H); // 10ner HC
 					}
 				}
 				else // NH
 				{
 					if (Is25ManRaid())
 					{
-						DoCastVictim(SPELL_VENGEFUL_BLAST_25N); // 25ner NH
+						DoCast(ObjectAccessor::GetObjectInMap(_targetGUID, me->GetMap(), (Unit*)NULL), SPELL_VENGEFUL_BLAST_25N); // 25ner NH
 					}
 					else
 					{
-						DoCastVictim(SPELL_VENGEFUL_BLAST); // 10ner NH
+						DoCast(ObjectAccessor::GetObjectInMap(_targetGUID, me->GetMap(), (Unit*)NULL), SPELL_VENGEFUL_BLAST); // 10ner NH
 					}
 				}
 

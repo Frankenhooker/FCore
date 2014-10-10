@@ -7639,6 +7639,11 @@ void Player::DuelComplete(DuelCompleteType type)
     if (!duel)
         return;
 
+	//FIX: Prevent Players from Damage after duel.
+	duel->opponent->SetHealth(duel->opponent->GetMaxHealth());
+	SetHealth(GetMaxHealth());
+	//FIX END
+
     TC_LOG_DEBUG(LOG_FILTER_UNITS, "Duel Complete %s %s", GetName().c_str(), duel->opponent->GetName().c_str());
 
     WorldPacket data(SMSG_DUEL_COMPLETE, (1));

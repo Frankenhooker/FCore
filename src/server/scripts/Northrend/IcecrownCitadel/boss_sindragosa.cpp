@@ -652,6 +652,25 @@ class npc_ice_tomb : public CreatureScript
                 if (!_trappedPlayerGUID)
                     return;
 
+				//FIX: Check if Sindra is alive, if not, despawn.
+
+				if (InstanceMap* instance = me->GetMap()->ToInstanceMap())
+				{
+					uint64 id = instance->GetInstanceScript()->GetData64(DATA_SINDRAGOSA);
+
+					if (Creature* sindra = Unit::GetCreature(*me, id))
+					{
+						if (!sindra->IsAlive())
+						{
+							JustDied(me);
+							me->DespawnOrUnsummon();
+						}
+					}
+
+				}
+
+				//FIX END
+
                 if (_existenceCheckTimer <= diff)
                 {
                     Player* player = ObjectAccessor::GetPlayer(*me, _trappedPlayerGUID);
