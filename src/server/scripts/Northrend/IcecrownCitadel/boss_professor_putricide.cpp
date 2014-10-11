@@ -749,6 +749,17 @@ class npc_putricide_oozeAI : public ScriptedAI
             if (!UpdateVictim() && !_newTargetSelectTimer)
                 return;
 
+			//KNOWN BUG: Wenn Prof während des Spawnens (genauer, bevor sie gespawnt sind) stirbt, spawnen sie, allerdings wird die AI nicht geupdatet,
+			//			 Sie despawnen, wenn man sie angreift (also eig. nur ein Visual Bug, ignoriere ich erstmal)
+			if (InstanceMap* instance = me->GetMap()->ToInstanceMap())
+			{
+				uint64 id = instance->GetInstanceScript()->GetData64(DATA_PROFESSOR_PUTRICIDE);
+
+				if (Creature* prof = Unit::GetCreature(*me, id))
+					if (!prof->IsAlive())
+						me->DespawnOrUnsummon();
+			}
+
             if (!_newTargetSelectTimer && !me->IsNonMeleeSpellCasted(false, false, true, false, true))
                 _newTargetSelectTimer = 1000;
 
